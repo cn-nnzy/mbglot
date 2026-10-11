@@ -6,6 +6,7 @@ import {
 }
 
 // Values
+pub fn detect_script(String) -> Script?
 
 // Errors
 

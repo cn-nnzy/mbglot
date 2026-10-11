@@ -38,6 +38,12 @@ What is taken from franc-min 6.2.0:
     and their ISO 639-3 codes. English names follow the ISO 639-3
     reference names listed in the franc-min readme, without the
     parenthesised qualifiers.
+  - The Unicode ranges of each script in script_ranges.mbt, decoded from
+    the regular expressions in franc-min 6.2.0 expressions.js
+    (https://unpkg.com/franc-min@6.2.0/expressions.js): surrogate pairs
+    were combined into code points and adjacent ranges merged, without
+    adding or removing any code point. The script order used to break
+    ties is the key order of that file.
 
 Universal Declaration of Human Rights
   franc builds its trigram profiles from translations of the Universal
