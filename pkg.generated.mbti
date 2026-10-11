@@ -16,6 +16,8 @@ pub let reliable_min_length : Int
 
 pub let reliable_min_margin : Double
 
+pub fn segments(String, options? : Options) -> Array[Segment]
+
 // Errors
 pub(all) suberror OptionsError {
   EmptyAllow
@@ -151,6 +153,13 @@ pub(all) enum Script {
 pub fn Script::all() -> Array[Self]
 pub fn Script::name(Self) -> String
 pub impl Show for Script
+
+pub(all) struct Segment {
+  start : Int
+  end : Int
+  text : String
+  detection : Detection?
+} derive(Eq, @debug.Debug)
 
 // Type aliases
 

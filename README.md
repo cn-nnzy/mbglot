@@ -31,11 +31,14 @@ Milestone 1 is complete. Implemented:
   CI regenerates them from npm and fails if they differ from the committed
   file.
 
+- `segments(text, options?) -> Array[Segment]`: splits a text that mixes
+  languages into consecutive segments with their own detection. This is
+  mbglot's own procedure on top of franc's scores (franc has no
+  segmentation); see below.
 - A command-line tool in `cmd/main` and a ticket-routing example in
   `examples/tickets`.
 
-Not implemented: languages beyond franc-min's 76, detecting several
-languages within one text, and streaming input. There is no release on
+Not implemented: languages beyond franc-min's 76, and streaming input. There is no release on
 mooncakes.io yet.
 
 ## Usage
@@ -161,6 +164,36 @@ instead of silently ignoring a setting that cannot work: an empty `allow`
 list, a language both allowed and denied, a `deny` list naming every
 language, or a negative `min_length`. Allowing only languages of another
 script than the text's makes `detect` return `None`.
+
+## Mixed-language text
+
+```moonbit
+test {
+  let text = "Hello, my order has not arrived yet and I need it for Friday. " +
+    "Hola, mi pedido no ha llegado todavía y lo necesito para el viernes."
+  let parts = @mbglot.segments(text)
+  assert_eq(parts.map(s => s.detection.unwrap().lang), [@mbglot.Eng, @mbglot.Spa])
+  assert_eq(parts[1].start, 62)
+}
+```
+
+`segments` cuts the text before the first letter after a sentence end
+(`.`, `!`, `?`, `؟` and `۔` when followed by whitespace; newlines, `。`,
+`！`, `？` and the danda always) and wherever the writing system changes
+(Han and Kana count as one, so Japanese stays together). Each piece goes
+through `detect`. A piece that cannot be identified on its own, because it
+is shorter than `min_length` or has no letters, is joined to a neighbour,
+preferably one in the same script, and identified again; neighbours in the
+same language are then merged and identified again. Punctuation, spaces
+and emoji stay with the piece before them.
+
+Segments are contiguous and cover the whole input; `start` and `end` are
+UTF-16 code unit offsets and `text` is that slice. An empty text gives no
+segments, and a text with nothing identifiable gives one segment whose
+`detection` is `None`. Abbreviations such as `e.g. ` cause an extra cut,
+which is usually undone because the short piece is joined back. Sentences
+inherit franc's accuracy, so short sentences in closely related languages
+can still be misidentified; check `reliable` on each segment.
 
 ## Script detection
 
