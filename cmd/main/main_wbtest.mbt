@@ -36,3 +36,28 @@ test "report without a detection" {
   ])
   assert_eq(report("👍👍👍👍👍👍👍👍👍👍👍"), report(""))
 }
+
+///|
+test "preview" {
+  assert_eq(preview("  short\ttext\n", 40), "short text")
+  assert_eq(preview("abcdefghij", 8), "abcde...")
+  assert_eq(preview("谢谢你们的帮助", 6), "谢谢你...")
+}
+
+///|
+test "segments report" {
+  let text = "Здравствуйте, заказ не пришёл. " +
+    "Hi, could you check the tracking number for order 4471 please? " +
+    "谢谢，麻烦尽快处理一下这个问题。"
+  assert_eq(segments_report(text), [
+    "[0, 31)      bul  Bulgarian                not reliable Здравствуйте, заказ не пришёл.",
+    "[31, 94)     eng  English                  reliable     Hi, could you check the tracking numb...",
+    "[94, 110)    cmn  Mandarin Chinese         not reliable 谢谢，麻烦尽快处理一下这个问题。",
+  ])
+}
+
+///|
+test "segments report falls back when nothing is identified" {
+  assert_eq(segments_report("ok"), report("ok"))
+  assert_eq(segments_report(""), report(""))
+}

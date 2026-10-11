@@ -76,7 +76,18 @@ top 5:
 ```
 
 Without an argument it prints a usage line; for text it cannot identify it
-says so instead of guessing.
+says so instead of guessing. With `--segments` it prints one line per
+language segment (see [Mixed-language text](#mixed-language-text)):
+
+```
+$ moon run cmd/main -- --segments "Здравствуйте, заказ не пришёл. Hi, could you check the tracking number for order 4471 please? 谢谢，麻烦尽快处理一下这个问题。"
+[0, 31)      bul  Bulgarian                not reliable Здравствуйте, заказ не пришёл.
+[31, 94)     eng  English                  reliable     Hi, could you check the tracking numb...
+[94, 110)    cmn  Mandarin Chinese         not reliable 谢谢，麻烦尽快处理一下这个问题。
+```
+
+The first sentence is Russian; franc-min's statistics prefer Bulgarian for
+it, and the line says that the detection is not reliable.
 
 ### Example: routing support tickets
 
