@@ -12,6 +12,11 @@ what is planned, and is updated with every change.
 
 Implemented now:
 
+- `detect(text, options?) -> Detection?` and
+  `rank(text, options?) -> Array[(Lang, Double)]`, giving the same
+  rankings and scores as franc-min 6.2.0 (checked by a golden test, see
+  below), with `Options` for allow / deny lists and a minimum length, and a
+  `reliable` flag.
 - `Lang`: the 76 languages of franc-min 6.2.0, with `code()` (ISO 639-3),
   `name()` (English), `Lang::from_code` and `Lang::all()`.
 - `Script`: the 20 writing systems franc-min distinguishes, with `name()`
@@ -20,13 +25,10 @@ Implemented now:
   characters, with franc-min's Unicode ranges, sample limit (first 2048
   UTF-16 code units) and tie order. Returns `None` for text with no
   letters of a supported script (empty, digits, punctuation, emoji).
-
-- Trigram extraction matching `trigram-utils` 2.0.1 (internal, used by the
-  planned `rank`): runs of ASCII punctuation, digits and whitespace become
+- Trigram extraction matching `trigram-utils` 2.0.1 (internal): runs of ASCII punctuation, digits and whitespace become
   one space, the text is trimmed and lowercased like JavaScript's
   `toLowerCase` (Unicode 17.0.0 tables, including `İ` and final sigma),
   padded with spaces and cut into trigrams of UTF-16 code units.
-
 - Trigram profiles (internal): the 66 profiles of franc-min 6.2.0, 300
   trigrams each, generated into `profiles.mbt` by `tools/gen_profiles.mjs`.
   CI regenerates them from npm and fails if they differ from the committed
@@ -34,9 +36,6 @@ Implemented now:
 
 Planned, not implemented yet:
 
-- `detect(text, options?)` and `rank(text, options?)` with `Options`
-  (allow / deny lists, minimum length) and a `reliable` flag, checked
-  against franc-min with a parity test.
 - A command-line tool in `cmd/main` and examples.
 
 ## Languages
@@ -52,6 +51,54 @@ Merging those gives 76 distinct ISO 639-3 codes:
   Gujarati, Kannada, Malayalam, Burmese, Panjabi (Gurmukhi), Amharic
   (Ethiopic), Thai, Sinhala and Modern Greek. Javanese script also maps to
   Javanese, which has a Latin profile as well.
+
+## Detecting a language
+
+```moonbit
+test {
+  let text = "Hola, mi pedido llegó incompleto y falta una de las piezas."
+  let detection = @mbglot.detect(text).unwrap()
+  assert_eq(detection.lang, @mbglot.Spa)
+  assert_eq(detection.lang.name(), "Spanish")
+  assert_eq(detection.script, @mbglot.Latin)
+  assert_eq(@mbglot.detect("12:30 👍"), None)
+}
+```
+
+`detect` returns `None` instead of guessing when the text is empty, has no
+letters of a supported script (whitespace, digits, punctuation, emoji), or
+is shorter than `min_length` (default 10 UTF-16 code units, as in franc).
+
+`rank` returns every candidate of the dominant script with franc's score:
+the best language scores 1.0 and the others are scaled by trigram
+distance relative to it. Equal scores keep franc's language order. For a
+script used by one language only (Han, Hangul, Thai, ...) the result has
+that single language with 1.0.
+
+`Detection.confidence` is the margin between the best and second-best
+score (1.0 with a single candidate). `reliable` is true when the margin is
+at least `reliable_min_margin` (0.15) and the text is at least
+`reliable_min_length` (30) UTF-16 code units long. On franc's own test
+fixtures, cut to lengths from 20 to 1000 code units, every detection with a
+margin of 0.14 or more was correct, and most mistakes came from texts of 20
+to 35 code units (mostly Bosnian, Croatian and Serbian). Those fixtures are
+the texts franc was trained on, so treat the flag as a heuristic.
+
+### Options
+
+```moonbit
+test {
+  let options = @mbglot.Options::new(allow=[@mbglot.Eng, @mbglot.Por])
+  let ranked = @mbglot.rank("Hola, mi pedido llegó incompleto.", options~)
+  assert_eq(ranked.map(r => r.0), [@mbglot.Por, @mbglot.Eng])
+}
+```
+
+`Options::new(allow?, deny?, min_length? = 10)` raises `OptionsError`
+instead of silently ignoring a setting that cannot work: an empty `allow`
+list, a language both allowed and denied, a `deny` list naming every
+language, or a negative `min_length`. Allowing only languages of another
+script than the text's makes `detect` return `None`.
 
 ## Script detection
 
@@ -81,6 +128,25 @@ moon test --target native  # needs a C compiler
 
 CI runs the same commands on Ubuntu, Windows and macOS. The generators
 for committed data files are described in [tools/README.md](tools/README.md).
+
+### franc parity
+
+`golden_wbtest.mbt` holds franc-min 6.2.0's `francAll` output for the 82
+fixtures of franc's own test suite in languages franc-min supports, and
+for the hand-written cases in `tools/golden_samples.json` (short and long
+texts, mixed scripts, emoji, the sample limit, options). The test compares
+mbglot's ranking and every score for exact equality. It is generated
+under Node.js with:
+
+```
+npm install --prefix "$TMP/franc" --no-save --ignore-scripts franc-min@6.2.0
+curl -fsSL -o "$TMP/fixtures.js" https://raw.githubusercontent.com/wooorm/franc/3f9f0b51a96c5df32a407dad865a3011ac0fa2d1/test/fixtures.js
+node tools/gen_golden.mjs "$TMP/franc/node_modules/franc-min" "$TMP/fixtures.js" golden_wbtest.mbt
+moon fmt
+```
+
+The `franc-min data` CI job runs these commands on every push and fails
+if the result differs from the committed file.
 
 ## License
 

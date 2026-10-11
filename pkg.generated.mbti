@@ -6,11 +6,32 @@ import {
 }
 
 // Values
+pub fn detect(String, options? : Options) -> Detection?
+
 pub fn detect_script(String) -> Script?
 
+pub fn rank(String, options? : Options) -> Array[(Lang, Double)]
+
+pub let reliable_min_length : Int
+
+pub let reliable_min_margin : Double
+
 // Errors
+pub(all) suberror OptionsError {
+  EmptyAllow
+  AllowDenyOverlap(Lang)
+  DenyAll
+  NegativeMinLength(Int)
+} derive(Eq, @debug.Debug)
 
 // Types and methods
+pub(all) struct Detection {
+  lang : Lang
+  script : Script
+  confidence : Double
+  reliable : Bool
+} derive(Eq, @debug.Debug)
+
 pub(all) enum Lang {
   Spa
   Eng
@@ -94,6 +115,16 @@ pub fn Lang::code(Self) -> String
 pub fn Lang::from_code(String) -> Self?
 pub fn Lang::name(Self) -> String
 pub impl Show for Lang
+
+pub struct Options {
+  allow : Array[Lang]
+  deny : Array[Lang]
+  min_length : Int
+}
+pub fn Options::allow(Self) -> Array[Lang]
+pub fn Options::deny(Self) -> Array[Lang]
+pub fn Options::min_length(Self) -> Int
+pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int) -> Self raise OptionsError
 
 pub(all) enum Script {
   Han

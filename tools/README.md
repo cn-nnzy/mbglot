@@ -19,6 +19,25 @@ moon fmt
 The `franc-min data` job in CI runs exactly these commands and fails if
 the result differs from the committed `profiles.mbt`.
 
+## gen_golden.mjs
+
+Writes `golden_wbtest.mbt`: franc-min 6.2.0 `francAll` results for franc's
+test fixtures in supported languages and for the cases in
+`golden_samples.json`. Needs Node.js. The fixtures file is downloaded from
+a pinned commit and checked against its SHA-256.
+
+```
+npm install --prefix "$TMP/franc" --no-save --ignore-scripts franc-min@6.2.0
+curl -fsSL -o "$TMP/fixtures.js" https://raw.githubusercontent.com/wooorm/franc/3f9f0b51a96c5df32a407dad865a3011ac0fa2d1/test/fixtures.js
+node tools/gen_golden.mjs "$TMP/franc/node_modules/franc-min" "$TMP/fixtures.js" golden_wbtest.mbt
+moon fmt
+```
+
+A sample in `golden_samples.json` has `name` and `text`, and optionally
+`repeat` (repeat `text` that many times), `suffix`, `allow`, `deny` and
+`minLength`. The `franc-min data` CI job regenerates this file too, and
+uploads the regenerated files as an artifact when they differ.
+
 ## unicode_case.py
 
 Writes `unicode_case.mbt`: simple lowercase mappings and the `Cased` and

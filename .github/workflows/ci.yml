@@ -85,10 +85,25 @@ jobs:
       - name: Install franc-min 6.2.0
         run: npm install --prefix "$RUNNER_TEMP/franc" --no-save --ignore-scripts franc-min@6.2.0
 
-      - name: Regenerate profiles.mbt
+      - name: Download franc 6.2.0 test fixtures
+        run: curl -fsSL -o "$RUNNER_TEMP/fixtures.js" https://raw.githubusercontent.com/wooorm/franc/3f9f0b51a96c5df32a407dad865a3011ac0fa2d1/test/fixtures.js
+
+      - name: Regenerate profiles and golden tests
         run: |
           node tools/gen_profiles.mjs "$RUNNER_TEMP/franc/node_modules/franc-min" profiles.mbt
+          node tools/gen_golden.mjs "$RUNNER_TEMP/franc/node_modules/franc-min" "$RUNNER_TEMP/fixtures.js" golden_wbtest.mbt
           moon fmt
 
-      - name: Generated data matches the committed files
-        run: git diff --exit-code
+      - name: Generated files match the committed ones
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)"
+
+      - name: Upload regenerated files
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regenerated
+          path: |
+            profiles.mbt
+            golden_wbtest.mbt
