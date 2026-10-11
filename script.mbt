@@ -87,3 +87,28 @@ pub fn Script::name(self : Script) -> String {
 pub impl Show for Script with fn output(self, logger) {
   logger.write_string(self.name())
 }
+
+///|
+/// The only language franc-min writes in this script, or `None` for the
+/// scripts whose languages are told apart by trigram profiles.
+fn Script::sole_language(self : Script) -> Lang? {
+  match self {
+    Han => Some(Cmn)
+    Bengali => Some(Ben)
+    Kana => Some(Jpn)
+    Javanese => Some(Jav)
+    Hangul => Some(Kor)
+    Telugu => Some(Tel)
+    Tamil => Some(Tam)
+    Gujarati => Some(Guj)
+    Kannada => Some(Kan)
+    Malayalam => Some(Mal)
+    Myanmar => Some(Mya)
+    Gurmukhi => Some(Pan)
+    Ethiopic => Some(Amh)
+    Thai => Some(Tha)
+    Sinhala => Some(Sin)
+    Greek => Some(Ell)
+    Latin | Cyrillic | Arabic | Devanagari => None
+  }
+}

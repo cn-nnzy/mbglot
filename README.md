@@ -27,9 +27,13 @@ Implemented now:
   `toLowerCase` (Unicode 17.0.0 tables, including `İ` and final sigma),
   padded with spaces and cut into trigrams of UTF-16 code units.
 
+- Trigram profiles (internal): the 66 profiles of franc-min 6.2.0, 300
+  trigrams each, generated into `profiles.mbt` by `tools/gen_profiles.mjs`.
+  CI regenerates them from npm and fails if they differ from the committed
+  file.
+
 Planned, not implemented yet:
 
-- Trigram profiles generated from franc-min 6.2.0.
 - `detect(text, options?)` and `rank(text, options?)` with `Options`
   (allow / deny lists, minimum length) and a `reliable` flag, checked
   against franc-min with a parity test.

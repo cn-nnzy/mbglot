@@ -66,3 +66,29 @@ jobs:
         run: moon test --target js
       - name: Test native
         run: moon test --target native
+
+  franc-data:
+    name: franc-min data
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Install franc-min 6.2.0
+        run: npm install --prefix "$RUNNER_TEMP/franc" --no-save --ignore-scripts franc-min@6.2.0
+
+      - name: Regenerate profiles.mbt
+        run: |
+          node tools/gen_profiles.mjs "$RUNNER_TEMP/franc/node_modules/franc-min" profiles.mbt
+          moon fmt
+
+      - name: Generated data matches the committed files
+        run: git diff --exit-code
