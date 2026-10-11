@@ -1,0 +1,125 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "cn-nnzy/mbglot"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) enum Lang {
+  Spa
+  Eng
+  Por
+  Ind
+  Fra
+  Deu
+  Jav
+  Vie
+  Ita
+  Tur
+  Pol
+  Swh
+  Sun
+  Ron
+  Hau
+  Fuv
+  Bos
+  Hrv
+  Nld
+  Srp
+  Ckb
+  Yor
+  Uzn
+  Zlm
+  Ibo
+  Ceb
+  Tgl
+  Hun
+  Azj
+  Ces
+  Run
+  Plt
+  Qug
+  Mad
+  Nya
+  Zyb
+  Kin
+  Zul
+  Swe
+  Lin
+  Som
+  Hms
+  Hnj
+  Ilo
+  Rus
+  Ukr
+  Koi
+  Bel
+  Bul
+  Kaz
+  Arb
+  Urd
+  Pes
+  Skr
+  Pbu
+  Hin
+  Mar
+  Mai
+  Bho
+  Npi
+  Mag
+  Cmn
+  Ben
+  Jpn
+  Kor
+  Tel
+  Tam
+  Guj
+  Kan
+  Mal
+  Mya
+  Pan
+  Amh
+  Tha
+  Sin
+  Ell
+} derive(Eq, Hash, @debug.Debug)
+pub fn Lang::all() -> Array[Self]
+pub fn Lang::code(Self) -> String
+pub fn Lang::from_code(String) -> Self?
+pub fn Lang::name(Self) -> String
+pub impl Show for Lang
+
+pub(all) enum Script {
+  Han
+  Latin
+  Cyrillic
+  Arabic
+  Bengali
+  Devanagari
+  Kana
+  Javanese
+  Hangul
+  Telugu
+  Tamil
+  Gujarati
+  Kannada
+  Malayalam
+  Myanmar
+  Gurmukhi
+  Ethiopic
+  Thai
+  Sinhala
+  Greek
+} derive(Eq, Hash, @debug.Debug)
+pub fn Script::all() -> Array[Self]
+pub fn Script::name(Self) -> String
+pub impl Show for Script
+
+// Type aliases
+
+// Traits
