@@ -36,7 +36,8 @@ const lines = [
   '',
   '///|',
   '/// Keys of franc-min expressions.js in order. A three-letter key is the',
-  '/// only language written in that script.',
+  '/// only language written in that script. Only tests read it.',
+  '#warnings("-unused_value")',
   'let franc_script_keys : FixedArray[String] = [',
   ...Object.keys(expressions).map((key) => `  ${literal(key)},`),
   ']'

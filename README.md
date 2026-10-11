@@ -7,10 +7,7 @@ wasm, wasm-gc, js and native backends.
 
 ## Status
 
-mbglot is under construction. This section lists what exists today and
-what is planned, and is updated with every change.
-
-Implemented now:
+Milestone 1 is complete. Implemented:
 
 - `detect(text, options?) -> Detection?` and
   `rank(text, options?) -> Array[(Lang, Double)]`, giving the same
@@ -25,8 +22,8 @@ Implemented now:
   characters, with franc-min's Unicode ranges, sample limit (first 2048
   UTF-16 code units) and tie order. Returns `None` for text with no
   letters of a supported script (empty, digits, punctuation, emoji).
-- Trigram extraction matching `trigram-utils` 2.0.1 (internal): runs of ASCII punctuation, digits and whitespace become
-  one space, the text is trimmed and lowercased like JavaScript's
+- Trigram extraction matching `trigram-utils` 2.0.1 (internal): runs of
+  ASCII punctuation, digits and whitespace become one space, the text is trimmed and lowercased like JavaScript's
   `toLowerCase` (Unicode 17.0.0 tables, including `İ` and final sigma),
   padded with spaces and cut into trigrams of UTF-16 code units.
 - Trigram profiles (internal): the 66 profiles of franc-min 6.2.0, 300
@@ -34,9 +31,74 @@ Implemented now:
   CI regenerates them from npm and fails if they differ from the committed
   file.
 
-Planned, not implemented yet:
+- A command-line tool in `cmd/main` and a ticket-routing example in
+  `examples/tickets`.
 
-- A command-line tool in `cmd/main` and examples.
+Not implemented: languages beyond franc-min's 76, detecting several
+languages within one text, and streaming input. There is no release on
+mooncakes.io yet.
+
+## Usage
+
+Add the module to your project:
+
+```
+moon add cn-nnzy/mbglot
+```
+
+and import the package in your `moon.pkg`:
+
+```
+import {
+  "cn-nnzy/mbglot" @mbglot,
+}
+```
+
+`moon add` works once the module is published; until then, depend on a
+checkout of this repository.
+
+### Command line
+
+```
+$ moon run cmd/main -- "Hola, mi pedido llegó incompleto y falta una de las piezas."
+language:   Spanish (spa)
+script:     Latin
+confidence: 0.226 (reliable)
+top 5:
+  1. spa  Spanish                  1.000
+  2. ita  Italian                  0.774
+  3. por  Portuguese               0.702
+  4. lin  Lingala                  0.689
+  5. fra  French                   0.687
+```
+
+Without an argument it prints a usage line; for text it cannot identify it
+says so instead of guessing.
+
+### Example: routing support tickets
+
+`examples/tickets` sends each message to a language queue when the
+detection is reliable and to manual triage otherwise:
+
+```
+$ moon run examples/tickets
+#1001  support-en  (eng English)
+#1002  triage  (spa Spanish, not reliable)
+#1003  support-fr  (fra French)
+#1004  support-de  (deu German)
+#1005  triage  (spa Spanish, not reliable)
+#1006  triage  (bul Bulgarian, not reliable)
+#1007  support-zh  (cmn Mandarin Chinese)
+#1008  support-ja  (jpn Japanese)
+#1009  support-ar  (arb Standard Arabic)
+#1010  triage  (tur Turkish, not reliable)
+#1011  triage  (no language)
+#1012  triage  (por Portuguese, not reliable)
+```
+
+Tickets 1005 (Portuguese) and 1006 (Russian) are misidentified by
+franc-min's statistics, which is why the example only trusts reliable
+detections: both are flagged as not reliable and go to triage.
 
 ## Languages
 

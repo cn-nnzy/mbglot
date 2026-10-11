@@ -1,0 +1,6 @@
+import {
+  "cn-nnzy/mbglot",
+  "moonbitlang/core/env",
+}
+
+pkgtype(kind: "executable")

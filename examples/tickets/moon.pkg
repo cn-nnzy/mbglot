@@ -1,0 +1,5 @@
+import {
+  "cn-nnzy/mbglot",
+}
+
+pkgtype(kind: "executable")

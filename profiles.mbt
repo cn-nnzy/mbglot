@@ -2,7 +2,8 @@
 
 ///|
 /// Keys of franc-min expressions.js in order. A three-letter key is the
-/// only language written in that script.
+/// only language written in that script. Only tests read it.
+#warnings("-unused_value")
 let franc_script_keys : FixedArray[String] = [
   "cmn", "Latin", "Cyrillic", "Arabic", "ben", "Devanagari", "jpn", "jav", "kor",
   "tel", "tam", "guj", "kan", "mal", "mya", "pan", "amh", "tha", "sin", "ell",
