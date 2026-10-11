@@ -21,10 +21,15 @@ Implemented now:
   UTF-16 code units) and tie order. Returns `None` for text with no
   letters of a supported script (empty, digits, punctuation, emoji).
 
+- Trigram extraction matching `trigram-utils` 2.0.1 (internal, used by the
+  planned `rank`): runs of ASCII punctuation, digits and whitespace become
+  one space, the text is trimmed and lowercased like JavaScript's
+  `toLowerCase` (Unicode 17.0.0 tables, including `İ` and final sigma),
+  padded with spaces and cut into trigrams of UTF-16 code units.
+
 Planned, not implemented yet:
 
-- Trigram profiles generated from franc-min 6.2.0, and trigram extraction
-  matching `trigram-utils`.
+- Trigram profiles generated from franc-min 6.2.0.
 - `detect(text, options?)` and `rank(text, options?)` with `Options`
   (allow / deny lists, minimum length) and a `reliable` flag, checked
   against franc-min with a parity test.
@@ -70,9 +75,11 @@ moon test --target js      # needs Node.js
 moon test --target native  # needs a C compiler
 ```
 
-CI runs the same commands on Ubuntu, Windows and macOS.
+CI runs the same commands on Ubuntu, Windows and macOS. The generators
+for committed data files are described in [tools/README.md](tools/README.md).
 
 ## License
 
 MIT, see [LICENSE](LICENSE). Data and algorithm come from franc-min
-(MIT); see [NOTICE](NOTICE).
+(MIT); the case tables come from the Unicode Character Database (Unicode
+License V3). See [NOTICE](NOTICE).
