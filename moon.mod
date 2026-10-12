@@ -2,7 +2,7 @@ name = "cn-nnzy/mbglot"
 
 version = "0.1.0"
 
-readme = "README.md"
+readme = "README.mbt.md"
 
 repository = "https://github.com/cn-nnzy/mbglot"
 
