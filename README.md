@@ -232,7 +232,10 @@ moon test --target js      # needs Node.js
 moon test --target native  # needs a C compiler
 ```
 
-CI runs the same commands on Ubuntu, Windows and macOS. The generators
+CI runs the same commands on Ubuntu 24.04, Windows Server 2025 and macOS
+15 with a pinned MoonBit toolchain (moonc 0.10.14+7d59c7ec9, set by
+`MOONBIT_INSTALL_VERSION` in `.github/workflows/ci.yml`), because newer
+releases may format code differently. The generators
 for committed data files are described in [tools/README.md](tools/README.md).
 
 ### franc parity

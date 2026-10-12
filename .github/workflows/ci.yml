@@ -8,13 +8,18 @@ on:
 permissions:
   contents: read
 
+env:
+  # The toolchain this repository is formatted and tested with. Update it
+  # deliberately: newer releases may format code differently.
+  MOONBIT_INSTALL_VERSION: "0.10.14+7d59c7ec9"
+
 jobs:
   test:
     name: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-24.04, windows-2025, macos-15]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v5
@@ -69,11 +74,11 @@ jobs:
 
   franc-data:
     name: franc-min data
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
 
@@ -101,7 +106,7 @@ jobs:
 
       - name: Upload regenerated files
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: regenerated
           path: |
