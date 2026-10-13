@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mbglot demo</title>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>mbglot</h1>
+    <p>Language identification in MoonBit, running in your browser. The
+    library is compiled to JavaScript; nothing you type leaves this page.
+    <a href="https://github.com/cn-nnzy/mbglot">Source</a></p>
+  </header>
+
+  <label for="input">Text</label>
+  <textarea id="input" rows="6" spellcheck="false"
+    placeholder="Type or paste text in any of 76 languages"></textarea>
+  <div id="samples" aria-label="Sample texts"></div>
+
+  <section id="result" aria-live="polite">
+    <div id="verdict"></div>
+    <ol id="top"></ol>
+  </section>
+
+  <section>
+    <h2>Segments</h2>
+    <p class="hint">Each stretch of text is coloured by the language detected
+    for it; dotted underlines mark detections that are not reliable. Hover a
+    segment for details.</p>
+    <div id="segments"></div>
+    <ul id="legend"></ul>
+  </section>
+</main>
+</body>
+</html>

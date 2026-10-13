@@ -35,8 +35,8 @@ Milestone 1 is complete. Implemented:
   languages into consecutive segments with their own detection. This is
   mbglot's own procedure on top of franc's scores (franc has no
   segmentation); see below.
-- A command-line tool in `cmd/main` and a ticket-routing example in
-  `examples/tickets`.
+- A command-line tool in `cmd/main`, a ticket-routing example in
+  `examples/tickets` and a [browser demo](#browser-demo) in `demo`.
 
 Not implemented: languages beyond franc-min's 76, and streaming input.
 There is no release on mooncakes.io yet.
@@ -113,6 +113,23 @@ $ moon run examples/tickets
 Tickets 1005 (Portuguese) and 1006 (Russian) are misidentified by
 franc-min's statistics, which is why the example only trusts reliable
 detections: both are flagged as not reliable and go to triage.
+
+### Browser demo
+
+`demo/` is a web page that runs mbglot compiled to JavaScript: type or
+paste text and it shows the detected language, the confidence, the five
+best candidates and the text coloured by language segment, updated on
+every keystroke. Nothing is sent to a server. Build and serve it with:
+
+```
+node tools/build_demo.mjs _site
+python -m http.server -d _site
+```
+
+and open <http://localhost:8000>. The page calls one exported function,
+`analyze(text)` in `demo/analyze.mbt`, which returns the detection, the
+top candidates and the segments as JSON; segment offsets are UTF-16 code
+units, so they index JavaScript strings directly.
 
 ## Languages
 
