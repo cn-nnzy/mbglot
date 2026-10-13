@@ -17,17 +17,21 @@ pub struct Options {
   allow : Array[Lang]
   deny : Array[Lang]
   min_length : Int
+  strip_markup : Bool
 }
 
 ///|
 /// Restricts detection to `allow` (when given) and never returns a
 /// language in `deny`. Texts shorter than `min_length` UTF-16 code units
-/// are not identified. Contradictory settings raise an error instead of
-/// being ignored.
+/// are not identified. With `strip_markup` (the default), URLs, e-mail
+/// addresses, mentions, hashtags, HTML and code are removed before
+/// detection (see `strip_markup`), and `min_length` applies to what is
+/// left. Contradictory settings raise an error instead of being ignored.
 pub fn Options::new(
   allow? : Array[Lang],
   deny? : Array[Lang] = [],
   min_length? : Int = 10,
+  strip_markup? : Bool = true,
 ) -> Options raise OptionsError {
   if min_length < 0 {
     raise NegativeMinLength(min_length)
@@ -45,11 +49,16 @@ pub fn Options::new(
   if all_langs.iter().all(lang => deny.contains(lang)) {
     raise DenyAll
   }
-  { allow, deny: deny.copy(), min_length, }
+  { allow, deny: deny.copy(), min_length, strip_markup, }
 }
 
 ///|
-let default_options : Options = { allow: [], deny: [], min_length: 10, }
+let default_options : Options = {
+  allow: [],
+  deny: [],
+  min_length: 10,
+  strip_markup: true,
+}
 
 ///|
 /// The languages allowed by these options, empty when all are.
@@ -67,6 +76,23 @@ pub fn Options::deny(self : Options) -> Array[Lang] {
 /// Minimum text length, in UTF-16 code units, for a detection.
 pub fn Options::min_length(self : Options) -> Int {
   self.min_length
+}
+
+///|
+/// Whether markup is removed before detection.
+pub fn Options::strip_markup(self : Options) -> Bool {
+  self.strip_markup
+}
+
+///|
+/// The text that is identified: `text` without markup when the options
+/// say so.
+fn prepared(text : String, options : Options) -> String {
+  if options.strip_markup {
+    strip_markup(text).text
+  } else {
+    text
+  }
 }
 
 ///|
@@ -102,6 +128,7 @@ pub fn rank(
   text : String,
   options? : Options = default_options,
 ) -> Array[(Lang, Double)] {
+  let text = prepared(text, options)
   match franc_all(text, options.allow, options.deny, options.min_length) {
     Some((_, ranked)) => ranked
     None => []
@@ -116,6 +143,7 @@ pub fn detect(
   text : String,
   options? : Options = default_options,
 ) -> Detection? {
+  let text = prepared(text, options)
   guard franc_all(text, options.allow, options.deny, options.min_length)
     is Some((script, ranked)) else {
     return None

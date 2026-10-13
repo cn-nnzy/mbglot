@@ -38,6 +38,9 @@ Milestone 1 is complete. Implemented:
   languages into consecutive segments with their own detection. This is
   mbglot's own procedure on top of franc's scores (franc has no
   segmentation); see below.
+- `strip_markup(text)`: removes URLs, e-mail addresses, mentions,
+  hashtags, HTML and code before detection, with a map back to the
+  original offsets (see [Markup](#markup)). On by default.
 - An evaluation package, `cn-nnzy/mbglot/eval`: accuracy, confusion
   counts and per-language precision, recall and F1 for any predictor over
   labelled samples (see [Measuring accuracy](#measuring-accuracy)), and a
@@ -201,11 +204,55 @@ test {
 }
 ```
 
-`Options::new(allow?, deny?, min_length? = 10)` raises `OptionsError`
+`Options::new(allow?, deny?, min_length? = 10, strip_markup? = true)`
+raises `OptionsError`
 instead of silently ignoring a setting that cannot work: an empty `allow`
 list, a language both allowed and denied, a `deny` list naming every
 language, or a negative `min_length`. Allowing only languages of another
 script than the text's makes `detect` return `None`.
+
+### Markup
+
+Messages from chat, e-mail and issue trackers carry addresses, handles
+and code whose words are not in the message's language. By default
+`detect`, `rank` and `segments` first remove URLs, e-mail addresses,
+`@mentions`, `#hashtags` (with at least one letter, in any script), HTML
+tags, comments and character references, Markdown code spans and fences,
+and the content of HTML `code`, `pre`, `script` and `style` elements.
+`min_length` and the `reliable` flag then apply to the text that is left,
+so a message that is only a link is not identified.
+
+```mbt check
+///|
+test {
+  let text = "Il mio ordine non è arrivato " +
+    "https://www.example.com/the/order/status/page/for/customers/with/questions"
+  assert_eq(@mbglot.detect(text).map(d => d.lang), Some(@mbglot.Ita))
+  let raw = @mbglot.Options::new(strip_markup=false)
+  assert_eq(
+    @mbglot.detect(text, options=raw).map(d => d.lang),
+    Some(@mbglot.Eng),
+  )
+}
+```
+
+`strip_markup(text)` does the removal on its own. Each removed stretch
+becomes one space, `removed()` lists what was removed and where, and
+`original_offset` maps an offset in the stripped text back to the input.
+`segments` uses that map, so its offsets and texts are slices of the
+original input, markup included: a removed stretch stays in the segment
+before it. `strip_markup=false` turns the step off; franc does not have it.
+
+```mbt check
+///|
+test {
+  let s = @mbglot.strip_markup("Merci @dana <b>!</b>")
+  assert_eq(s.text(), "Merci    ! ")
+  assert_eq(s.removed().map(r => r.kind), [Mention, HtmlTag, HtmlTag])
+  assert_eq(s.original_offset(6), 6) // the space for @dana
+  assert_eq(s.original_offset(9), 15) // the "!"
+}
+```
 
 ## Mixed-language text
 

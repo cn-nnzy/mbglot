@@ -121,6 +121,27 @@ pub fn segments(
   if text.length() == 0 {
     return []
   }
+  if !options.strip_markup {
+    return segments_of(text, options)
+  }
+  // Segment the text without markup, then map the boundaries back. A
+  // removed stretch stays in the segment of the text before it.
+  let stripped = strip_markup(text)
+  let raw = segments_of(stripped.text, { ..options, strip_markup: false, })
+  raw.mapi((i, s) => {
+    let start = stripped.original_offset(s.start)
+    let end = if i == raw.length() - 1 {
+      text.length()
+    } else {
+      stripped.original_offset(s.end)
+    }
+    { start, end, text: slice(text, start, end), detection: s.detection, }
+  })
+}
+
+///|
+/// `segments` on text that is identified as it is.
+fn segments_of(text : String, options : Options) -> Array[Segment] {
   let points = split_points(text)
   let pieces = []
   for i in 0..<(points.length() - 1) {

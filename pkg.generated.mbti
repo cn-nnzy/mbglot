@@ -18,6 +18,8 @@ pub let reliable_min_margin : Double
 
 pub fn segments(String, options? : Options) -> Array[Segment]
 
+pub fn strip_markup(String) -> Stripped
+
 // Errors
 pub(all) suberror OptionsError {
   EmptyAllow
@@ -118,15 +120,33 @@ pub fn Lang::from_code(String) -> Self?
 pub fn Lang::name(Self) -> String
 pub impl Show for Lang
 
+pub(all) enum Markup {
+  Url
+  Email
+  Mention
+  Hashtag
+  HtmlTag
+  HtmlEntity
+  Code
+} derive(Eq, @debug.Debug)
+
 pub struct Options {
   allow : Array[Lang]
   deny : Array[Lang]
   min_length : Int
+  strip_markup : Bool
 }
 pub fn Options::allow(Self) -> Array[Lang]
 pub fn Options::deny(Self) -> Array[Lang]
 pub fn Options::min_length(Self) -> Int
-pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int) -> Self raise OptionsError
+pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int, strip_markup? : Bool) -> Self raise OptionsError
+pub fn Options::strip_markup(Self) -> Bool
+
+pub(all) struct Removed {
+  start : Int
+  end : Int
+  kind : Markup
+} derive(Eq, @debug.Debug)
 
 pub(all) enum Script {
   Han
@@ -160,6 +180,15 @@ pub(all) struct Segment {
   text : String
   detection : Detection?
 } derive(Eq, @debug.Debug)
+
+pub struct Stripped {
+  text : String
+  removed : Array[Removed]
+  // private fields
+}
+pub fn Stripped::original_offset(Self, Int) -> Int
+pub fn Stripped::removed(Self) -> Array[Removed]
+pub fn Stripped::text(Self) -> String
 
 // Type aliases
 
