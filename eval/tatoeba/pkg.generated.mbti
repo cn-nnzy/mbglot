@@ -1,0 +1,28 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "cn-nnzy/mbglot/eval/tatoeba"
+
+import {
+  "cn-nnzy/mbglot",
+  "cn-nnzy/mbglot/eval",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn languages() -> Array[@mbglot.Lang]
+
+pub fn samples(length? : Length) -> Array[@eval.Sample]
+
+// Errors
+
+// Types and methods
+pub(all) enum Length {
+  Short
+  Medium
+  Long
+} derive(Eq, Hash, @debug.Debug)
+pub fn Length::all() -> Array[Self]
+pub fn Length::name(Self) -> String
+
+// Type aliases
+
+// Traits

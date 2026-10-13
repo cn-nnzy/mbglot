@@ -1,6 +1,7 @@
 import {
   "cn-nnzy/mbglot",
   "cn-nnzy/mbglot/eval",
+  "cn-nnzy/mbglot/eval/tatoeba",
 }
 
 pkgtype(kind: "executable")

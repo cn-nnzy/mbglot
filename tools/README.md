@@ -69,3 +69,23 @@ generated; `*_test.mbt` and `*_wbtest.mbt` as tests; the `cmd`,
 `examples`, `demo` and `eval/run` packages as apps; everything else as
 core library code. Non-blank lines and code lines (non-blank lines that
 are not only a comment) are counted separately.
+
+## gen_tatoeba.py
+
+Writes `eval/tatoeba/corpus.mbt`, the benchmark corpus: Tatoeba sentences
+(CC BY 2.0 FR, see NOTICE) for mbglot's languages in three lengths. Needs
+Python 3 and network access; uses only the standard library. The
+per-language exports are downloaded into the given cache directory, which
+is not committed.
+
+```
+python tools/gen_tatoeba.py "$TMP/tatoeba" eval/tatoeba/corpus.mbt
+moon fmt
+moon run eval/run > eval/results.md
+```
+
+Sentences are picked in the order of SHA-256 of `<code>:<id>`, so the same
+export gives the same corpus. Tatoeba updates its exports weekly, so a
+later export can change the selection where sentences were removed; the
+file header records the export date. The script's docstring lists the
+length classes and the mapping from mbglot's language codes to Tatoeba's.

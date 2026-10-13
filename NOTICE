@@ -112,3 +112,16 @@ Universal Declaration of Human Rights
   Declaration of Human Rights collected by the UDHR in Unicode project
   (https://unicode.org/udhr/). Any trigram data in this repository is
   derived from franc-min 6.2.0 and therefore from that corpus.
+
+Tatoeba
+  eval/tatoeba/corpus.mbt holds sentences from Tatoeba
+  (https://tatoeba.org), selected by tools/gen_tatoeba.py from the
+  per-language exports of 10 October 2026
+  (https://downloads.tatoeba.org/exports/per_language/). They are licensed
+  under the Creative Commons Attribution 2.0 France license (CC BY 2.0 FR,
+  https://creativecommons.org/licenses/by/2.0/fr/). The authors are the
+  Tatoeba contributors; each sample in the file lists the ids of its
+  sentences, and the author of sentence N is shown at
+  https://tatoeba.org/sentences/show/N. Sentences were only joined with
+  spaces and had runs of whitespace collapsed; they are not otherwise
+  modified.

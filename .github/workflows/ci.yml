@@ -72,6 +72,12 @@ jobs:
       - name: Test native
         run: moon test --target native
 
+      - name: Benchmark results are up to date
+        shell: bash
+        run: |
+          moon run eval/run --target wasm-gc > "$RUNNER_TEMP/results.md"
+          diff --strip-trailing-cr "$RUNNER_TEMP/results.md" eval/results.md
+
   franc-data:
     name: franc-min data
     runs-on: ubuntu-24.04
