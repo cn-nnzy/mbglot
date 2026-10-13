@@ -53,3 +53,19 @@ moon fmt
 The Unicode version is pinned in the script (`UNICODE_VERSION`). The script
 stops if that version adds an unconditional full lowercase mapping other
 than U+0130, which `trigram.mbt` handles by hand.
+
+## loc.py
+
+Counts lines of MoonBit by kind and prints a table. Needs Python 3; uses
+only the standard library. `-v` lists every file.
+
+```
+python tools/loc.py
+```
+
+Files whose first line says `Do not edit` (written by the generators
+above) and `script_ranges.mbt` (transcribed from franc-min) count as
+generated; `*_test.mbt` and `*_wbtest.mbt` as tests; the `cmd`,
+`examples`, `demo` and `eval/run` packages as apps; everything else as
+core library code. Non-blank lines and code lines (non-blank lines that
+are not only a comment) are counted separately.

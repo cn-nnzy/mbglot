@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "cn-nnzy/mbglot/eval"
+
+import {
+  "cn-nnzy/mbglot",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn evaluate(Array[Sample], (String) -> @mbglot.Lang?) -> Report
+
+pub fn percent(Double) -> String
+
+// Errors
+
+// Types and methods
+pub(all) struct LangStats {
+  lang : @mbglot.Lang
+  support : Int
+  predicted : Int
+  correct : Int
+  precision : Double?
+  recall : Double?
+  f1 : Double?
+} derive(Eq, @debug.Debug)
+
+pub struct Report {
+  // private fields
+}
+pub fn Report::accuracy(Self) -> Double
+pub fn Report::confusion_markdown(Self, Array[@mbglot.Lang]) -> String
+pub fn Report::correct(Self) -> Int
+pub fn Report::count(Self, @mbglot.Lang, @mbglot.Lang?) -> Int
+pub fn Report::languages(Self) -> Array[@mbglot.Lang]
+pub fn Report::macro_f1(Self) -> Double
+pub fn Report::per_language(Self) -> Array[LangStats]
+pub fn Report::to_markdown(Self, confusions? : Int) -> String
+pub fn Report::top_confusions(Self, Int) -> Array[(@mbglot.Lang, @mbglot.Lang?, Int)]
+pub fn Report::total(Self) -> Int
+pub fn Report::unidentified(Self) -> Int
+
+pub(all) struct Sample {
+  lang : @mbglot.Lang
+  text : String
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

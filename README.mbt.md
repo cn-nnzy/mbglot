@@ -38,6 +38,9 @@ Milestone 1 is complete. Implemented:
   languages into consecutive segments with their own detection. This is
   mbglot's own procedure on top of franc's scores (franc has no
   segmentation); see below.
+- An evaluation package, `cn-nnzy/mbglot/eval`: accuracy, confusion
+  counts and per-language precision, recall and F1 for any predictor over
+  labelled samples (see [Measuring accuracy](#measuring-accuracy)).
 - A command-line tool in `cmd/main`, a ticket-routing example in
   `examples/tickets` and a [browser demo](#browser-demo) in `demo`.
 
@@ -254,6 +257,45 @@ is `Han` (ties go to `Han`), while Japanese text that mixes kana and kanji
 is `Kana`. Combining marks outside a script's own block (such as U+0301)
 count for no script.
 
+## Measuring accuracy
+
+The `cn-nnzy/mbglot/eval` package scores any language predictor against
+labelled samples. `evaluate(samples, predict)` returns a `Report` with
+accuracy, the confusion counts, precision, recall and F1 per language,
+macro F1, the most frequent mistakes, and Markdown tables of these
+(`to_markdown`, `confusion_markdown`). A predictor returns `None` when it
+declines to answer; that counts against recall and accuracy but not
+precision, which is how a router that sends uncertain messages to manual
+triage behaves.
+
+```mbt check
+///|
+test {
+  let samples : Array[@eval.Sample] = [
+    {
+      lang: Eng,
+      text: "Thanks for the quick reply, the replacement arrived today.",
+    },
+    {
+      lang: Deu,
+      text: "Vielen Dank, die Ersatzlieferung ist heute angekommen.",
+    },
+  ]
+  let report = @eval.evaluate(samples, text => {
+    match @mbglot.detect(text) {
+      Some(d) => Some(d.lang)
+      None => None
+    }
+  })
+  assert_eq(report.total(), 2)
+  assert_eq(report.count(Deu, Some(Deu)), 1)
+}
+```
+
+`moon run eval/run` evaluates mbglot on a small labelled set (the ticket
+example and the demo samples), once counting every detection and once
+counting only reliable ones.
+
 ## Development
 
 ```
@@ -274,6 +316,9 @@ are `mbt check` blocks of `README.mbt.md`, so `moon test` compiles and runs
 them on every target (`README.md` is a symbolic link to it). The
 generators for committed data files are described in
 [tools/README.md](tools/README.md).
+
+`python tools/loc.py` counts lines of MoonBit by kind: library code,
+programs and demos, tests, and generated or transcribed data.
 
 ### franc parity
 

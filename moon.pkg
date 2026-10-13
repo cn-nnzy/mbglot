@@ -1,1 +1,5 @@
 warnings = "-implicit_impl_as_method"
+
+import {
+  "cn-nnzy/mbglot/eval",
+} for "test"
