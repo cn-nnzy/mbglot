@@ -5,6 +5,9 @@ ported from [franc-min](https://github.com/wooorm/franc/tree/main/packages/franc
 6.2.0. No network access, no native dependencies; the same results on the
 wasm, wasm-gc, js and native backends.
 
+[Try it in your browser](https://cn-nnzy.github.io/mbglot/): the
+[demo page](#browser-demo) runs mbglot compiled to JavaScript.
+
 ## Status
 
 Milestone 1 is complete. Implemented:
@@ -119,7 +122,11 @@ detections: both are flagged as not reliable and go to triage.
 `demo/` is a web page that runs mbglot compiled to JavaScript: type or
 paste text and it shows the detected language, the confidence, the five
 best candidates and the text coloured by language segment, updated on
-every keystroke. Nothing is sent to a server. Build and serve it with:
+every keystroke. Nothing is sent to a server. It is published at
+<https://cn-nnzy.github.io/mbglot/> by the `Demo` workflow
+(`.github/workflows/pages.yml`) on every push to `main`, after a check
+that the built page identifies a German sentence. To build and serve it
+locally:
 
 ```
 node tools/build_demo.mjs _site

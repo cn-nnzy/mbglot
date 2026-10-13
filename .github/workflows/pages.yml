@@ -1,0 +1,63 @@
+name: Demo
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  # Same toolchain as ci.yml.
+  MOONBIT_INSTALL_VERSION: "0.10.14+7d59c7ec9"
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 22
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Build the demo
+        run: node tools/build_demo.mjs _site
+
+      - name: Check the page loads mbglot
+        run: |
+          node --input-type=module -e '
+            import { pathToFileURL } from "node:url";
+            const { analyze } = await import(pathToFileURL("_site/mbglot.js").href);
+            const result = JSON.parse(analyze("Guten Tag, meine Bestellung ist leider noch nicht angekommen."));
+            if (result.detection?.lang !== "deu") throw new Error(JSON.stringify(result));
+            console.log("ok:", result.detection.name);
+          '
+
+      - uses: actions/configure-pages@v6.0.0
+
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5.0.1
