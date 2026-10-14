@@ -18,8 +18,11 @@ test "routing" {
 }
 
 ///|
-test "wrong guesses are flagged as not reliable" {
-  assert_eq(describe(tickets[4].1), "spa Spanish, not reliable")
-  assert_eq(describe(tickets[5].1), "bul Bulgarian, not reliable")
+test "close calls are flagged as not reliable" {
+  // franc's statistics alone pick Spanish and Bulgarian here; the letters
+  // and words of the messages settle Portuguese and Russian, but the
+  // margin stays below the reliability threshold.
+  assert_eq(describe(tickets[4].1), "por Portuguese, not reliable")
+  assert_eq(describe(tickets[5].1), "rus Russian, not reliable")
   assert_eq(describe(tickets[10].1), "no language")
 }

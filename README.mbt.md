@@ -13,10 +13,12 @@ wasm, wasm-gc, js and native backends.
 Milestone 1 is complete. Implemented:
 
 - `detect(text, options?) -> Detection?` and
-  `rank(text, options?) -> Array[(Lang, Double)]`, giving the same
-  rankings and scores as franc-min 6.2.0 (checked by a golden test, see
-  below), with `Options` for allow / deny lists and a minimum length, and a
-  `reliable` flag.
+  `rank(text, options?) -> Array[(Lang, Double)]`, with `Options` for
+  allow / deny lists and a minimum length, and a `reliable` flag. In
+  `Mode::Franc` they give the same rankings and scores as franc-min 6.2.0
+  (checked by a golden test, see below); the default `Mode::Enhanced`
+  removes markup first and settles closely related languages by their
+  letters and common words (see [Related languages](#related-languages)).
 - `Lang`: the 76 languages of franc-min 6.2.0, with `code()` (ISO 639-3),
   `name()` (English), `Lang::from_code` and `Lang::all()`.
 - `Script`: the 20 writing systems franc-min distinguishes, with `name()`
@@ -92,13 +94,15 @@ language segment (see [Mixed-language text](#mixed-language-text)):
 
 ```
 $ moon run cmd/main -- --segments "Здравствуйте, заказ не пришёл. Hi, could you check the tracking number for order 4471 please? 谢谢，麻烦尽快处理一下这个问题。"
-[0, 31)      bul  Bulgarian                not reliable Здравствуйте, заказ не пришёл.
+[0, 31)      rus  Russian                  not reliable Здравствуйте, заказ не пришёл.
 [31, 94)     eng  English                  reliable     Hi, could you check the tracking numb...
 [94, 110)    cmn  Mandarin Chinese         not reliable 谢谢，麻烦尽快处理一下这个问题。
 ```
 
-The first sentence is Russian; franc-min's statistics prefer Bulgarian for
-it, and the line says that the detection is not reliable.
+franc-min's statistics alone prefer Bulgarian for the first sentence; the
+pass for [related languages](#related-languages) settles Russian from its
+letters and words, and the line says that the margin is too small for a
+reliable detection.
 
 ### Example: routing support tickets
 
@@ -111,8 +115,8 @@ $ moon run examples/tickets
 #1002  triage  (spa Spanish, not reliable)
 #1003  support-fr  (fra French)
 #1004  support-de  (deu German)
-#1005  triage  (spa Spanish, not reliable)
-#1006  triage  (bul Bulgarian, not reliable)
+#1005  triage  (por Portuguese, not reliable)
+#1006  triage  (rus Russian, not reliable)
 #1007  support-zh  (cmn Mandarin Chinese)
 #1008  support-ja  (jpn Japanese)
 #1009  support-ar  (arb Standard Arabic)
@@ -121,9 +125,11 @@ $ moon run examples/tickets
 #1012  triage  (por Portuguese, not reliable)
 ```
 
-Tickets 1005 (Portuguese) and 1006 (Russian) are misidentified by
-franc-min's statistics, which is why the example only trusts reliable
-detections: both are flagged as not reliable and go to triage.
+franc-min's statistics alone take ticket 1005 for Spanish and 1006 for
+Bulgarian. The pass for [related languages](#related-languages) gets both
+right, but the margins stay small, so they are flagged as not reliable
+and go to triage, which is why the example only trusts reliable
+detections.
 
 ### Browser demo
 
@@ -178,7 +184,9 @@ test {
 letters of a supported script (whitespace, digits, punctuation, emoji), or
 is shorter than `min_length` (default 10 UTF-16 code units, as in franc).
 
-`rank` returns every candidate of the dominant script with franc's score:
+`rank` returns every candidate of the dominant script with franc's score
+(in the default mode, after the pass for
+[related languages](#related-languages)):
 the best language scores 1.0 and the others are scaled by trigram
 distance relative to it. Equal scores keep franc's language order. For a
 script used by one language only (Han, Hangul, Thai, ...) the result has
@@ -204,12 +212,55 @@ test {
 }
 ```
 
-`Options::new(allow?, deny?, min_length? = 10, strip_markup? = true)`
+`Options::new(allow?, deny?, min_length? = 10, mode? = Enhanced, strip_markup?)`
 raises `OptionsError`
 instead of silently ignoring a setting that cannot work: an empty `allow`
 list, a language both allowed and denied, a `deny` list naming every
 language, or a negative `min_length`. Allowing only languages of another
 script than the text's makes `detect` return `None`.
+
+### Related languages
+
+franc ranks languages by trigram statistics, which often cannot tell
+closely related languages apart in short texts. In the default
+`Mode::Enhanced`, when franc's best language belongs to one of these
+groups, a second pass counts letters and common words that only some
+members use:
+
+- Spanish and Portuguese (`ñ`, `¿` against `ã`, `õ`, `ç`, `lh`, `nh`;
+  articles and pronouns);
+- Russian, Ukrainian, Belarusian, Bulgarian, Serbian and Kazakh in
+  Cyrillic (`ы`, `э`, `ё`; `ї`, `є`, `ґ`; `ў`; `ђ`, `ј`, `љ`, `њ`, `ћ`, `џ`;
+  `ә`, `қ`, `ң`, `ө`, `ұ`, `ү`; and common words such as Bulgarian `е`,
+  `са`, `ще`, `това`);
+- Croatian, Serbian and Bosnian in Latin script (words such as `tko`,
+  `ko`, `što`, `šta`, ekavian and ijekavian forms);
+- Indonesian and Malay, Rundi and Kinyarwanda, Tagalog and Cebuano
+  (common words, and `cy`, `jy` against `vy`);
+- Standard Arabic, Persian, Urdu, Saraiki, Sorani Kurdish and Pashto in
+  Arabic script (letters such as `ة`, `ڕ`, `ێ`, `ە`, `ټ`, `ښ`, `ٹ`, `ے`,
+  `ٻ`, `ڄ`, and common words).
+
+The member with strictly the most evidence moves to the top and swaps
+scores with franc's choice, so the scores and the confidence margin stay
+franc's; without clear evidence the ranking is left alone. franc-min only
+has a profile for Kurdish in Latin script, so Sorani in Arabic script is
+recognised by this pass alone. Norwegian and Danish are not among
+franc-min's languages. The [benchmark](#benchmark) shows the effect;
+`Mode::Franc` turns the pass off.
+
+```mbt check
+///|
+test {
+  let text = "Здравствуйте! После оплаты подписка так и не активировалась, а деньги списались."
+  assert_eq(@mbglot.detect(text).map(d => d.lang), Some(@mbglot.Rus))
+  let franc = @mbglot.Options::new(mode=Franc)
+  assert_eq(
+    @mbglot.detect(text, options=franc).map(d => d.lang),
+    Some(@mbglot.Bul),
+  )
+}
+```
 
 ### Markup
 
@@ -241,7 +292,8 @@ becomes one space, `removed()` lists what was removed and where, and
 `original_offset` maps an offset in the stripped text back to the input.
 `segments` uses that map, so its offsets and texts are slices of the
 original input, markup included: a removed stretch stays in the segment
-before it. `strip_markup=false` turns the step off; franc does not have it.
+before it. `strip_markup=false` turns the step off. It is on by default in
+`Mode::Enhanced` and off in `Mode::Franc`, which reproduces franc.
 
 ```mbt check
 ///|
@@ -284,9 +336,9 @@ Segments are contiguous and cover the whole input; `start` and `end` are
 UTF-16 code unit offsets and `text` is that slice. An empty text gives no
 segments, and a text with nothing identifiable gives one segment whose
 `detection` is `None`. Abbreviations such as `e.g. ` cause an extra cut,
-which is usually undone because the short piece is joined back. Sentences
-inherit franc's accuracy, so short sentences in closely related languages
-can still be misidentified; check `reliable` on each segment.
+which is usually undone because the short piece is joined back. Short
+sentences in closely related languages can still be misidentified; check
+`reliable` on each segment.
 
 ## Script detection
 
@@ -346,24 +398,29 @@ test {
 `moon run eval/run` evaluates mbglot on 5,541 sentences from
 [Tatoeba](https://tatoeba.org) (CC BY 2.0 FR) in 72 of the 76 languages,
 in three lengths: one sentence of 10 to 30 UTF-16 code units, one of 31 to
-80, and several sentences joined to at least 150. Current results with
-franc-min's statistics:
+80, and several sentences joined to at least 150, with franc's ranking
+alone (`Mode::Franc`) and with the default `Mode::Enhanced`:
 
-| Length | Samples | Accuracy | Macro F1 | Reliable precision | Coverage |
-|---|---:|---:|---:|---:|---:|
-| short | 2059 | 65.6% | 64.6% | 88.3% | 2.9% |
-| medium | 1829 | 80.4% | 79.0% | 96.6% | 63.4% |
-| long | 1653 | 90.0% | 90.9% | 99.6% | 59.3% |
-| all | 5541 | 77.8% | 75.1% | 97.7% | 39.7% |
+| Length | Mode | Samples | Accuracy | Macro F1 | Reliable precision | Coverage |
+|---|---|---:|---:|---:|---:|---:|
+| short | franc | 2059 | 65.6% | 64.6% | 88.3% | 2.9% |
+| short | enhanced | 2059 | 68.3% | 67.7% | 91.7% | 2.9% |
+| medium | franc | 1829 | 80.4% | 79.0% | 96.6% | 63.4% |
+| medium | enhanced | 1829 | 84.3% | 83.2% | 97.5% | 63.4% |
+| long | franc | 1653 | 90.0% | 90.9% | 99.6% | 59.3% |
+| long | enhanced | 1653 | 93.5% | 94.6% | 99.9% | 59.3% |
+| all | franc | 5541 | 77.8% | 75.1% | 97.7% | 39.7% |
+| all | enhanced | 5541 | 81.1% | 78.5% | 98.4% | 39.7% |
 
 Accuracy counts every detection. Reliable precision is the share of
 detections flagged `reliable` that are right, and coverage the share of
 samples that get a reliable detection: a router that trusts only reliable
-detections is right 97.7% of the time and sends 60.3% of messages to
+detections is right 98.4% of the time and sends 60.3% of messages to
 manual triage. [eval/results.md](eval/results.md) has precision, recall
-and F1 for every language and the most frequent confusions, led by
-closely related pairs (Bosnian, Croatian and Serbian; Indonesian and
-Malay; Rundi and Kinyarwanda; Tagalog and Cebuano). CI reruns the
+and F1 for every language and the most frequent confusions, which are
+still led by closely related languages (Bosnian, Croatian and Serbian;
+Indonesian and Malay; Rundi and Kinyarwanda; Hindi, Magahi and
+Bhojpuri). CI reruns the
 benchmark and fails if `eval/results.md` is out of date.
 
 Tatoeba has no sentences in Chimborazo Highland Quichua (qug), Hmong

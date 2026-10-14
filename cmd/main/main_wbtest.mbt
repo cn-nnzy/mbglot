@@ -50,7 +50,7 @@ test "segments report" {
     "Hi, could you check the tracking number for order 4471 please? " +
     "谢谢，麻烦尽快处理一下这个问题。"
   assert_eq(segments_report(text), [
-    "[0, 31)      bul  Bulgarian                not reliable Здравствуйте, заказ не пришёл.",
+    "[0, 31)      rus  Russian                  not reliable Здравствуйте, заказ не пришёл.",
     "[31, 94)     eng  English                  reliable     Hi, could you check the tracking numb...",
     "[94, 110)    cmn  Mandarin Chinese         not reliable 谢谢，麻烦尽快处理一下这个问题。",
   ])

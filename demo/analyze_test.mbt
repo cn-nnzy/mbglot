@@ -7,7 +7,7 @@ test "analyze reports detection, top candidates and segments" {
       "detection": { "lang": "eng", "reliable": true, .. },
       "top": [{ "lang": "eng", "score": 1, .. }, _, _, _, _],
       "segments": [
-        { "start": 0, "end": 31, "detection": { "lang": "bul", .. }, .. },
+        { "start": 0, "end": 31, "detection": { "lang": "rus", .. }, .. },
         { "start": 31, "end": 93, "detection": { "lang": "eng", .. }, .. },
       ],
       ..

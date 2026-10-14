@@ -18,20 +18,25 @@ pub struct Options {
   deny : Array[Lang]
   min_length : Int
   strip_markup : Bool
+  mode : Mode
 }
 
 ///|
 /// Restricts detection to `allow` (when given) and never returns a
 /// language in `deny`. Texts shorter than `min_length` UTF-16 code units
-/// are not identified. With `strip_markup` (the default), URLs, e-mail
-/// addresses, mentions, hashtags, HTML and code are removed before
+/// are not identified. `mode` chooses between franc's ranking alone
+/// (`Franc`) and franc's ranking with a second pass for closely related
+/// languages (`Enhanced`, the default). With `strip_markup`, which
+/// defaults to true in `Enhanced` mode and false in `Franc` mode, URLs,
+/// e-mail addresses, mentions, hashtags, HTML and code are removed before
 /// detection (see `strip_markup`), and `min_length` applies to what is
 /// left. Contradictory settings raise an error instead of being ignored.
 pub fn Options::new(
   allow? : Array[Lang],
   deny? : Array[Lang] = [],
   min_length? : Int = 10,
-  strip_markup? : Bool = true,
+  mode? : Mode = Enhanced,
+  strip_markup? : Bool,
 ) -> Options raise OptionsError {
   if min_length < 0 {
     raise NegativeMinLength(min_length)
@@ -49,7 +54,8 @@ pub fn Options::new(
   if all_langs.iter().all(lang => deny.contains(lang)) {
     raise DenyAll
   }
-  { allow, deny: deny.copy(), min_length, strip_markup, }
+  let strip_markup = strip_markup.unwrap_or(mode == Enhanced)
+  { allow, deny: deny.copy(), min_length, strip_markup, mode, }
 }
 
 ///|
@@ -58,6 +64,7 @@ let default_options : Options = {
   deny: [],
   min_length: 10,
   strip_markup: true,
+  mode: Enhanced,
 }
 
 ///|
@@ -82,6 +89,12 @@ pub fn Options::min_length(self : Options) -> Int {
 /// Whether markup is removed before detection.
 pub fn Options::strip_markup(self : Options) -> Bool {
   self.strip_markup
+}
+
+///|
+/// How languages are decided.
+pub fn Options::mode(self : Options) -> Mode {
+  self.mode
 }
 
 ///|
@@ -119,17 +132,43 @@ pub let reliable_min_margin : Double = 0.15
 pub let reliable_min_length : Int = 30
 
 ///|
-/// Candidate languages with scores between 0 and 1, best first, as
-/// franc-min 6.2.0 ranks them: the best language scores 1.0 and the others
-/// are scaled by their trigram distance relative to it. Ties keep a fixed
-/// language order. Returns an empty array when the text is shorter than
-/// `min_length` or contains no letters of a supported script.
+/// franc's result for `text` under `options`, followed in `Enhanced` mode
+/// by the pass for closely related languages.
+fn ranking(
+  text : String,
+  options : Options,
+) -> (Script, Array[(Lang, Double)])? {
+  guard franc_all(text, options.allow, options.deny, options.min_length)
+    is Some((script, ranked)) else {
+    return None
+  }
+  match options.mode {
+    Franc => Some((script, ranked))
+    Enhanced =>
+      Some(
+        (script, settle_confusables(text, ranked, options.allow, options.deny)),
+      )
+  }
+}
+
+///|
+/// Candidate languages with scores between 0 and 1, best first. The
+/// scores are franc-min 6.2.0's: the best language scores 1.0 and the
+/// others are scaled by their trigram distance relative to it, ties in a
+/// fixed language order. In `Franc` mode the ranking is franc's. In
+/// `Enhanced` mode, when the letters and common words of the text show
+/// that a closely related language is meant (Spanish or Portuguese;
+/// Russian, Ukrainian, Belarusian, Bulgarian, Serbian or Kazakh; Croatian,
+/// Serbian or Bosnian; Indonesian or Malay; Rundi or Kinyarwanda; Tagalog
+/// or Cebuano; or the languages written in Arabic script), that language
+/// moves to the top and swaps scores with franc's choice. Returns an empty
+/// array when the text is shorter than `min_length` or contains no letters
+/// of a supported script.
 pub fn rank(
   text : String,
   options? : Options = default_options,
 ) -> Array[(Lang, Double)] {
-  let text = prepared(text, options)
-  match franc_all(text, options.allow, options.deny, options.min_length) {
+  match ranking(prepared(text, options), options) {
     Some((_, ranked)) => ranked
     None => []
   }
@@ -144,10 +183,7 @@ pub fn detect(
   options? : Options = default_options,
 ) -> Detection? {
   let text = prepared(text, options)
-  guard franc_all(text, options.allow, options.deny, options.min_length)
-    is Some((script, ranked)) else {
-    return None
-  }
+  guard ranking(text, options) is Some((script, ranked)) else { return None }
   let confidence = if ranked.length() > 1 {
     ranked[0].1 - ranked[1].1
   } else {

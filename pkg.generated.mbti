@@ -130,16 +130,23 @@ pub(all) enum Markup {
   Code
 } derive(Eq, @debug.Debug)
 
+pub(all) enum Mode {
+  Franc
+  Enhanced
+} derive(Eq, @debug.Debug)
+
 pub struct Options {
   allow : Array[Lang]
   deny : Array[Lang]
   min_length : Int
   strip_markup : Bool
+  mode : Mode
 }
 pub fn Options::allow(Self) -> Array[Lang]
 pub fn Options::deny(Self) -> Array[Lang]
 pub fn Options::min_length(Self) -> Int
-pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int, strip_markup? : Bool) -> Self raise OptionsError
+pub fn Options::mode(Self) -> Mode
+pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int, mode? : Mode, strip_markup? : Bool) -> Self raise OptionsError
 pub fn Options::strip_markup(Self) -> Bool
 
 pub(all) struct Removed {
