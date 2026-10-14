@@ -18,6 +18,8 @@ pub let reliable_min_margin : Double
 
 pub fn segments(String, options? : Options) -> Array[Segment]
 
+pub let short_text_length : Int
+
 pub fn strip_markup(String) -> Stripped
 
 // Errors

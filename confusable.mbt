@@ -447,29 +447,42 @@ fn settle_confusables(
     if !allowed(best, allow, deny) {
       return ranked
     }
-    // franc's choice takes the score `best` had and goes after every
-    // language that scores at least as much. A language franc has no
-    // profile for in this script (Sorani, which franc-min only knows in
-    // Latin script) is not in the ranking; franc's choice then takes the
-    // runner-up's score.
-    let i = ranked.search_by(r => r.0 == best).unwrap_or(-1)
-    let demoted = (top, if i >= 0 { ranked[i].1 } else { ranked[1].1 })
-    let out = [(best, ranked[0].1)]
-    let mut placed = false
-    for k in 1..<ranked.length() {
-      if k == i {
-        continue
-      }
-      if !placed && ranked[k].1 < demoted.1 {
-        out.push(demoted)
-        placed = true
-      }
-      out.push(ranked[k])
-    }
-    if !placed {
-      out.push(demoted)
-    }
-    return out
+    return promote(ranked, best)
   }
   ranked
+}
+
+///|
+/// `ranked` with `best` first. franc's choice takes the score `best` had
+/// and goes after every language that scores at least as much, so the
+/// scores stay franc's and only their order changes. A language franc has
+/// no profile for in this script (Sorani, which franc-min only knows in
+/// Latin script) is not in the ranking; franc's choice then takes the
+/// runner-up's score.
+fn promote(
+  ranked : Array[(Lang, Double)],
+  best : Lang,
+) -> Array[(Lang, Double)] {
+  let top = ranked[0].0
+  if best == top {
+    return ranked
+  }
+  let i = ranked.search_by(r => r.0 == best).unwrap_or(-1)
+  let demoted = (top, if i >= 0 { ranked[i].1 } else { ranked[1].1 })
+  let out = [(best, ranked[0].1)]
+  let mut placed = false
+  for k in 1..<ranked.length() {
+    if k == i {
+      continue
+    }
+    if !placed && ranked[k].1 < demoted.1 {
+      out.push(demoted)
+      placed = true
+    }
+    out.push(ranked[k])
+  }
+  if !placed {
+    out.push(demoted)
+  }
+  out
 }
