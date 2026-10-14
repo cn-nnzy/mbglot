@@ -1,7 +1,18 @@
 ///|
-/// `detection` as JSON.
-fn detection_json(detection : @mbglot.Detection) -> Json {
+/// `detection` of `text` as JSON. Chinese also gets the variant of its
+/// characters ("simplified", "traditional" or null).
+fn detection_json(detection : @mbglot.Detection, text : String) -> Json {
+  let variant : Json = match detection.lang {
+    Cmn =>
+      match @mbglot.chinese_variant(text) {
+        Some(Simplified) => "simplified".to_json()
+        Some(Traditional) => "traditional".to_json()
+        None => Json::null()
+      }
+    _ => Json::null()
+  }
   {
+    "variant": variant,
     "lang": detection.lang.code().to_json(),
     "name": detection.lang.name().to_json(),
     "script": detection.script.name().to_json(),
@@ -16,7 +27,7 @@ fn detection_json(detection : @mbglot.Detection) -> Json {
 /// segments with UTF-16 offsets, which index JavaScript strings directly.
 pub fn analyze(text : String) -> String {
   let detection : Json = match @mbglot.detect(text) {
-    Some(d) => detection_json(d)
+    Some(d) => detection_json(d, text)
     None => Json::null()
   }
   let ranked = @mbglot.rank(text)
@@ -36,7 +47,7 @@ pub fn analyze(text : String) -> String {
     "start": segment.start.to_json(),
     "end": segment.end.to_json(),
     "detection": match segment.detection {
-      Some(d) => detection_json(d)
+      Some(d) => detection_json(d, segment.text)
       None => Json::null()
     },
   })

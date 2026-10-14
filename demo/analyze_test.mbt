@@ -42,3 +42,30 @@ test "segment offsets cover the input" {
   }
   assert_eq(expected, text.length())
 }
+
+///|
+test "Chinese detections carry the character variant" {
+  let simplified = @json.parse(
+    @demo.analyze(
+      "我们这个月的订单还没有到，请帮忙查一下物流信息，谢谢。",
+    ),
+  )
+  guard simplified
+    is { "detection": { "lang": "cmn", "variant": "simplified", .. }, .. } else {
+    fail(simplified.stringify())
+  }
+  let traditional = @json.parse(
+    @demo.analyze(
+      "我們這個月的訂單還沒有到，請幫忙查一下物流資訊，謝謝。",
+    ),
+  )
+  guard traditional is { "detection": { "variant": "traditional", .. }, .. } else {
+    fail(traditional.stringify())
+  }
+  let english = @json.parse(
+    @demo.analyze("The parcel has not arrived yet, could you check?"),
+  )
+  guard english is { "detection": { "variant": Null, .. }, .. } else {
+    fail(english.stringify())
+  }
+}

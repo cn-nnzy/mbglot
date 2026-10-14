@@ -145,6 +145,13 @@ fn ranking(
   match options.mode {
     Franc => Some((script, ranked))
     Enhanced => {
+      let (script, ranked) = refine_cjk(
+        text,
+        script,
+        ranked,
+        options.allow,
+        options.deny,
+      )
       let ranked = short_text_signal(text, ranked)
       Some(
         (script, settle_confusables(text, ranked, options.allow, options.deny)),

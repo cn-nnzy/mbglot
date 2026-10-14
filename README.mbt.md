@@ -40,6 +40,9 @@ Milestone 1 is complete. Implemented:
   languages into consecutive segments with their own detection. This is
   mbglot's own procedure on top of franc's scores (franc has no
   segmentation); see below.
+- `chinese_variant(text)`: simplified or traditional Chinese, and kana
+  and Hangul shares that settle Chinese, Japanese and Korean (see
+  [Chinese, Japanese and Korean](#chinese-japanese-and-korean)).
 - `strip_markup(text)`: removes URLs, e-mail addresses, mentions,
   hashtags, HTML and code before detection, with a map back to the
   original offsets (see [Markup](#markup)). On by default.
@@ -298,6 +301,42 @@ test {
   assert_eq(
     @mbglot.detect(text, options=franc).map(d => d.lang),
     Some(@mbglot.Bul),
+  )
+}
+```
+
+### Chinese, Japanese and Korean
+
+franc counts every Han ideograph as kana too, so a Chinese text with a
+single kana, such as の in a shop name, comes out as Japanese, and Korean
+that mixes in hanja comes out as Chinese when the hanja outnumber the
+Hangul. In `Mode::Enhanced` a text in Han or kana is Japanese only when
+kana make up at least a tenth of its CJK characters, and Korean when
+Hangul makes up at least a fifth of its Hangul and Han characters.
+`segments` keeps Han, kana and Hangul in one piece, so Korean with hanja
+or Japanese with kanji is not cut at every change of script.
+
+`chinese_variant(text)` tells simplified from traditional Chinese by
+about 120 common characters that differ between the two standards (such
+as 们/們, 这/這, 国/國), and returns `None` when the text has none of them
+or as many of each. It is a hint for picking a font or a locale such as
+`zh-Hans` or `zh-Hant`; the [browser demo](#browser-demo) shows it for
+Chinese text.
+
+```mbt check
+///|
+test {
+  let text = "我们公司的产品在“美味の店”有售，欢迎大家来购买。"
+  assert_eq(@mbglot.detect(text).map(d => d.lang), Some(@mbglot.Cmn))
+  let franc = @mbglot.Options::new(mode=Franc)
+  assert_eq(
+    @mbglot.detect(text, options=franc).map(d => d.lang),
+    Some(@mbglot.Jpn),
+  )
+  assert_eq(@mbglot.chinese_variant(text), Some(Simplified))
+  assert_eq(
+    @mbglot.chinese_variant("請幫忙查一下物流資訊，謝謝。"),
+    Some(Traditional),
   )
 }
 ```

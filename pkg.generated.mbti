@@ -6,6 +6,8 @@ import {
 }
 
 // Values
+pub fn chinese_variant(String) -> ChineseVariant?
+
 pub fn detect(String, options? : Options) -> Detection?
 
 pub fn detect_script(String) -> Script?
@@ -31,6 +33,11 @@ pub(all) suberror OptionsError {
 } derive(Eq, @debug.Debug)
 
 // Types and methods
+pub(all) enum ChineseVariant {
+  Simplified
+  Traditional
+} derive(Eq, @debug.Debug)
+
 pub(all) struct Detection {
   lang : Lang
   script : Script

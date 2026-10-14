@@ -5,6 +5,7 @@ const samples = [
   ["French", "Bonjour, je voudrais savoir quand ma commande sera livrée, merci de votre aide."],
   ["German", "Guten Tag, meine Bestellung ist leider noch nicht angekommen. Können Sie bitte nachsehen?"],
   ["Japanese", "ご注文の商品が届いておりません。至急確認していただけますでしょうか。"],
+  ["Chinese", "我們這個月的訂單還沒有到，請幫忙查一下物流資訊，謝謝。"],
   ["Arabic", "مرحبا، لم يصل طلبي بعد، هل يمكنكم التحقق من رقم التتبع من فضلكم؟"],
   ["Mixed", "Здравствуйте, заказ не пришёл. Hi, could you check the tracking number for order 4471 please? 谢谢，麻烦尽快处理一下这个问题。"],
 ];
@@ -43,6 +44,7 @@ function renderVerdict(detection, text) {
   const head = el("p", "lang");
   head.append(el("strong", "", detection.name), " ", el("code", "", detection.lang),
     " ", el("span", "script", detection.script));
+  if (detection.variant) head.append(" ", el("span", "script", `(${detection.variant})`));
   const conf = el("p", "conf", `confidence ${detection.confidence.toFixed(3)} `);
   conf.append(el("span", detection.reliable ? "badge ok" : "badge warn",
     detection.reliable ? "reliable" : "not reliable"));

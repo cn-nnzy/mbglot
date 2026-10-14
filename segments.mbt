@@ -11,12 +11,17 @@ pub(all) struct Segment {
 } derive(Eq, Debug)
 
 ///|
-/// Script class of a code point for splitting, or -1 for non-letters. Han
-/// and Kana share a class because Japanese mixes them.
+/// Script class of a code point for splitting, or -1 for non-letters. Han,
+/// Kana and Hangul share a class because Japanese mixes kanji and kana and
+/// Korean may mix in hanja; `detect` tells them apart within a piece.
 fn letter_class(cp : Int) -> Int {
   for s in 0..<script_ranges.length() {
     if in_ranges(script_ranges[s], cp) {
-      return if all_scripts[s] == Kana { 0 } else { s }
+      return if all_scripts[s] == Kana || all_scripts[s] == Hangul {
+        0
+      } else {
+        s
+      }
     }
   }
   -1
