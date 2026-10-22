@@ -26,7 +26,7 @@ fn lang_label(lang : @mbglot.Lang?) -> String {
 /// A Markdown summary of the report: overall accuracy, a table with
 /// precision, recall and F1 per language (in order of first appearance),
 /// and the `confusions` most frequent mistakes.
-pub fn Report::to_markdown(self : Report, confusions? : Int = 10) -> String {
+pub fn Report::to_markdown(self : Report, confusions~ : Int32 = 10) -> String {
   let buf = StringBuilder()
   buf.write_string(
     "Accuracy: \{percent(self.accuracy())} (\{self.correct} of \{self.total}), " +

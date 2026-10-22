@@ -3,7 +3,7 @@
 // Exports dated Sat, 10 Oct 2026 06:30:50 GMT.
 
 ///|
-let rows_spa : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_spa : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Spa, Short, [2624631], "Tom se quedará."),
   (Spa, Short, [13024729], "No ganaré."),
   (Spa, Short, [5967486], "Se lo doy."),
@@ -302,7 +302,7 @@ let rows_spa : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_eng : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_eng : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Eng, Short, [11629178], "Finding Gunter is easy."),
   (Eng, Short, [3915358], "I'll help you tomorrow."),
   (Eng, Short, [11245283], "My girlfriend is beautiful."),
@@ -581,7 +581,7 @@ let rows_eng : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_por : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_por : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Por, Short, [12822936], "Você me deixa muito feliz."),
   (Por, Short, [1361923], "De onde vocês se conhecem?"),
   (Por, Short, [7882950], "Eles moram perto do dique."),
@@ -850,7 +850,7 @@ let rows_por : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ind : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ind : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ind, Short, [12137903], "Ini masuk akal."),
   (Ind, Short, [13018661], "Aku tidak tahu namanya."),
   (Ind, Short, [11962079], "Aku terlalu mabuk."),
@@ -1129,7 +1129,7 @@ let rows_ind : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_fra : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_fra : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Fra, Short, [11980759], "Va voir un psy !"),
   (Fra, Short, [2053714], "Je te tiens au courant."),
   (Fra, Short, [8648940], "Tu es végétarien."),
@@ -1403,7 +1403,7 @@ let rows_fra : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_deu : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_deu : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Deu, Short, [808229], "Bitte wecke mich um sechs."),
   (Deu, Short, [4776733], "Unser Bus ist gekommen."),
   (Deu, Short, [13824568], "Diese Annonce ist dringend."),
@@ -1697,7 +1697,7 @@ let rows_deu : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_jav : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_jav : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Jav, Short, [8864680], "Sapa sing ngangkat tilpunmu?"),
   (
     Jav,
@@ -2071,7 +2071,7 @@ let rows_jav : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_vie : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_vie : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Vie, Short, [12269774], "Chúng tôi khiêu vũ."),
   (Vie, Short, [11059230], "Anh tưới hoa xong rồi đấy."),
   (Vie, Short, [13634583], "Mọi thứ có vẻ OK."),
@@ -2405,7 +2405,7 @@ let rows_vie : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ita : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ita : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ita, Short, [1520601], "A me fa proprio schifo."),
   (Ita, Short, [13482329], "Lei sa se Tom e Mary lavorano?"),
   (Ita, Short, [5439160], "Io ero cattivo."),
@@ -2679,7 +2679,7 @@ let rows_ita : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_tur : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_tur : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Tur, Short, [1486515], "O, kapıya doğru koştu."),
   (Tur, Short, [2596087], "Tom dinlemedi."),
   (Tur, Short, [4126321], "Bu biraz tuzlu."),
@@ -2968,7 +2968,7 @@ let rows_tur : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_pol : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_pol : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Pol, Short, [734222], "Znam ją trochę."),
   (Pol, Short, [933361], "On pewnie przegra."),
   (Pol, Short, [366302], "To gruba ryba."),
@@ -3282,7 +3282,7 @@ let rows_pol : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_swh : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_swh : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Swh, Short, [10848348], "Ungeipenda."),
   (Swh, Short, [10872284], "Ilionekana rahisi sana."),
   (Swh, Short, [10845877], "Lazima nishughulikie kitu."),
@@ -3581,7 +3581,7 @@ let rows_swh : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_sun : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_sun : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Sun, Short, [13444935], "Nya, hayu urang lakukeun wé."),
   (Sun, Short, [5161396], "Wilujeng Natal!"),
   (Sun, Short, [13457122], "Tom ngorok tarik pisan."),
@@ -3895,7 +3895,7 @@ let rows_sun : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ron : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ron : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ron, Short, [8605276], "Și Tom și Mary sunt nebuni."),
   (Ron, Short, [6581973], "Aceasta îți aparține?"),
   (Ron, Short, [12349301], "Sora mea nu are mașină."),
@@ -4204,7 +4204,7 @@ let rows_ron : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_hau : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_hau : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Hau, Short, [10804552], "Ina bukatar kifi."),
   (Hau, Short, [10889284], "Yaya kafarka take warkewa?"),
   (Hau, Short, [10833285], "Kai! Daga ina ya zo?"),
@@ -4528,7 +4528,7 @@ let rows_hau : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_fuv : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_fuv : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Fuv, Short, [4639450], "Wala ko mi yidi."),
   (Fuv, Short, [4641855], "Patiru vurti ha les koruwal."),
   (Fuv, Short, [4674649], "Mido mari paturu didi."),
@@ -4561,7 +4561,7 @@ let rows_fuv : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_bos : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_bos : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Bos, Short, [2734673], "On ima psa."),
   (Bos, Short, [2507715], "Pjevao je pjesmu."),
   (Bos, Short, [11183002], "Pažljivo slušaj."),
@@ -4830,7 +4830,7 @@ let rows_bos : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_hrv : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_hrv : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Hrv, Short, [1051119], "1, 3 i 5 su neparni brojevi."),
   (Hrv, Short, [935023], "Nedruštven je."),
   (Hrv, Short, [670219], "Možeš li mi dodati sol?"),
@@ -5094,7 +5094,7 @@ let rows_hrv : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_nld : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_nld : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Nld, Short, [3270169], "Hebt u een tatoeage?"),
   (Nld, Short, [11321302], "Tom is in zijn kantoor."),
   (Nld, Short, [687089], "Een kat heeft negen levens."),
@@ -5383,7 +5383,7 @@ let rows_nld : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_srp : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_srp : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Srp,
     Short,
@@ -5727,7 +5727,7 @@ let rows_srp : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ckb : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ckb : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ckb, Short, [11008083], "نامەوێت کارە پیسەکەت بکەم."),
   (
     Ckb,
@@ -6161,7 +6161,7 @@ let rows_ckb : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_yor : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_yor : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Yor, Short, [11984682], "Mo ń lọ Àpápá."),
   (Yor, Short, [11984688], "Ọmọ wa ni."),
   (Yor, Short, [3179086], "Agogo mejila ọsan."),
@@ -6238,7 +6238,7 @@ let rows_yor : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_uzn : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_uzn : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Uzn, Short, [3212166], "Hayirli tong."),
   (Uzn, Short, [10474537], "Bu xonada issiq suv yo'q."),
   (Uzn, Short, [11070349], "Pul yeyolmaysan."),
@@ -6502,7 +6502,7 @@ let rows_uzn : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_zlm : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_zlm : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Zlm, Short, [8223072], "Dia meninggalkan keluarganya."),
   (Zlm, Short, [9947276], "Kenapa awak semua ketawa?"),
   (Zlm, Short, [10943079], "Tangan awak sejuk macam ais."),
@@ -6801,7 +6801,7 @@ let rows_zlm : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ibo : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ibo : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ibo, Short, [6789594], "Mu na ndi be Tomu ahubeghi."),
   (Ibo, Short, [6789583], "I wepuru ahihia ahu?"),
   (Ibo, Short, [6789597], "Ikwukwara Ihe meru?"),
@@ -6860,7 +6860,7 @@ let rows_ibo : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ceb : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ceb : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ceb, Short, [4674588], "Pahulama ra kog kutchilyo."),
   (Ceb, Short, [14037092], "Murag buotan nga tawo si Ken."),
   (Ceb, Short, [4687864], "Susmarusep!"),
@@ -7144,7 +7144,7 @@ let rows_ceb : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_tgl : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_tgl : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Tgl, Short, [11468611], "Iunat mo ang mga binti mo."),
   (Tgl, Short, [11806913], "Delikado ang mga taong iyon."),
   (Tgl, Short, [11555367], "Ayaw mo ba silang makita?"),
@@ -7408,7 +7408,7 @@ let rows_tgl : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_hun : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_hun : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Hun, Short, [7887863], "Túl pőrén öltöztél."),
   (Hun, Short, [7883675], "Köszönet az ízletes ételért."),
   (Hun, Short, [13909586], "Én mást szeretnék csinálni."),
@@ -7722,7 +7722,7 @@ let rows_hun : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_azj : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_azj : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Azj, Short, [10852250], "Pomidor yeməyi sevmirəm."),
   (Azj, Short, [4464810], "O məndən bir az gödəkboyludur."),
   (Azj, Short, [13639354], "Adətən çimərliyə gedirəm."),
@@ -8031,7 +8031,7 @@ let rows_azj : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ces : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ces : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ces, Short, [11005843], "Tom si zaslouží lepší bydlení."),
   (Ces, Short, [3465025], "Stromy už shodily listí."),
   (Ces, Short, [10033567], "Jsi lékař."),
@@ -8300,7 +8300,7 @@ let rows_ces : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_run : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_run : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Run, Short, [8063954], "Nanje nzogukumbura."),
   (Run, Short, [8619607], "Afise inzu ku kiyaga."),
   (Run, Short, [7100079], "Ngirango ntaza."),
@@ -8579,7 +8579,7 @@ let rows_run : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_plt : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_plt : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Plt, Short, [6672761], "Alako ny ririnina."),
   (Plt, Short, [1674452], "Mandrosoa tompoko ô!"),
   (Plt, Short, [9527939], "Mila fehezanteny feno izahay."),
@@ -8641,7 +8641,7 @@ let rows_plt : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_mad : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_mad : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Mad, Short, [5049206], "Sakalangkong!"),
   (Mad, Short, [5049193], "Tom andhi' tello ana'."),
   (Mad, Short, [11427334], "Engko' kaso."),
@@ -8656,7 +8656,7 @@ let rows_mad : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_nya : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_nya : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Nya, Short, [3247171], "Ndifuna kugula nthoci."),
   (Nya, Short, [3239421], "Ndifuna kugona."),
   (Nya, Short, [13375442], "Chili ndi mutu chili ndi nzeru"),
@@ -8700,7 +8700,7 @@ let rows_nya : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_kin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_kin : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Kin, Short, [8260645], "Ndabirore?"),
   (Kin, Short, [7782421], "Twaje kugusura."),
   (Kin, Short, [11261989], "Sindi umuganga."),
@@ -8742,7 +8742,7 @@ let rows_kin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_zul : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_zul : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Zul, Short, [2887234], "Ngiyabhukuda olwandle."),
   (Zul, Short, [3633485], "Angifuni ukuya esikoleni."),
   (Zul, Short, [2887177], "Ngingumfundi."),
@@ -8852,7 +8852,7 @@ let rows_zul : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_swe : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_swe : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Swe, Short, [5104690], "Hä av den!"),
   (Swe, Short, [922566], "Hon såg upp mot himlen."),
   (Swe, Short, [3834337], "Fågeln är i skyn."),
@@ -9121,7 +9121,7 @@ let rows_swe : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_lin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_lin : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Lin, Short, [10888976], "Ozalaka kaka mwana ya kimia."),
   (Lin, Short, [10827016], "Bonzenga na ye ekweyisi ye."),
   (Lin, Short, [10830646], "Tata akei koloba mbisi."),
@@ -9470,7 +9470,7 @@ let rows_lin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_som : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_som : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Som, Short, [9084217], "Ma carab baa?"),
   (Som, Short, [9084204], "Waa xun yahay."),
   (Som, Short, [9083381], "Maxaad doonaysaa?"),
@@ -9638,7 +9638,7 @@ let rows_som : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_hnj : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_hnj : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Hnj, Short, [4964879], "Tus dlev nuav loj lawm."),
   (Hnj, Short, [4964876], "Tus dlev nuav loj heev."),
   (Hnj, Short, [4977236], "Koj moog qhov twg?"),
@@ -9646,7 +9646,7 @@ let rows_hnj : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ilo : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ilo : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ilo, Short, [4677329], "Imbagam a nalpasen."),
   (Ilo, Short, [4680618], "Agpannuray kenka ti ragsakko."),
   (Ilo, Short, [4650084], "Adda asomi."),
@@ -9930,7 +9930,7 @@ let rows_ilo : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_rus : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_rus : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Rus, Short, [6298192], "Нам хочется веселиться."),
   (Rus, Short, [11767092], "Они прибудут одновременно."),
   (Rus, Short, [3454229], "Он всегда такой?"),
@@ -10344,7 +10344,7 @@ let rows_rus : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ukr : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ukr : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ukr, Short, [8393430], "Чому Том переодягнувся?"),
   (
     Ukr,
@@ -10763,7 +10763,7 @@ let rows_ukr : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_koi : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_koi : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Koi, Short, [5966380], "Ыджыт спасибо!"),
   (Koi, Short, [5966406], "Нем понда."),
   (Koi, Short, [5966480], "Тіян чужӧм меным тӧдса."),
@@ -10818,7 +10818,7 @@ let rows_koi : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_bel : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_bel : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Bel, Short, [6599679], "Паедзеш на поездзе?"),
   (Bel, Short, [2813747], "Я распранаюся."),
   (Bel, Short, [5294875], "Крэйда белая."),
@@ -11237,7 +11237,7 @@ let rows_bel : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_bul : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_bul : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Bul, Short, [3250616], "Ти си голямо момче."),
   (
     Bul,
@@ -11651,7 +11651,7 @@ let rows_bul : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_kaz : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_kaz : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Kaz,
     Short,
@@ -12075,7 +12075,7 @@ let rows_kaz : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_arb : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_arb : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Arb, Short, [12355111], "إنهن في البستان."),
   (Arb, Short, [3581850], "لا أريد البكاء أمامهُ."),
   (Arb, Short, [607986], "ذاك هو العائق."),
@@ -12474,7 +12474,7 @@ let rows_arb : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_urd : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_urd : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Urd, Short, [1459159], "وہ دل بھینک ہے۔"),
   (Urd, Short, [9869801], "مجھے بیت الخلا خانہ جانا ہے."),
   (Urd, Short, [12486884], "آپ میری مدد کیسے کرتے؟"),
@@ -12873,7 +12873,7 @@ let rows_urd : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_pes : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_pes : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Pes, Short, [6970484], "ادامه دارد."),
   (Pes, Short, [9866564], "تام هم امروز دیر خواهد کرد."),
   (Pes, Short, [8143563], "مانند برف سفید است."),
@@ -13292,7 +13292,7 @@ let rows_pes : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_skr : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_skr : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Skr, Short, [11111385], "ݙاڈھا زور دا مین٘ہ وسیا۔"),
   (Skr, Short, [11115668], "سارے ایں تے خوش کائناں ہن۔"),
   (Skr, Short, [11551658], "ایہ بے مثال ہے۔"),
@@ -13520,7 +13520,7 @@ let rows_skr : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_pbu : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_pbu : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Pbu, Short, [13848941], "دوی په کور کې دي."),
   (Pbu, Short, [13848949], "زه غواړم چې لاړ شم."),
   (Pbu, Short, [12943651], "صلى الله عليه وسلم۔"),
@@ -13733,7 +13733,7 @@ let rows_pbu : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_hin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_hin : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Hin,
     Short,
@@ -14222,7 +14222,7 @@ let rows_hin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_mar : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_mar : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Mar,
     Short,
@@ -14721,14 +14721,14 @@ let rows_mar : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_mai : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_mai : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Mai, Short, [5049815], "हम ठीक छी, धन्यवाद।"),
   (Mai, Short, [5055516], "हमर नाम टॉम छी।"),
   (Mai, Short, [5049751], "केना छी अहाँ।"),
 ]
 
 ///|
-let rows_bho : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_bho : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Bho, Short, [2809592], "ओकर बात जनि सुनऽ।"),
   (
     Bho,
@@ -14956,7 +14956,7 @@ let rows_bho : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_npi : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_npi : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Npi,
     Short,
@@ -15460,7 +15460,7 @@ let rows_npi : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_cmn : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_cmn : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Cmn, Short, [876920], "我不喜歡這些唱片中的任何一張。"),
   (Cmn, Short, [13504527], "牠們回來了，而且更強。"),
   (Cmn, Short, [334775], "我穿了件外套，因为今天早上有点冷。"),
@@ -15869,7 +15869,7 @@ let rows_cmn : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ben : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ben : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ben, Short, [3740332], "সোয়া নটা বাজে।"),
   (
     Ben,
@@ -16353,7 +16353,7 @@ let rows_ben : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_jpn : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_jpn : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Jpn,
     Short,
@@ -16837,7 +16837,7 @@ let rows_jpn : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_kor : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_kor : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Kor, Short, [10603136], "나는 그를 신뢰한다."),
   (Kor, Short, [11105127], "그녀는 어제 병원에 갔다."),
   (Kor, Short, [13882102], "기지개를 켜고 있었어요."),
@@ -17261,7 +17261,7 @@ let rows_kor : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_tel : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_tel : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Tel, Short, [13348852], "మీరు రొమేనియన్లా?"),
   (
     Tel,
@@ -17755,7 +17755,7 @@ let rows_tel : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_tam : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_tam : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Tam,
     Short,
@@ -18244,7 +18244,7 @@ let rows_tam : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_guj : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_guj : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Guj, Short, [3936565], "મારું નામ રાહુલ છે."),
   (
     Guj,
@@ -18592,7 +18592,7 @@ let rows_guj : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_kan : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_kan : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Kan,
     Short,
@@ -19081,7 +19081,7 @@ let rows_kan : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_mal : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_mal : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Mal,
     Short,
@@ -19575,7 +19575,7 @@ let rows_mal : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_mya : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_mya : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Mya,
     Short,
@@ -20049,7 +20049,7 @@ let rows_mya : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_pan : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_pan : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Pan,
     Short,
@@ -20517,7 +20517,7 @@ let rows_pan : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_amh : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_amh : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Amh, Short, [4451452], "እሷ እንድትረዳህ ትፈልጋለህ?"),
   (Amh, Short, [12405448], "ከቶ አልወደድኩህም።"),
   (
@@ -20620,7 +20620,7 @@ let rows_amh : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_tha : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_tha : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Tha, Short, [12579505], "เขาเป็นหวัด"),
   (
     Tha,
@@ -21114,7 +21114,7 @@ let rows_tha : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_sin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_sin : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (
     Sin,
     Short,
@@ -21238,7 +21238,7 @@ let rows_sin : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 ]
 
 ///|
-let rows_ell : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
+let rows_ell : Array[(@mbglot.Lang, Length, Array[Int32], String)] = [
   (Ell, Short, [2428043], "Θέλω λεπτομέρειες."),
   (Ell, Short, [5458056], "Είσαι απρόβλεπτη."),
   (
@@ -21668,7 +21668,7 @@ let rows_ell : Array[(@mbglot.Lang, Length, Array[Int], String)] = [
 
 ///|
 /// Every language's table, in mbglot's language order.
-let tables : Array[Array[(@mbglot.Lang, Length, Array[Int], String)]] = [
+let tables : Array[Array[(@mbglot.Lang, Length, Array[Int32], String)]] = [
   rows_spa, rows_eng, rows_por, rows_ind, rows_fra, rows_deu, rows_jav, rows_vie,
   rows_ita, rows_tur, rows_pol, rows_swh, rows_sun, rows_ron, rows_hau, rows_fuv,
   rows_bos, rows_hrv, rows_nld, rows_srp, rows_ckb, rows_yor, rows_uzn, rows_zlm,

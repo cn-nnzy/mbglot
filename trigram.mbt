@@ -1,15 +1,15 @@
 ///|
 /// Whitespace as matched by `\s` in JavaScript regular expressions.
-fn is_js_space(unit : Int) -> Bool {
+fn is_js_space(unit : Int32) -> Bool {
   match unit {
-    0x09..=0x0D | 0x20 | 0xA0 | 0x1680 | 0x2000..=0x200A => true
+    0x09..<=0x0D | 0x20 | 0xA0 | 0x1680 | 0x2000..<=0x200A => true
     0x2028 | 0x2029 | 0x202F | 0x205F | 0x3000 | 0xFEFF => true
     _ => false
   }
 }
 
 ///|
-fn lower_simple(cp : Int) -> Int {
+fn lower_simple(cp : Int32) -> Int32 {
   let mut lo = 0
   let mut hi = lower_from.length() - 1
   while lo <= hi {
@@ -27,7 +27,7 @@ fn lower_simple(cp : Int) -> Int {
 }
 
 ///|
-fn decode_utf16(units : Array[Int]) -> Array[Int] {
+fn decode_utf16(units : Array[Int32]) -> Array[Int32] {
   let out = []
   let mut i = 0
   while i < units.length() {
@@ -48,7 +48,7 @@ fn decode_utf16(units : Array[Int]) -> Array[Int] {
 }
 
 ///|
-fn push_utf16(out : Array[Int], cp : Int) -> Unit {
+fn push_utf16(out : Array[Int32], cp : Int32) -> Unit {
   if cp >= 0x10000 {
     let v = cp - 0x10000
     out.push(0xD800 + (v >> 10))
@@ -61,7 +61,7 @@ fn push_utf16(out : Array[Int], cp : Int) -> Unit {
 ///|
 /// Unicode Final_Sigma condition for the capital sigma at `index`, with
 /// case-ignorable characters taking precedence over cased ones as in ICU.
-fn is_final_sigma(cps : Array[Int], index : Int) -> Bool {
+fn is_final_sigma(cps : Array[Int32], index : Int32) -> Bool {
   let mut before = false
   let mut i = index - 1
   while i >= 0 {
@@ -91,7 +91,7 @@ fn is_final_sigma(cps : Array[Int], index : Int) -> Bool {
 ///|
 /// Full lowercasing as done by JavaScript's `toLowerCase` (root locale),
 /// on UTF-16 code units. Unpaired surrogates are kept.
-fn lowercase(units : Array[Int]) -> Array[Int] {
+fn lowercase(units : Array[Int32]) -> Array[Int32] {
   let cps = decode_utf16(units)
   let out = []
   for i, cp in cps {
@@ -110,7 +110,7 @@ fn lowercase(units : Array[Int]) -> Array[Int] {
 ///|
 /// trigram-utils `clean`: runs of U+0021..U+0040 and whitespace become a
 /// single space, the ends are trimmed and the result is lowercased.
-fn clean_units(text : String) -> Array[Int] {
+fn clean_units(text : String) -> Array[Int32] {
   let units = []
   let mut pending_space = false
   for i in 0..<text.length() {
@@ -129,7 +129,7 @@ fn clean_units(text : String) -> Array[Int] {
 }
 
 ///|
-fn units_to_string(units : ArrayView[Int]) -> String {
+fn units_to_string(units : ArrayView[Int32]) -> String {
   let b = StringBuilder()
   for unit in units {
     b.write_char(unit.unsafe_to_char())
@@ -141,11 +141,11 @@ fn units_to_string(units : ArrayView[Int]) -> String {
 /// trigram-utils `asTuples`: trigrams of UTF-16 code units of the cleaned
 /// text padded with one space on each side, with their counts, ordered by
 /// ascending count and then by first occurrence.
-fn trigrams(text : String) -> Array[(String, Int)] {
+fn trigrams(text : String) -> Array[(String, Int32)] {
   let units = [0x20]
   units.append(clean_units(text))
   units.push(0x20)
-  let counts : Map[String, Int] = Map([])
+  let counts : Map[String, Int32] = Map([])
   for i in 0..<(units.length() - 2) {
     let gram = units_to_string(units[i:i + 3])
     counts[gram] = counts.get_or_default(gram, 0) + 1

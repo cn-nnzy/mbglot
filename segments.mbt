@@ -4,8 +4,8 @@
 /// `text` is that slice. `detection` is `None` only when the whole input
 /// could not be identified.
 pub(all) struct Segment {
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   text : String
   detection : Detection?
 } derive(Eq, Debug)
@@ -14,7 +14,7 @@ pub(all) struct Segment {
 /// Script class of a code point for splitting, or -1 for non-letters. Han,
 /// Kana and Hangul share a class because Japanese mixes kanji and kana and
 /// Korean may mix in hanja; `detect` tells them apart within a piece.
-fn letter_class(cp : Int) -> Int {
+fn letter_class(cp : Int32) -> Int32 {
   for s in 0..<script_ranges.length() {
     if in_ranges(script_ranges[s], cp) {
       return if all_scripts[s] == Kana || all_scripts[s] == Hangul {
@@ -30,7 +30,7 @@ fn letter_class(cp : Int) -> Int {
 ///|
 /// 2 for marks that end a sentence on their own (newline, CJK full stops,
 /// danda), 1 for marks that end one only when whitespace follows, else 0.
-fn sentence_end(cp : Int) -> Int {
+fn sentence_end(cp : Int32) -> Int32 {
   match cp {
     0x0A | 0x0D | 0x3002 | 0xFF01 | 0xFF1F | 0xFF0E | 0x0964 | 0x0965 => 2
     0x21 | 0x2E | 0x3F | 0x061F | 0x06D4 => 1
@@ -43,7 +43,7 @@ fn sentence_end(cp : Int) -> Int {
 /// sentence end (see `sentence_end`), and before a letter whose script
 /// class differs from the previous letter's. Punctuation and spaces stay
 /// with the preceding piece.
-fn split_points(text : String) -> Array[Int] {
+fn split_points(text : String) -> Array[Int32] {
   let points = [0]
   let mut last_class = -1
   let mut after_end = false
@@ -87,18 +87,18 @@ fn split_points(text : String) -> Array[Int] {
 
 ///|
 priv struct Piece {
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   detection : Detection?
 }
 
 ///|
-fn slice(text : String, start : Int, end : Int) -> String {
+fn slice(text : String, start : Int32, end : Int32) -> String {
   text.view(start_offset=start, end_offset=end).to_owned()
 }
 
 ///|
-fn piece(text : String, start : Int, end : Int, options : Options) -> Piece {
+fn piece(text : String, start : Int32, end : Int32, options : Options) -> Piece {
   { start, end, detection: detect(slice(text, start, end), options~), }
 }
 
@@ -121,7 +121,7 @@ fn piece_script(text : String, p : Piece) -> Script? {
 /// identified.
 pub fn segments(
   text : String,
-  options? : Options = default_options,
+  options~ : Options = default_options,
 ) -> Array[Segment] {
   if text.length() == 0 {
     return []

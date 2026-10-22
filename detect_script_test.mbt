@@ -1,5 +1,5 @@
 ///|
-fn repeat(s : String, n : Int) -> String {
+fn repeat(s : String, n : Int32) -> String {
   let b = StringBuilder()
   for _ in 0..<n {
     b.write_string(s)
@@ -8,7 +8,7 @@ fn repeat(s : String, n : Int) -> String {
 }
 
 ///|
-fn lone_surrogate(unit : Int) -> String {
+fn lone_surrogate(unit : Int32) -> String {
   let b = StringBuilder()
   b.write_char(unit.unsafe_to_char())
   b.to_string()

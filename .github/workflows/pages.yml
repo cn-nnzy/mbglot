@@ -16,7 +16,7 @@ concurrency:
 
 env:
   # Same toolchain as ci.yml.
-  MOONBIT_INSTALL_VERSION: "0.10.14+7d59c7ec9"
+  MOONBIT_INSTALL_VERSION: "0.10.17+093cb8f9c"
 
 jobs:
   build:

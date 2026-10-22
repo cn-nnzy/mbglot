@@ -17,7 +17,7 @@ pub(all) enum Mode {
 /// common words (lowercase) that each count once per occurrence.
 priv struct Group {
   langs : Array[Lang]
-  markers : Array[(Lang, String, Int)]
+  markers : Array[(Lang, String, Int32)]
   words : Array[(Lang, Array[String])]
 }
 
@@ -364,7 +364,7 @@ fn words_of(text : String) -> Array[String] {
 
 ///|
 /// Occurrences of `needle` in `haystack`, not overlapping.
-fn occurrences(haystack : String, needle : String) -> Int {
+fn occurrences(haystack : String, needle : String) -> Int32 {
   let mut count = 0
   let mut i = 0
   while i + needle.length() <= haystack.length() {
@@ -380,8 +380,8 @@ fn occurrences(haystack : String, needle : String) -> Int {
 
 ///|
 /// Evidence for each language of `group` in `text`.
-fn evidence(group : Group, text : String) -> Map[Lang, Int] {
-  let scores : Map[Lang, Int] = Map([])
+fn evidence(group : Group, text : String) -> Map[Lang, Int32] {
+  let scores : Map[Lang, Int32] = Map([])
   for lang in group.langs {
     scores[lang] = 0
   }

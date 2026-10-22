@@ -26,7 +26,7 @@ pub fn Length::name(self : Length) -> String {
 ///|
 /// Every corpus entry, language by language: language, length, Tatoeba
 /// sentence ids, text.
-let rows : Array[(@mbglot.Lang, Length, Array[Int], String)] = {
+let rows : Array[(@mbglot.Lang, Length, Array[Int32], String)] = {
   let all = []
   for table in tables {
     all.append(table)

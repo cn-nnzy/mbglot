@@ -1,14 +1,14 @@
 ///|
 /// Distance added for a trigram missing from a profile.
-let max_difference : Int = 300
+let max_difference : Int32 = 300
 
 ///|
 /// Profiles of the trigram scripts as trigram -> rank maps, built once.
 let numeric_profiles : FixedArray[
-  (Script, FixedArray[(Lang, Map[String, Int])]),
+  (Script, FixedArray[(Lang, Map[String, Int32])]),
 ] = trigram_profiles.map(entry => {
   let langs = entry.1.map(profile => {
-    let ranks : Map[String, Int] = Map([])
+    let ranks : Map[String, Int32] = Map([])
     for i, gram in profile.1.split("|").collect() {
       ranks[gram.to_owned()] = i
     }
@@ -23,7 +23,10 @@ fn allowed(lang : Lang, allow : Array[Lang], deny : Array[Lang]) -> Bool {
 }
 
 ///|
-fn distance(trigrams : Array[(String, Int)], model : Map[String, Int]) -> Int {
+fn distance(
+  trigrams : Array[(String, Int32)],
+  model : Map[String, Int32],
+) -> Int32 {
   let mut total = 0
   for tuple in trigrams {
     total += match model.get(tuple.0) {
@@ -49,7 +52,7 @@ fn franc_all(
   text : String,
   allow : Array[Lang],
   deny : Array[Lang],
-  min_length : Int,
+  min_length : Int32,
 ) -> (Script, Array[(Lang, Double)])? {
   if text.length() == 0 || text.length() < min_length {
     return None
@@ -72,7 +75,7 @@ fn franc_all(
     text
   }
   let grams = trigrams(sample)
-  let distances : Array[(Lang, Int, Int)] = []
+  let distances : Array[(Lang, Int32, Int32)] = []
   for entry in numeric_profiles {
     if entry.0 != script {
       continue

@@ -10,7 +10,7 @@ fn fixed3(x : Double) -> String {
 }
 
 ///|
-fn pad(s : String, width : Int) -> String {
+fn pad(s : String, width : Int32) -> String {
   s + " ".repeat((width - s.length()).max(0))
 }
 
@@ -44,7 +44,7 @@ fn report(text : String) -> Array[String] {
 
 ///|
 /// `text` on one line, cut to `width` characters.
-fn preview(text : String, width : Int) -> String {
+fn preview(text : String, width : Int32) -> String {
   let chars = text
     .trim()
     .iter()

@@ -522,7 +522,7 @@ moon test --target native  # needs a C compiler
 ```
 
 CI runs the same commands on Ubuntu 24.04, Windows Server 2025 and macOS
-15 with a pinned MoonBit toolchain (moonc 0.10.14+7d59c7ec9, set by
+15 with a pinned MoonBit toolchain (moonc 0.10.17+093cb8f9c, set by
 `MOONBIT_INSTALL_VERSION` in `.github/workflows/ci.yml`), because newer
 releases may format code differently. The code examples in this README
 are `mbt check` blocks of `README.mbt.md`, so `moon test` compiles and runs

@@ -43,7 +43,7 @@ pub fn chinese_variant(text : String) -> ChineseVariant? {
 }
 
 ///|
-fn script_index(script : Script) -> Int {
+fn script_index(script : Script) -> Int32 {
   for i, s in all_scripts {
     if s == script {
       return i

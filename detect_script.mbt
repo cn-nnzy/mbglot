@@ -1,9 +1,9 @@
 ///|
 /// franc only looks at this many UTF-16 code units of the input.
-let max_sample_length : Int = 2048
+let max_sample_length : Int32 = 2048
 
 ///|
-fn in_ranges(ranges : FixedArray[Int], cp : Int) -> Bool {
+fn in_ranges(ranges : FixedArray[Int32], cp : Int32) -> Bool {
   let mut lo = 0
   let mut hi = ranges.length() / 2 - 1
   while lo <= hi {
@@ -23,7 +23,7 @@ fn in_ranges(ranges : FixedArray[Int], cp : Int) -> Bool {
 /// Counts, per script, the code points of the first `max_sample_length`
 /// code units of `text`. A surrogate pair cut by the limit and unpaired
 /// surrogates count for no script, as in franc's regular expressions.
-fn script_counts(text : String) -> FixedArray[Int] {
+fn script_counts(text : String) -> FixedArray[Int32] {
   let counts = FixedArray::make(script_ranges.length(), 0)
   let limit = if text.length() < max_sample_length {
     text.length()
@@ -60,7 +60,7 @@ fn script_counts(text : String) -> FixedArray[Int] {
 /// Index into `all_scripts` of the most frequent script and its count.
 /// Ties go to the script listed first. The index is -1 when no character
 /// belongs to any script.
-fn top_script(text : String) -> (Int, Int) {
+fn top_script(text : String) -> (Int32, Int32) {
   let counts = script_counts(text)
   let mut best = -1
   let mut best_count = 0

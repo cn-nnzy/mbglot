@@ -91,7 +91,7 @@ const lines = [
   '///|',
   '/// (name, text, allow, deny, min_length, francAll result)',
   'let golden_cases : Array[',
-  '  (String, String, Array[String], Array[String], Int, Array[(String, Double)]),',
+  '  (String, String, Array[String], Array[String], Int32, Array[(String, Double)]),',
   '] = ['
 ]
 for (const c of cases) {

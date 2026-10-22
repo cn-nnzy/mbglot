@@ -11,11 +11,11 @@ pub(all) struct Sample {
 pub(all) struct LangStats {
   lang : @mbglot.Lang
   /// Samples whose expected language is `lang`.
-  support : Int
+  support : Int32
   /// Samples predicted as `lang`, correct or not.
-  predicted : Int
+  predicted : Int32
   /// Samples of `lang` predicted as `lang`.
-  correct : Int
+  correct : Int32
   precision : Double?
   recall : Double?
   f1 : Double?
@@ -24,11 +24,11 @@ pub(all) struct LangStats {
 ///|
 /// The outcome of `evaluate`: how every sample was classified.
 pub struct Report {
-  priv total : Int
-  priv correct : Int
-  priv unidentified : Int
+  priv total : Int32
+  priv correct : Int32
+  priv unidentified : Int32
   /// (expected, predicted) to count; `None` when nothing was detected.
-  priv confusion : Map[(@mbglot.Lang, @mbglot.Lang?), Int]
+  priv confusion : Map[(@mbglot.Lang, @mbglot.Lang?), Int32]
   /// Expected languages in order of first appearance.
   priv langs : Array[@mbglot.Lang]
 }
@@ -42,7 +42,7 @@ pub fn evaluate(
   samples : Array[Sample],
   predict : (String) -> @mbglot.Lang?,
 ) -> Report {
-  let confusion : Map[(@mbglot.Lang, @mbglot.Lang?), Int] = Map([])
+  let confusion : Map[(@mbglot.Lang, @mbglot.Lang?), Int32] = Map([])
   let langs = []
   let seen : Set[@mbglot.Lang] = Set([])
   let mut correct = 0
@@ -66,19 +66,19 @@ pub fn evaluate(
 
 ///|
 /// Number of samples.
-pub fn Report::total(self : Report) -> Int {
+pub fn Report::total(self : Report) -> Int32 {
   self.total
 }
 
 ///|
 /// Number of samples predicted as their expected language.
-pub fn Report::correct(self : Report) -> Int {
+pub fn Report::correct(self : Report) -> Int32 {
   self.correct
 }
 
 ///|
 /// Number of samples for which no language was predicted.
-pub fn Report::unidentified(self : Report) -> Int {
+pub fn Report::unidentified(self : Report) -> Int32 {
   self.unidentified
 }
 
@@ -99,7 +99,7 @@ pub fn Report::count(
   self : Report,
   expected : @mbglot.Lang,
   predicted : @mbglot.Lang?,
-) -> Int {
+) -> Int32 {
   self.confusion.get((expected, predicted)).unwrap_or(0)
 }
 
@@ -110,7 +110,7 @@ pub fn Report::languages(self : Report) -> Array[@mbglot.Lang] {
 }
 
 ///|
-fn ratio(num : Int, den : Int) -> Double? {
+fn ratio(num : Int32, den : Int32) -> Double? {
   if den == 0 {
     None
   } else {
@@ -122,8 +122,8 @@ fn ratio(num : Int, den : Int) -> Double? {
 /// Precision, recall and F1 for every expected language, in order of
 /// first appearance.
 pub fn Report::per_language(self : Report) -> Array[LangStats] {
-  let support : Map[@mbglot.Lang, Int] = Map([])
-  let predicted : Map[@mbglot.Lang, Int] = Map([])
+  let support : Map[@mbglot.Lang, Int32] = Map([])
+  let predicted : Map[@mbglot.Lang, Int32] = Map([])
   for key, n in self.confusion {
     let (expected, guess) = key
     support[expected] = support.get(expected).unwrap_or(0) + n
@@ -167,9 +167,9 @@ pub fn Report::macro_f1(self : Report) -> Double {
 /// prediction, in `Lang::all()` order with `None` last.
 pub fn Report::top_confusions(
   self : Report,
-  n : Int,
-) -> Array[(@mbglot.Lang, @mbglot.Lang?, Int)] {
-  let order : Map[@mbglot.Lang, Int] = Map([])
+  n : Int32,
+) -> Array[(@mbglot.Lang, @mbglot.Lang?, Int32)] {
+  let order : Map[@mbglot.Lang, Int32] = Map([])
   for i, lang in @mbglot.Lang::all() {
     order[lang] = i
   }

@@ -5,19 +5,19 @@ fn detection_json(detection : @mbglot.Detection, text : String) -> Json {
   let variant : Json = match detection.lang {
     Cmn =>
       match @mbglot.chinese_variant(text) {
-        Some(Simplified) => "simplified".to_json()
-        Some(Traditional) => "traditional".to_json()
+        Some(Simplified) => Json("simplified")
+        Some(Traditional) => Json("traditional")
         None => Json::null()
       }
     _ => Json::null()
   }
   {
     "variant": variant,
-    "lang": detection.lang.code().to_json(),
-    "name": detection.lang.name().to_json(),
-    "script": detection.script.name().to_json(),
-    "confidence": detection.confidence.to_json(),
-    "reliable": detection.reliable.to_json(),
+    "lang": Json(detection.lang.code()),
+    "name": Json(detection.lang.name()),
+    "script": Json(detection.script.name()),
+    "confidence": Json(detection.confidence),
+    "reliable": Json(detection.reliable),
   }
 }
 
@@ -38,14 +38,14 @@ pub fn analyze(text : String) -> String {
     }
     let (lang, score) = entry
     top.push({
-      "lang": lang.code().to_json(),
-      "name": lang.name().to_json(),
-      "score": score.to_json(),
+      "lang": Json(lang.code()),
+      "name": Json(lang.name()),
+      "score": Json(score),
     })
   }
   let segments : Array[Json] = @mbglot.segments(text).map(segment => {
-    "start": segment.start.to_json(),
-    "end": segment.end.to_json(),
+    "start": Json(segment.start),
+    "end": Json(segment.end),
     "detection": match segment.detection {
       Some(d) => detection_json(d, segment.text)
       None => Json::null()

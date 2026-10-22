@@ -11,7 +11,7 @@ permissions:
 env:
   # The toolchain this repository is formatted and tested with. Update it
   # deliberately: newer releases may format code differently.
-  MOONBIT_INSTALL_VERSION: "0.10.14+7d59c7ec9"
+  MOONBIT_INSTALL_VERSION: "0.10.17+093cb8f9c"
 
 jobs:
   test:

@@ -8,7 +8,7 @@ pub(all) suberror OptionsError {
   /// `deny` lists every language, so no language could ever match.
   DenyAll
   /// `min_length` must not be negative.
-  NegativeMinLength(Int)
+  NegativeMinLength(Int32)
 } derive(Eq, Debug)
 
 ///|
@@ -16,7 +16,7 @@ pub(all) suberror OptionsError {
 pub struct Options {
   allow : Array[Lang]
   deny : Array[Lang]
-  min_length : Int
+  min_length : Int32
   strip_markup : Bool
   mode : Mode
 }
@@ -33,9 +33,9 @@ pub struct Options {
 /// left. Contradictory settings raise an error instead of being ignored.
 pub fn Options::new(
   allow? : Array[Lang],
-  deny? : Array[Lang] = [],
-  min_length? : Int = 10,
-  mode? : Mode = Enhanced,
+  deny~ : Array[Lang] = [],
+  min_length~ : Int32 = 10,
+  mode~ : Mode = Enhanced,
   strip_markup? : Bool,
 ) -> Options raise OptionsError {
   if min_length < 0 {
@@ -81,7 +81,7 @@ pub fn Options::deny(self : Options) -> Array[Lang] {
 
 ///|
 /// Minimum text length, in UTF-16 code units, for a detection.
-pub fn Options::min_length(self : Options) -> Int {
+pub fn Options::min_length(self : Options) -> Int32 {
   self.min_length
 }
 
@@ -129,7 +129,7 @@ pub let reliable_min_margin : Double = 0.15
 
 ///|
 /// Minimum text length, in UTF-16 code units, for a reliable detection.
-pub let reliable_min_length : Int = 30
+pub let reliable_min_length : Int32 = 30
 
 ///|
 /// franc's result for `text` under `options`, followed in `Enhanced` mode
@@ -175,7 +175,7 @@ fn ranking(
 /// of a supported script.
 pub fn rank(
   text : String,
-  options? : Options = default_options,
+  options~ : Options = default_options,
 ) -> Array[(Lang, Double)] {
   match ranking(prepared(text, options), options) {
     Some((_, ranked)) => ranked
@@ -189,7 +189,7 @@ pub fn rank(
 /// whitespace, digits, punctuation or emoji). Never guesses.
 pub fn detect(
   text : String,
-  options? : Options = default_options,
+  options~ : Options = default_options,
 ) -> Detection? {
   let text = prepared(text, options)
   guard ranking(text, options) is Some((script, ranked)) else { return None }

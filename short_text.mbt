@@ -1,7 +1,7 @@
 ///|
 /// Texts shorter than this many UTF-16 code units (after markup removal)
 /// get the word signal in `Mode::Enhanced`.
-pub let short_text_length : Int = 40
+pub let short_text_length : Int32 = 40
 
 ///|
 /// How much one common word adds to a language's score in short texts.
@@ -255,7 +255,7 @@ let stop_words : Array[(Lang, Array[String])] = [
 
 ///|
 /// Number of `words` that are common words of `lang`.
-fn stop_word_hits(lang : Lang, words : Array[String]) -> Int {
+fn stop_word_hits(lang : Lang, words : Array[String]) -> Int32 {
   guard stop_words.search_by(entry => entry.0 == lang) is Some(i) else {
     return 0
   }

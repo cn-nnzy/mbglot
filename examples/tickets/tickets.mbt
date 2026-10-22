@@ -1,6 +1,6 @@
 ///|
 /// Support messages written for this example, as (ticket id, body).
-let tickets : Array[(Int, String)] = [
+let tickets : Array[(Int32, String)] = [
   (
     1001, "Hi, I was charged twice for my annual plan on March 3rd. Can you refund the duplicate payment? Thanks, Dana",
   ),

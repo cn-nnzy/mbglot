@@ -14,13 +14,13 @@ pub fn detect_script(String) -> Script?
 
 pub fn rank(String, options? : Options) -> Array[(Lang, Double)]
 
-pub let reliable_min_length : Int
+pub let reliable_min_length : Int32
 
 pub let reliable_min_margin : Double
 
 pub fn segments(String, options? : Options) -> Array[Segment]
 
-pub let short_text_length : Int
+pub let short_text_length : Int32
 
 pub fn strip_markup(String) -> Stripped
 
@@ -29,7 +29,7 @@ pub(all) suberror OptionsError {
   EmptyAllow
   AllowDenyOverlap(Lang)
   DenyAll
-  NegativeMinLength(Int)
+  NegativeMinLength(Int32)
 } derive(Eq, @debug.Debug)
 
 // Types and methods
@@ -147,20 +147,20 @@ pub(all) enum Mode {
 pub struct Options {
   allow : Array[Lang]
   deny : Array[Lang]
-  min_length : Int
+  min_length : Int32
   strip_markup : Bool
   mode : Mode
 }
 pub fn Options::allow(Self) -> Array[Lang]
 pub fn Options::deny(Self) -> Array[Lang]
-pub fn Options::min_length(Self) -> Int
+pub fn Options::min_length(Self) -> Int32
 pub fn Options::mode(Self) -> Mode
-pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int, mode? : Mode, strip_markup? : Bool) -> Self raise OptionsError
+pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int32, mode? : Mode, strip_markup? : Bool) -> Self raise OptionsError
 pub fn Options::strip_markup(Self) -> Bool
 
 pub(all) struct Removed {
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   kind : Markup
 } derive(Eq, @debug.Debug)
 
@@ -191,8 +191,8 @@ pub fn Script::name(Self) -> String
 pub impl Show for Script
 
 pub(all) struct Segment {
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   text : String
   detection : Detection?
 } derive(Eq, @debug.Debug)
@@ -202,7 +202,7 @@ pub struct Stripped {
   removed : Array[Removed]
   // private fields
 }
-pub fn Stripped::original_offset(Self, Int) -> Int
+pub fn Stripped::original_offset(Self, Int32) -> Int32
 pub fn Stripped::removed(Self) -> Array[Removed]
 pub fn Stripped::text(Self) -> String
 

@@ -21,8 +21,8 @@ pub(all) enum Markup {
 ///|
 /// A stretch of the input that `strip_markup` removed.
 pub(all) struct Removed {
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   kind : Markup
 } derive(Eq, Debug)
 
@@ -35,7 +35,7 @@ pub struct Stripped {
   removed : Array[Removed]
   /// `origin[i]` is the input offset of `text[i]`; one more entry maps the
   /// end of `text` to the end of the input.
-  priv origin : Array[Int]
+  priv origin : Array[Int32]
 }
 
 ///|
@@ -56,7 +56,7 @@ pub fn Stripped::removed(self : Stripped) -> Array[Removed] {
 /// a kept character its own position, for the space that stands for a
 /// removed stretch the start of that stretch, and for `text.length()` the
 /// end of the input. Offsets outside the stripped text are clamped.
-pub fn Stripped::original_offset(self : Stripped, offset : Int) -> Int {
+pub fn Stripped::original_offset(self : Stripped, offset : Int32) -> Int32 {
   let i = if offset < 0 {
     0
   } else if offset >= self.origin.length() {
@@ -68,22 +68,22 @@ pub fn Stripped::original_offset(self : Stripped, offset : Int) -> Int {
 }
 
 ///|
-fn is_ascii_alpha(c : Int) -> Bool {
+fn is_ascii_alpha(c : Int32) -> Bool {
   (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }
 
 ///|
-fn is_ascii_digit(c : Int) -> Bool {
+fn is_ascii_digit(c : Int32) -> Bool {
   c >= '0' && c <= '9'
 }
 
 ///|
-fn is_hex_letter(c : Int) -> Bool {
+fn is_hex_letter(c : Int32) -> Bool {
   (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')
 }
 
 ///|
-fn is_ascii_alnum(c : Int) -> Bool {
+fn is_ascii_alnum(c : Int32) -> Bool {
   is_ascii_alpha(c) || is_ascii_digit(c)
 }
 
@@ -91,14 +91,14 @@ fn is_ascii_alnum(c : Int) -> Bool {
 /// Letters of any script, digits and `_`, by UTF-16 unit: every unit at
 /// or above U+00C0 except punctuation and spaces counts, which keeps
 /// hashtags in other languages whole.
-fn is_word_unit(c : Int) -> Bool {
+fn is_word_unit(c : Int32) -> Bool {
   is_ascii_alnum(c) ||
   c == '_' ||
   (c >= 0xC0 && !is_js_space(c) && c != 0xD7 && c != 0xF7 && !is_cjk_punct(c))
 }
 
 ///|
-fn is_cjk_punct(c : Int) -> Bool {
+fn is_cjk_punct(c : Int32) -> Bool {
   (c >= 0x2000 && c <= 0x206F) ||
   (c >= 0x3000 && c <= 0x303F) ||
   (c >= 0xFF00 && c <= 0xFF0F) ||
@@ -106,7 +106,7 @@ fn is_cjk_punct(c : Int) -> Bool {
 }
 
 ///|
-fn unit(text : String, i : Int) -> Int {
+fn unit(text : String, i : Int32) -> Int32 {
   if i >= 0 && i < text.length() {
     text.unsafe_get(i).to_int()
   } else {
@@ -116,7 +116,7 @@ fn unit(text : String, i : Int) -> Int {
 
 ///|
 /// True when `text` at `i` starts with `prefix`, ignoring ASCII case.
-fn starts_with_ci(text : String, i : Int, prefix : String) -> Bool {
+fn starts_with_ci(text : String, i : Int32, prefix : String) -> Bool {
   if i + prefix.length() > text.length() {
     return false
   }
@@ -135,7 +135,7 @@ fn starts_with_ci(text : String, i : Int, prefix : String) -> Bool {
 ///|
 /// True when position `i` does not continue a word, so that a mention,
 /// hashtag or address may start there.
-fn at_word_start(text : String, i : Int) -> Bool {
+fn at_word_start(text : String, i : Int32) -> Bool {
   let prev = unit(text, i - 1)
   prev < 0 || !(is_word_unit(prev) || prev == '@' || prev == '#' || prev == '.')
 }
@@ -143,7 +143,7 @@ fn at_word_start(text : String, i : Int) -> Bool {
 ///|
 /// End of a URL whose address starts at `i`: the run of non-space units,
 /// without trailing sentence punctuation or an unmatched closing bracket.
-fn url_end(text : String, i : Int) -> Int {
+fn url_end(text : String, i : Int32) -> Int32 {
   let mut end = i
   let mut open = 0
   while end < text.length() {
@@ -179,7 +179,7 @@ fn url_end(text : String, i : Int) -> Int {
 }
 
 ///|
-fn match_url(text : String, i : Int) -> Int? {
+fn match_url(text : String, i : Int32) -> Int32? {
   if !at_word_start(text, i) {
     return None
   }
@@ -193,13 +193,13 @@ fn match_url(text : String, i : Int) -> Int? {
 }
 
 ///|
-fn is_email_local(c : Int) -> Bool {
+fn is_email_local(c : Int32) -> Bool {
   is_ascii_alnum(c) || c == '.' || c == '_' || c == '%' || c == '+' || c == '-'
 }
 
 ///|
 /// An e-mail address whose `@` is at `at`: returns its start and end.
-fn match_email(text : String, at : Int) -> (Int, Int)? {
+fn match_email(text : String, at : Int32) -> (Int32, Int32)? {
   let mut start = at
   while start > 0 && is_email_local(unit(text, start - 1)) {
     start -= 1
@@ -233,7 +233,7 @@ fn match_email(text : String, at : Int) -> (Int, Int)? {
 
 ///|
 /// A `@mention` or `#hashtag` starting at `i`: the end of its name.
-fn match_tag(text : String, i : Int, hashtag : Bool) -> Int? {
+fn match_tag(text : String, i : Int32, hashtag : Bool) -> Int32? {
   if !at_word_start(text, i) {
     return None
   }
@@ -258,7 +258,7 @@ fn match_tag(text : String, i : Int, hashtag : Bool) -> Int? {
 
 ///|
 /// Index of `needle` in `text` at or after `from`, ignoring ASCII case.
-fn find_ci(text : String, from : Int, needle : String) -> Int? {
+fn find_ci(text : String, from : Int32, needle : String) -> Int32? {
   let mut i = from
   while i + needle.length() <= text.length() {
     if starts_with_ci(text, i, needle) {
@@ -277,7 +277,7 @@ let code_elements : Array[String] = ["code", "pre", "script", "style"]
 /// An HTML tag, comment or doctype at `i`. Returns the end and whether the
 /// tag opens an element whose content is removed with it, in which case
 /// the end is after the matching closing tag (or the end of the input).
-fn match_html(text : String, i : Int) -> (Int, Markup)? {
+fn match_html(text : String, i : Int32) -> (Int32, Markup)? {
   if starts_with_ci(text, i, "<!--") {
     let end = match find_ci(text, i + 4, "-->") {
       Some(k) => k + 3
@@ -343,7 +343,7 @@ fn match_html(text : String, i : Int) -> (Int, Markup)? {
 
 ///|
 /// An HTML character reference at `i`, `&name;`, `&#123;` or `&#x7B;`.
-fn match_entity(text : String, i : Int) -> Int? {
+fn match_entity(text : String, i : Int32) -> Int32? {
   let mut k = i + 1
   if unit(text, k) == '#' {
     k += 1
@@ -379,7 +379,7 @@ fn match_entity(text : String, i : Int) -> Int? {
 /// `i`: the end after the closing run of as many backticks. An unclosed
 /// fence of three or more runs to the end of the input; an unclosed single
 /// backtick is not code.
-fn match_code(text : String, i : Int) -> Int? {
+fn match_code(text : String, i : Int32) -> Int32? {
   let mut run = 0
   while unit(text, i + run) == '`' {
     run += 1
@@ -421,7 +421,7 @@ pub fn strip_markup(text : String) -> Stripped {
   let mut kept_from = 0
   let n = text.length()
   // Copies text[kept_from, upto) and records where each unit came from.
-  let flush = (upto : Int) => {
+  let flush = (upto : Int32) => {
     out.write_substring(text, kept_from, upto - kept_from)
     for k in kept_from..<upto {
       origin.push(k)
@@ -429,7 +429,7 @@ pub fn strip_markup(text : String) -> Stripped {
   }
   while i < n {
     let c = unit(text, i)
-    let found : (Int, Int, Markup)? = match c {
+    let found : (Int32, Int32, Markup)? = match c {
       'h' | 'H' | 'f' | 'F' | 'w' | 'W' =>
         match_url(text, i).map(end => (i, end, Url))
       '@' =>
