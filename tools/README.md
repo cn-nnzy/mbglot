@@ -16,7 +16,7 @@ node tools/gen_profiles.mjs "$TMP/franc/node_modules/franc-min" profiles.mbt
 moon fmt
 ```
 
-The `franc-min data` job in CI runs exactly these commands and fails if
+The `franc data` job in CI runs exactly these commands and fails if
 the result differs from the committed `profiles.mbt`.
 
 ## gen_golden.mjs
@@ -35,7 +35,7 @@ moon fmt
 
 A sample in `golden_samples.json` has `name` and `text`, and optionally
 `repeat` (repeat `text` that many times), `suffix`, `allow`, `deny` and
-`minLength`. The `franc-min data` CI job regenerates this file too, and
+`minLength`. The `franc data` CI job regenerates this file too, and
 uploads the regenerated files as an artifact when they differ.
 
 ## unicode_case.py
@@ -89,6 +89,23 @@ export gives the same corpus. Tatoeba updates its exports weekly, so a
 later export can change the selection where sentences were removed; the
 file header records the export date. The script's docstring lists the
 length classes and the mapping from mbglot's language codes to Tatoeba's.
+
+## gen_full.mjs
+
+Writes `full/data.mbt` (the Unicode ranges of franc 6.2.0's 30 script
+expressions, decoded by testing every code point, and its 163 trigram
+profiles) and `full/golden_test.mbt` (the ten best `francAll` entries and
+their number for franc's fixtures in the supported languages and the
+cases in `golden_samples.json`). Needs Node.js; the fixtures are the
+same pinned file as for `gen_golden.mjs`.
+
+```
+npm install --prefix "$TMP/franc-full" --no-save --ignore-scripts franc@6.2.0
+node tools/gen_full.mjs "$TMP/franc-full/node_modules/franc" "$TMP/fixtures.js" full
+moon fmt
+```
+
+The `franc data` CI job regenerates both files and fails if they differ.
 
 ## bench_franc.mjs
 

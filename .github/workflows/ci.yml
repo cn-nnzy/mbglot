@@ -95,7 +95,7 @@ jobs:
           diff --strip-trailing-cr "$RUNNER_TEMP/results.md" eval/results.md
 
   franc-data:
-    name: franc-min data
+    name: franc data
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
@@ -112,8 +112,10 @@ jobs:
       - name: Fetch the registry index
         run: moon update
 
-      - name: Install franc-min 6.2.0
-        run: npm install --prefix "$RUNNER_TEMP/franc" --no-save --ignore-scripts franc-min@6.2.0
+      - name: Install franc-min 6.2.0 and franc 6.2.0
+        run: |
+          npm install --prefix "$RUNNER_TEMP/franc" --no-save --ignore-scripts franc-min@6.2.0
+          npm install --prefix "$RUNNER_TEMP/franc-full" --no-save --ignore-scripts franc@6.2.0
 
       - name: Download franc 6.2.0 test fixtures
         run: curl -fsSL -o "$RUNNER_TEMP/fixtures.js" https://raw.githubusercontent.com/wooorm/franc/3f9f0b51a96c5df32a407dad865a3011ac0fa2d1/test/fixtures.js
@@ -122,6 +124,7 @@ jobs:
         run: |
           node tools/gen_profiles.mjs "$RUNNER_TEMP/franc/node_modules/franc-min" profiles.mbt
           node tools/gen_golden.mjs "$RUNNER_TEMP/franc/node_modules/franc-min" "$RUNNER_TEMP/fixtures.js" golden_wbtest.mbt
+          node tools/gen_full.mjs "$RUNNER_TEMP/franc-full/node_modules/franc" "$RUNNER_TEMP/fixtures.js" full
           moon fmt
 
       - name: Generated files match the committed ones
@@ -137,3 +140,5 @@ jobs:
           path: |
             profiles.mbt
             golden_wbtest.mbt
+            full/data.mbt
+            full/golden_test.mbt

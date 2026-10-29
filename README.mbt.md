@@ -48,6 +48,8 @@ Milestone 1 is complete. Implemented:
 - `Profile::train` and `Classifier`: profiles trained from sample text,
   saved as plain text and compared with franc's method, alone or with
   the built-in ones (see [Custom profiles](#custom-profiles)).
+- `cn-nnzy/mbglot/full`: franc 6.2.0 with all its languages (see
+  [All of franc's languages](#all-of-francs-languages)).
 - `Accumulator`: the language of a stream fed in chunks, without
   re-reading earlier chunks (see [Streams](#streams)).
 - `explain(text, options?)`: the steps that decided a detection and the
@@ -68,7 +70,8 @@ Milestone 1 is complete. Implemented:
   files of one text per line, a ticket-routing example in
   `examples/tickets` and a [browser demo](#browser-demo) in `demo`.
 
-Not implemented: languages beyond franc-min's 76.
+All 186 of franc's languages are in the `full` package; the enhanced
+passes cover franc-min's 76.
 There is no release on mooncakes.io yet.
 
 ## Usage
@@ -657,6 +660,42 @@ changes language follows the change. Markup is removed chunk by chunk.
 `Detector::accumulator()` starts one with a detector's options, and
 `reset` empties it.
 
+## All of franc's languages
+
+The `cn-nnzy/mbglot/full` package is franc 6.2.0 itself rather than
+franc-min: 186 languages as franc counts them (once per script), 178
+ISO 639-3 codes, including Catalan, Danish, Norwegian, Esperanto,
+Hebrew, Georgian, Armenian and Khmer. Its languages are ISO 639-3 codes
+(most have no `Lang`), and it offers franc's own functions, without the
+passes of `Mode::Enhanced`:
+
+```mbt check
+///|
+test {
+  assert_eq(
+    @full.franc("Bon dia, voldria saber quan arribarà la meva comanda."),
+    "cat",
+  )
+  assert_eq(
+    @full.franc(
+      "שלום, ההזמנה שלי עדיין לא הגיעה. אפשר לבדוק?",
+    ),
+    "heb",
+  )
+  assert_eq(@full.franc_all("hi"), [("und", 1.0)])
+  assert_eq(@full.languages().length(), 178)
+}
+```
+
+It is a separate package so that applications that need only
+franc-min's languages do not carry its 250 KB of data; import
+`cn-nnzy/mbglot/full` in `moon.pkg` to use it. `tools/gen_full.mjs`
+generates its data from the npm package and a golden test compares the
+ten best entries and the number of entries of `francAll` with franc on
+franc's fixtures in all 186 languages and on the hand-written cases, and
+CI regenerates both. It uses the `Classifier` of
+[Custom profiles](#custom-profiles) with franc's profiles.
+
 ## Script detection
 
 ```mbt check
@@ -822,7 +861,7 @@ node tools/gen_golden.mjs "$TMP/franc/node_modules/franc-min" "$TMP/fixtures.js"
 moon fmt
 ```
 
-The `franc-min data` CI job runs these commands on every push and fails
+The `franc data` CI job runs these commands on every push and fails
 if the result differs from the committed file.
 
 ## License
