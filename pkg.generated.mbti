@@ -12,6 +12,8 @@ pub fn detect(String, options? : Options) -> Detection?
 
 pub fn detect_script(String) -> Script?
 
+pub fn explain(String, options? : Options) -> Explanation
+
 pub fn rank(String, options? : Options) -> Array[(Lang, Double)]
 
 pub let reliable_min_confidence : Double
@@ -55,10 +57,17 @@ pub struct Detector {
   // private fields
 }
 pub fn Detector::detect(Self, String) -> Detection?
+pub fn Detector::explain(Self, String) -> Explanation
 pub fn Detector::new(options? : Options) -> Self
 pub fn Detector::options(Self) -> Options
 pub fn Detector::rank(Self, String) -> Array[(Lang, Double)]
 pub fn Detector::segments(Self, String) -> Array[Segment]
+
+pub(all) struct Explanation {
+  detection : Detection?
+  steps : Array[Step]
+  trigrams : Array[TrigramScore]
+}
 
 pub(all) enum Lang {
   Spa
@@ -217,6 +226,14 @@ pub(all) struct Segment {
   detection : Detection?
 } derive(Eq, @debug.Debug)
 
+pub(all) enum Step {
+  Trigrams(Lang)
+  ScriptShare(Lang)
+  CommonWords(Lang, Array[String])
+  RelatedLanguages(Lang, Array[String])
+  NearTie(Lang, Lang)
+} derive(Eq, @debug.Debug)
+
 pub struct Stripped {
   text : String
   removed : Array[Removed]
@@ -225,6 +242,14 @@ pub struct Stripped {
 pub fn Stripped::original_offset(Self, Int32) -> Int32
 pub fn Stripped::removed(Self) -> Array[Removed]
 pub fn Stripped::text(Self) -> String
+
+pub(all) struct TrigramScore {
+  trigram : String
+  count : Int32
+  rank : Int32?
+  runner_up_rank : Int32?
+  gain : Int32
+} derive(Eq, @debug.Debug)
 
 // Type aliases
 

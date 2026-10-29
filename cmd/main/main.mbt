@@ -10,6 +10,8 @@ priv struct Settings {
   file : String?
   segments : Bool
   json : Bool
+  /// Also show why the language was chosen.
+  explain : Bool
   /// How many candidates to list.
   top : Int32
   options : @mbglot.Options
@@ -36,6 +38,10 @@ fn command() -> @argparse.Command {
       @argparse.FlagArg(
         "segments",
         about="split text that mixes languages into segments and identify each",
+      ),
+      @argparse.FlagArg(
+        "explain",
+        about="also show why: the step that decided the language and the trigrams that weigh most for and against it",
       ),
       @argparse.FlagArg(
         "json",
@@ -163,11 +169,16 @@ fn parse_args(argv? : ArrayView[String]) -> Settings raise {
     DenyAll => raise Usage("error: --deny lists every language")
     NegativeMinLength(_) => raise Usage("error: --min-length is negative")
   }
+  let explain = matches.flags.get_or_default("explain", false)
+  if explain && file is Some(_) && !matches.flags.get_or_default("json", false) {
+    raise Usage("error: --explain with --file needs --json")
+  }
   {
     text,
     file,
     segments: matches.flags.get_or_default("segments", false),
     json: matches.flags.get_or_default("json", false),
+    explain,
     top: count(matches, "top", if file is Some(_) { 0 } else { 5 }),
     options,
   }
@@ -307,6 +318,7 @@ fn json_report(
   detector : @mbglot.Detector,
   top : Int32,
   segments : Bool,
+  explain~ : Bool = false,
 ) -> Json {
   let candidates : Array[Json] = []
   if top > 0 {
@@ -331,6 +343,9 @@ fn json_report(
         "detection": detection_json(part.detection),
       }),
     )
+  }
+  if explain {
+    result["explain"] = explain_json(text, detector)
   }
   Json::object(result)
 }
@@ -362,7 +377,13 @@ fn batch_report(contents : String, settings : Settings) -> Array[String] {
   for i, line in lines {
     let number = i + 1
     if settings.json {
-      let result = json_report(line, detector, settings.top, settings.segments)
+      let result = json_report(
+        line,
+        detector,
+        settings.top,
+        settings.segments,
+        explain=settings.explain,
+      )
       if result is Object(fields) {
         fields["line"] = Json(number)
       }
@@ -387,15 +408,140 @@ fn batch_report(contents : String, settings : Settings) -> Array[String] {
 }
 
 ///|
+fn lang_label(lang : @mbglot.Lang) -> String {
+  "\{lang.name()} (\{lang.code()})"
+}
+
+///|
+/// A step of the decision in words.
+fn describe_step(step : @mbglot.Step) -> String {
+  match step {
+    Trigrams(lang) => "trigram statistics rank \{lang_label(lang)} first"
+    ScriptShare(lang) =>
+      "the shares of kana, Han and Hangul make it \{lang_label(lang)}"
+    CommonWords(lang, words) =>
+      "common words of \{lang_label(lang)} in a short text: \{words.join(", ")}"
+    RelatedLanguages(lang, clues) =>
+      "letters and words that set \{lang_label(lang)} apart from a related language: \{clues.join(", ")}"
+    NearTie(lang, other) =>
+      "near tie with \{lang_label(other)}, broken for \{lang.name()}, which has more speakers"
+  }
+}
+
+///|
+/// Up to five trigrams of `scores` that favour (or with `against`, weigh
+/// against) the detected language, as `"tri" +gain`.
+fn strongest(
+  scores : Array[@mbglot.TrigramScore],
+  against~ : Bool,
+) -> Array[@mbglot.TrigramScore] {
+  let picked = if against {
+    scores.rev().filter(s => s.gain < 0)
+  } else {
+    scores.filter(s => s.gain > 0)
+  }
+  if picked.length() > 5 {
+    picked.truncate(5)
+  }
+  picked
+}
+
+///|
+fn trigram_list(scores : Array[@mbglot.TrigramScore]) -> String {
+  let parts = scores.map(s => {
+    let sign = if s.gain > 0 { "+" } else { "" }
+    "\"\{s.trigram}\" \{sign}\{s.gain}"
+  })
+  if parts.is_empty() {
+    "none"
+  } else {
+    parts.join(", ")
+  }
+}
+
+///|
+/// The lines printed for `text` with `--explain`, after the report.
+fn explain_lines(text : String, detector : @mbglot.Detector) -> Array[String] {
+  let explanation = detector.explain(text)
+  guard explanation.detection is Some(detection) else { return [] }
+  let lines = ["why:"]
+  for step in explanation.steps {
+    lines.push("  \{describe_step(step)}")
+  }
+  if detection.runner_up is Some(other) && !explanation.trigrams.is_empty() {
+    let lang = detection.lang.code()
+    lines.push(
+      "trigrams for \{lang} over \{other.code()}: \{trigram_list(strongest(explanation.trigrams, against=false))}",
+    )
+    lines.push(
+      "trigrams for \{other.code()} over \{lang}: \{trigram_list(strongest(explanation.trigrams, against=true))}",
+    )
+  }
+  lines
+}
+
+///|
+fn step_json(step : @mbglot.Step) -> Json {
+  match step {
+    Trigrams(lang) => { "step": "trigrams", "lang": Json(lang.code()) }
+    ScriptShare(lang) => { "step": "script_share", "lang": Json(lang.code()) }
+    CommonWords(lang, words) =>
+      {
+        "step": "common_words",
+        "lang": Json(lang.code()),
+        "clues": Json::array(words.map(w => Json(w))),
+      }
+    RelatedLanguages(lang, clues) =>
+      {
+        "step": "related_languages",
+        "lang": Json(lang.code()),
+        "clues": Json::array(clues.map(w => Json(w))),
+      }
+    NearTie(lang, other) =>
+      {
+        "step": "near_tie",
+        "lang": Json(lang.code()),
+        "over": Json(other.code()),
+      }
+  }
+}
+
+///|
+/// The explanation of `text` as JSON: the steps, and the trigrams that
+/// weigh most for and against the detected language.
+fn explain_json(text : String, detector : @mbglot.Detector) -> Json {
+  let explanation = detector.explain(text)
+  let trigrams = (scores : Array[@mbglot.TrigramScore]) => {
+    Json::array(
+      scores.map(s => { "trigram": Json(s.trigram), "gain": Json(s.gain) }),
+    )
+  }
+  {
+    "steps": Json::array(explanation.steps.map(step_json)),
+    "trigrams_for": trigrams(strongest(explanation.trigrams, against=false)),
+    "trigrams_against": trigrams(strongest(explanation.trigrams, against=true)),
+  }
+}
+
+///|
 /// The lines printed for the text of the command line.
 fn text_report(settings : Settings) -> Array[String] {
   let detector = @mbglot.Detector::new(options=settings.options)
   if settings.json {
     [
-      json_report(settings.text, detector, settings.top, settings.segments).stringify(),
+      json_report(
+        settings.text,
+        detector,
+        settings.top,
+        settings.segments,
+        explain=settings.explain,
+      ).stringify(),
     ]
   } else if settings.segments {
     segments_report(settings.text, detector, settings.top)
+  } else if settings.explain {
+    report(settings.text, detector, settings.top) +
+    explain_lines(settings.text, detector)
   } else {
     report(settings.text, detector, settings.top)
   }

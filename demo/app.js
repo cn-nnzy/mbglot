@@ -32,13 +32,26 @@ function el(tag, className, text) {
   return node;
 }
 
-function renderVerdict(detection, text) {
+// One sentence per step of the decision, as `analyze` lists them.
+function describeStep(step) {
+  const quoted = step.clues.map((c) => `“${c}”`).join(", ");
+  switch (step.step) {
+    case "trigrams": return `Trigram statistics rank ${step.name} first.`;
+    case "script_share": return `The shares of kana, Han and Hangul make it ${step.name}.`;
+    case "common_words": return `Common ${step.name} words in a short text: ${quoted}.`;
+    case "related_languages": return `Letters and words that set ${step.name} apart from a related language: ${quoted}.`;
+    case "near_tie": return `Near tie with ${step.over}, broken for ${step.name}, which has more speakers.`;
+    default: return "";
+  }
+}
+
+function renderVerdict(detection, text, why) {
   verdict.replaceChildren();
   if (!detection) {
-    const why = text.trim().length === 0
+    const message = text.trim().length === 0
       ? "Type some text to see its language."
       : "No language detected: the text is shorter than 10 characters or has no letters of a supported script.";
-    verdict.append(el("p", "none", why));
+    verdict.append(el("p", "none", message));
     return;
   }
   const head = el("p", "lang");
@@ -50,6 +63,7 @@ function renderVerdict(detection, text) {
   conf.append(el("span", detection.reliable ? "badge ok" : "badge warn",
     detection.reliable ? "reliable" : "not reliable"));
   verdict.append(head, conf);
+  if (why.length > 0) verdict.append(el("p", "why", why.map(describeStep).join(" ")));
 }
 
 function renderTop(entries) {
@@ -95,7 +109,7 @@ function renderSegments(text, segments) {
 function update() {
   const text = input.value;
   const result = JSON.parse(analyze(text));
-  renderVerdict(result.detection, text);
+  renderVerdict(result.detection, text, result.why);
   renderTop(result.top);
   renderSegments(text, text.length === 0 ? [] : result.segments);
 }

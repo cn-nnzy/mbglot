@@ -75,3 +75,27 @@ test "Chinese detections carry the character variant" {
     fail(english.stringify())
   }
 }
+
+///|
+test "analyze lists the steps that decided" {
+  let result = @json.parse(
+    @demo.analyze(
+      "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio.",
+    ),
+  )
+  guard result
+    is {
+      "why": [
+        { "step": "trigrams", "name": "Spanish", .. },
+        {
+          "step": "related_languages",
+          "name": "Portuguese",
+          "clues": ["ç", "o", "do"],
+          ..
+        },
+      ],
+      ..
+    } else {
+    fail("unexpected result: \{result.stringify()}")
+  }
+}

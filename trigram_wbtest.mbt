@@ -13,16 +13,6 @@ fn clean(text : String) -> String {
 }
 
 ///|
-/// The trigram string of a key made by `pack`.
-fn unpack(key : Int64) -> String {
-  let b = StringBuilder()
-  for shift in [32, 16, 0] {
-    b.write_char(((key >> shift).to_int() & 0xFFFF).unsafe_to_char())
-  }
-  b.to_string()
-}
-
-///|
 /// `trigram_keys` with the trigrams as strings.
 fn trigrams(text : String) -> Array[(String, Int32)] {
   trigram_keys(text).map(t => (unpack(t.0), t.1))

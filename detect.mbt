@@ -163,6 +163,7 @@ fn ranking(
   text : String,
   options : Options,
   masks : FixedArray[FixedArray[Bool]],
+  steps? : Array[Step],
 ) -> (Script, Array[(Lang, Double)])? {
   guard franc_masked(
       text,
@@ -174,9 +175,12 @@ fn ranking(
     is Some((script, ranked)) else {
     return None
   }
+  let record = (step : Step) => if steps is Some(list) { list.push(step) }
+  record(Trigrams(ranked[0].0))
   match options.mode {
     Franc => Some((script, ranked))
     Enhanced => {
+      let before = ranked[0].0
       let (script, ranked) = refine_cjk(
         text,
         script,
@@ -184,9 +188,27 @@ fn ranking(
         options.allow,
         options.deny,
       )
+      if ranked[0].0 != before {
+        record(ScriptShare(ranked[0].0))
+      }
+      let before = ranked[0].0
       let ranked = short_text_signal(text, ranked)
+      if ranked[0].0 != before {
+        record(CommonWords(ranked[0].0, common_words_of(ranked[0].0, text)))
+      }
+      let before = ranked[0].0
       let ranked = settle_confusables(text, ranked, options.allow, options.deny)
-      Some((script, near_tie_prior(text, ranked)))
+      if ranked[0].0 != before {
+        record(
+          RelatedLanguages(ranked[0].0, group_clues(ranked[0].0, before, text)),
+        )
+      }
+      let before = ranked[0].0
+      let ranked = near_tie_prior(text, ranked)
+      if ranked[0].0 != before {
+        record(NearTie(ranked[0].0, before))
+      }
+      Some((script, ranked))
     }
   }
 }

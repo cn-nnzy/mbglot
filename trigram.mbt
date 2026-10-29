@@ -135,6 +135,16 @@ fn pack(a : Int32, b : Int32, c : Int32) -> Int64 {
 }
 
 ///|
+/// The trigram string of a key made by `pack`.
+fn unpack(key : Int64) -> String {
+  let b = StringBuilder()
+  for shift in [32, 16, 0] {
+    b.write_char(((key >> shift).to_int() & 0xFFFF).unsafe_to_char())
+  }
+  b.to_string()
+}
+
+///|
 /// The trigram string `gram` (three UTF-16 code units) as a key.
 fn key_of(gram : StringView) -> Int64 {
   pack(

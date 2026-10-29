@@ -45,6 +45,9 @@ Milestone 1 is complete. Implemented:
   languages into consecutive segments with their own detection. This is
   mbglot's own procedure on top of franc's scores (franc has no
   segmentation); see below.
+- `explain(text, options?)`: the steps that decided a detection and the
+  trigrams that weigh for and against it (see
+  [Why this language](#why-this-language)).
 - `chinese_variant(text)`: simplified or traditional Chinese, and kana
   and Hangul shares that settle Chinese, Japanese and Korean (see
   [Chinese, Japanese and Korean](#chinese-japanese-and-korean)).
@@ -136,7 +139,10 @@ $ moon run cmd/main -- --json --top 2 "Olá, gostaria de mudar o endereço de en
 {"detection":{"lang":"por","bcp47":"pt","name":"Portuguese","script":"Latin","confidence":0.428,"margin":0.068,"reliable":true,"runner_up":"spa"},"top":[{"lang":"por","score":1},{"lang":"spa","score":0.932}]}
 ```
 
-`--top N` sets how many candidates are listed (5 for a text, none for a
+`--explain` adds the steps that decided the language and the trigrams
+that weigh most for and against it (see
+[Why this language](#why-this-language)). `--top N` sets how many
+candidates are listed (5 for a text, none for a
 file), `--allow` and `--deny` take language tags or ISO 639 codes
 separated by commas (`--allow en,fr,deu`), `--mode franc` turns off the enhanced passes and
 `--min-length` sets the minimum text length. Wrong options give a message
@@ -486,6 +492,50 @@ test {
   assert_eq(s.original_offset(6), 6) // the space for @dana
   assert_eq(s.original_offset(9), 15) // the "!"
 }
+```
+
+## Why this language
+
+`explain(text, options?)` (or `Detector::explain`) returns the detection
+together with the steps that decided it and the trigrams behind franc's
+part:
+
+- `steps`: franc's choice by trigram distance (`Trigrams`), then each pass
+  of `Mode::Enhanced` that changed the language at the top: the shares of
+  kana, Han and Hangul (`ScriptShare`), common words in a short text
+  (`CommonWords`), letters and words that set a related language apart
+  (`RelatedLanguages`, with only the clues that the language franc chose
+  lacks) and a near tie broken by number of speakers (`NearTie`);
+- `trigrams`: every trigram of the text that weighs differently for the
+  detected language and the runner-up, with its count, its rank in both
+  profiles and the difference it makes to franc's distance, strongest
+  first.
+
+```mbt check
+///|
+test {
+  let why = @mbglot.explain(
+    "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio.",
+  )
+  assert_eq(why.steps, [Trigrams(Spa), RelatedLanguages(Por, ["ç", "o", "do"])])
+  assert_eq(why.trigrams[0].trigram, " do")
+}
+```
+
+The command line prints the same with `--explain`, and the browser demo
+shows the steps under the detection:
+
+```
+$ moon run cmd/main -- --explain --top 0 "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio."
+language:   Portuguese (por)
+script:     Latin
+confidence: 0.428 (reliable)
+runner-up:  Spanish (spa), margin 0.068
+why:
+  trigram statistics rank Spanish (spa) first
+  letters and words that set Portuguese (por) apart from a related language: ç, o, do
+trigrams for por over spa: " do" +233, "ido" +103, "o e" +101, "do " +87, "ntr" +51
+trigrams for spa over por: "ere" -290, "der" -286, " en" -269, "ant" -145, "ari" -86
 ```
 
 ## Mixed-language text

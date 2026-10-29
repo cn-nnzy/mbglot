@@ -209,3 +209,46 @@ test "batch segments are prefixed with the line number" {
     "1\t[31, 94)     eng  English                  reliable     Hi, could you check the tracking numb...",
   )
 }
+
+///|
+test "explain" {
+  let lines = run([
+    "--explain", "--top", "0", "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio.",
+  ])
+  assert_eq(lines[4:].to_owned(), [
+    "why:", "  trigram statistics rank Spanish (spa) first", "  letters and words that set Portuguese (por) apart from a related language: ç, o, do",
+    "trigrams for por over spa: \" do\" +233, \"ido\" +103, \"o e\" +101, \"do \" +87, \"ntr\" +51",
+    "trigrams for spa over por: \"ere\" -290, \"der\" -286, \" en\" -269, \"ant\" -145, \"ari\" -86",
+  ])
+  assert_eq(run(["--explain", "ok"]), run(["ok"]))
+  assert_eq(
+    usage_error(["--explain", "--file", "a.txt"]),
+    "error: --explain with --file needs --json",
+  )
+}
+
+///|
+test "explain as json" {
+  let json = @json.parse(
+    run(["--explain", "--json", "--top", "0", "это мой дом"])[0],
+  )
+  guard json
+    is {
+      "explain": {
+        "steps": [
+          { "step": "trigrams", "lang": "koi", .. },
+          {
+            "step": "common_words",
+            "lang": "rus",
+            "clues": ["это", "мой"],
+            ..
+          },
+        ],
+        "trigrams_for": [{ "trigram": "ой ", "gain": 229, .. }, ..],
+        ..
+      },
+      ..
+    } else {
+    fail("unexpected JSON: \{json.stringify()}")
+  }
+}
