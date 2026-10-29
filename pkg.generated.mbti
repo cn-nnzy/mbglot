@@ -14,11 +14,15 @@ pub fn detect_script(String) -> Script?
 
 pub fn rank(String, options? : Options) -> Array[(Lang, Double)]
 
+pub let reliable_min_confidence : Double
+
 pub let reliable_min_length : Int32
 
 pub let reliable_min_margin : Double
 
 pub fn segments(String, options? : Options) -> Array[Segment]
+
+pub let short_reliable_min_confidence : Double
 
 pub let short_text_length : Int32
 
@@ -43,6 +47,8 @@ pub(all) struct Detection {
   script : Script
   confidence : Double
   reliable : Bool
+  margin : Double
+  runner_up : Lang?
 } derive(Eq, @debug.Debug)
 
 pub(all) enum Lang {

@@ -111,25 +111,49 @@ fn prepared(text : String, options : Options) -> String {
 ///|
 /// Result of `detect`.
 ///
-/// `confidence` is the margin between the best and the second-best
-/// language on franc's normalised scale (1.0 when there is no second
-/// candidate). `reliable` is true when `confidence` is at least
-/// `reliable_min_margin` and the text is at least `reliable_min_length`
-/// UTF-16 code units long.
+/// `margin` is the margin between the best and the second-best language
+/// on franc's normalised scale (1.0 when there is no second candidate),
+/// and `runner_up` that second language. `confidence` is the margin in
+/// `Mode::Franc`; in `Mode::Enhanced` it adds `evidence_weight` for every
+/// letter or common word that points to `lang` rather than the runner-up,
+/// up to 1.0. It is a score for ordering and thresholds, not a
+/// probability. `reliable` says whether the detection can be acted on
+/// without review (see `reliable_min_margin` for `Mode::Franc` and
+/// `reliable_min_confidence` for `Mode::Enhanced`).
 pub(all) struct Detection {
   lang : Lang
   script : Script
   confidence : Double
   reliable : Bool
+  margin : Double
+  runner_up : Lang?
 } derive(Eq, Debug)
 
 ///|
-/// Minimum `confidence` for a reliable detection.
+/// Minimum margin for a reliable detection in `Mode::Franc`.
 pub let reliable_min_margin : Double = 0.15
 
 ///|
-/// Minimum text length, in UTF-16 code units, for a reliable detection.
+/// Minimum text length, in UTF-16 code units, for a reliable detection in
+/// `Mode::Franc`. In `Mode::Enhanced` shorter texts need a higher
+/// confidence instead (`short_reliable_min_confidence`).
 pub let reliable_min_length : Int32 = 30
+
+///|
+/// What one letter or common word adds to `confidence` in
+/// `Mode::Enhanced`. Chosen with the two thresholds below on the dev half
+/// of the Tatoeba benchmark.
+let evidence_weight : Double = 0.04
+
+///|
+/// Minimum `confidence` for a reliable detection in `Mode::Enhanced`, for
+/// texts of at least `reliable_min_length` UTF-16 code units.
+pub let reliable_min_confidence : Double = 0.18
+
+///|
+/// Minimum `confidence` for a reliable detection in `Mode::Enhanced`, for
+/// texts shorter than `reliable_min_length`.
+pub let short_reliable_min_confidence : Double = 0.4
 
 ///|
 /// franc's result for `text` under `options`, followed in `Enhanced` mode
@@ -193,12 +217,30 @@ pub fn detect(
 ) -> Detection? {
   let text = prepared(text, options)
   guard ranking(text, options) is Some((script, ranked)) else { return None }
-  let confidence = if ranked.length() > 1 {
-    ranked[0].1 - ranked[1].1
+  let lang = ranked[0].0
+  let (margin, runner_up) = if ranked.length() > 1 {
+    (ranked[0].1 - ranked[1].1, Some(ranked[1].0))
   } else {
-    1.0
+    (1.0, None)
   }
-  let reliable = confidence >= reliable_min_margin &&
-    text.length() >= reliable_min_length
-  Some({ lang: ranked[0].0, script, confidence, reliable, })
+  let (confidence, reliable) = match options.mode {
+    Franc =>
+      (
+        margin,
+        margin >= reliable_min_margin && text.length() >= reliable_min_length,
+      )
+    Enhanced => {
+      let clues = clues(text, lang, runner_up)
+      let confidence = (margin + evidence_weight * clues.evidence.to_double()).min(
+        1.0,
+      )
+      let threshold = if text.length() >= reliable_min_length {
+        reliable_min_confidence
+      } else {
+        short_reliable_min_confidence
+      }
+      (confidence, confidence >= threshold && !clues.contested)
+    }
+  }
+  Some({ lang, script, confidence, reliable, margin, runner_up, })
 }

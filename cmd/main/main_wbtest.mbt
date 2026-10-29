@@ -14,17 +14,17 @@ test "report for a detected language" {
     "Hola, mi pedido llegó incompleto y falta una de las piezas.",
   )
   assert_eq(lines, [
-    "language:   Spanish (spa)", "script:     Latin", "confidence: 0.226 (reliable)",
-    "top 5:", "  1. spa  Spanish                  1.000", "  2. ita  Italian                  0.774",
-    "  3. por  Portuguese               0.702", "  4. lin  Lingala                  0.689",
-    "  5. fra  French                   0.687",
+    "language:   Spanish (spa)", "script:     Latin", "confidence: 0.506 (reliable)",
+    "runner-up:  Italian (ita), margin 0.226", "top 5:", "  1. spa  Spanish                  1.000",
+    "  2. ita  Italian                  0.774", "  3. por  Portuguese               0.702",
+    "  4. lin  Lingala                  0.689", "  5. fra  French                   0.687",
   ])
 }
 
 ///|
 test "report for a single-script language" {
   assert_eq(report("您好，订单还没有发货"), [
-    "language:   Mandarin Chinese (cmn)", "script:     Han", "confidence: 1.000 (not reliable)",
+    "language:   Mandarin Chinese (cmn)", "script:     Han", "confidence: 1.000 (reliable)",
     "top 5:", "  1. cmn  Mandarin Chinese         1.000",
   ])
 }
@@ -50,9 +50,9 @@ test "segments report" {
     "Hi, could you check the tracking number for order 4471 please? " +
     "谢谢，麻烦尽快处理一下这个问题。"
   assert_eq(segments_report(text), [
-    "[0, 31)      rus  Russian                  not reliable Здравствуйте, заказ не пришёл.",
+    "[0, 31)      rus  Russian                  reliable     Здравствуйте, заказ не пришёл.",
     "[31, 94)     eng  English                  reliable     Hi, could you check the tracking numb...",
-    "[94, 110)    cmn  Mandarin Chinese         not reliable 谢谢，麻烦尽快处理一下这个问题。",
+    "[94, 110)    cmn  Mandarin Chinese         reliable     谢谢，麻烦尽快处理一下这个问题。",
   ])
 }
 

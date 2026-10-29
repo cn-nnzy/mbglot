@@ -11,13 +11,13 @@ The samples of each language and length alternate between a dev half and a test 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.0% | 76.6% | 69.7% | 92.6% | 2.6% |
+| short | enhanced | 1027 | 71.0% | 76.6% | 69.7% | 97.1% | 36.5% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.5% | 90.5% | 85.8% | 97.9% | 62.8% |
+| medium | enhanced | 911 | 85.5% | 90.5% | 85.8% | 98.4% | 67.4% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 92.5% | 98.1% | 93.6% | 99.8% | 58.1% |
+| long | enhanced | 823 | 92.5% | 98.1% | 93.6% | 99.2% | 77.2% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.2% | 87.6% | 79.0% | 98.6% | 39.0% |
+| all | enhanced | 2761 | 82.2% | 87.6% | 79.0% | 98.4% | 58.8% |
 
 ## Every length, enhanced mode, test half
 
@@ -126,10 +126,10 @@ Accuracy: 82.2% (2269 of 2761), unidentified: 1, macro F1: 79.0%
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1032 | 66.4% | 70.7% | 65.8% | 84.8% | 3.2% |
-| short | enhanced | 1032 | 71.4% | 76.3% | 70.9% | 93.9% | 3.2% |
+| short | enhanced | 1032 | 71.4% | 76.3% | 70.9% | 98.1% | 36.4% |
 | medium | franc | 918 | 80.5% | 86.5% | 79.0% | 96.6% | 64.1% |
-| medium | enhanced | 918 | 85.3% | 90.4% | 83.9% | 97.3% | 64.1% |
+| medium | enhanced | 918 | 85.3% | 90.4% | 83.9% | 97.8% | 70.0% |
 | long | franc | 830 | 90.8% | 96.0% | 91.5% | 99.8% | 60.6% |
-| long | enhanced | 830 | 94.5% | 98.4% | 95.3% | 100.0% | 60.6% |
+| long | enhanced | 830 | 94.5% | 98.4% | 95.3% | 99.7% | 77.2% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
-| all | enhanced | 2780 | 82.9% | 87.6% | 80.7% | 98.4% | 40.4% |
+| all | enhanced | 2780 | 82.9% | 87.6% | 80.7% | 98.6% | 59.7% |

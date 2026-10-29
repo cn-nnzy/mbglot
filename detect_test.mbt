@@ -140,12 +140,13 @@ test "options copy their inputs" {
 }
 
 ///|
-test "reliable needs the minimum length" {
+test "in franc mode reliable needs the minimum length" {
+  let franc = @mbglot.Options::new(mode=Franc)
   let base = "Hi, I was charged twice for my subscription this month."
   let at_limit = base.view(end_offset=@mbglot.reliable_min_length).to_owned()
   let below = base.view(end_offset=@mbglot.reliable_min_length - 1).to_owned()
-  let long = @mbglot.detect(at_limit).unwrap()
-  let short = @mbglot.detect(below).unwrap()
+  let long = @mbglot.detect(at_limit, options=franc).unwrap()
+  let short = @mbglot.detect(below, options=franc).unwrap()
   assert_eq(long.lang, @mbglot.Eng)
   assert_eq(short.lang, @mbglot.Eng)
   assert_true(long.confidence >= @mbglot.reliable_min_margin)
@@ -155,25 +156,66 @@ test "reliable needs the minimum length" {
 }
 
 ///|
-test "reliable needs the minimum margin" {
+test "in enhanced mode short texts need a higher confidence" {
+  // Two common German words lift the confidence over the bar for short
+  // texts; franc's margin alone does not reach it.
+  let clear = @mbglot.detect("Ich habe eine Frage.").unwrap()
+  assert_eq(clear.lang, @mbglot.Deu)
+  assert_true(clear.margin < @mbglot.short_reliable_min_confidence)
+  assert_true(clear.confidence >= @mbglot.short_reliable_min_confidence)
+  assert_true(clear.reliable)
+  let close = @mbglot.detect("Where is my order?").unwrap()
+  assert_eq(close.lang, @mbglot.Eng)
+  assert_true(close.confidence >= @mbglot.reliable_min_confidence)
+  assert_true(close.confidence < @mbglot.short_reliable_min_confidence)
+  assert_false(close.reliable)
+}
+
+///|
+test "related languages without evidence are not reliable" {
+  // Indonesian and Malay share these words; nothing decides between them.
+  let d = @mbglot.detect("Saya tidak tahu di mana dia.").unwrap()
+  assert_true(d.runner_up is Some(@mbglot.Ind | @mbglot.Zlm))
+  assert_false(d.reliable)
   let close = @mbglot.detect(
     "Dobar dan, moja narudžba još nije stigla i nitko mi ne odgovara na poruke.",
   ).unwrap()
-  assert_true(close.confidence < @mbglot.reliable_min_margin)
+  assert_true(close.confidence < @mbglot.reliable_min_confidence)
   assert_false(close.reliable)
+}
+
+///|
+test "reliable needs the minimum margin in franc mode" {
+  let franc = @mbglot.Options::new(mode=Franc)
   let clear = @mbglot.detect(
     "Hi, I was charged twice for my subscription this month. Could you refund it?",
+    options=franc,
   ).unwrap()
   assert_true(clear.confidence >= @mbglot.reliable_min_margin)
   assert_true(clear.reliable)
 }
 
 ///|
-test "confidence is the margin to the runner-up" {
+test "margin is the score gap to the runner-up" {
   let text = "Bonjour, je n'ai toujours pas reçu ma facture du mois dernier."
   let ranked = @mbglot.rank(text)
   let detection = @mbglot.detect(text).unwrap()
   assert_eq(detection.lang, ranked[0].0)
-  assert_eq(detection.confidence, ranked[0].1 - ranked[1].1)
+  assert_eq(detection.runner_up, Some(ranked[1].0))
+  assert_eq(detection.margin, ranked[0].1 - ranked[1].1)
   assert_eq(detection.script, @mbglot.Latin)
+  // Common French words add to the margin in enhanced mode only.
+  assert_true(detection.confidence > detection.margin)
+  let franc = @mbglot.detect(text, options=@mbglot.Options::new(mode=Franc))
+  assert_eq(franc.map(d => d.confidence), franc.map(d => d.margin))
+}
+
+///|
+test "a single candidate has margin 1 and no runner-up" {
+  let d = @mbglot.detect(
+    "您好，我昨天下的订单到现在还没有发货。",
+  ).unwrap()
+  assert_eq(d.margin, 1.0)
+  assert_eq(d.runner_up, None)
+  assert_true(d.reliable)
 }

@@ -82,7 +82,8 @@ checkout of this repository.
 $ moon run cmd/main -- "Hola, mi pedido llegó incompleto y falta una de las piezas."
 language:   Spanish (spa)
 script:     Latin
-confidence: 0.226 (reliable)
+confidence: 0.506 (reliable)
+runner-up:  Italian (ita), margin 0.226
 top 5:
   1. spa  Spanish                  1.000
   2. ita  Italian                  0.774
@@ -97,15 +98,15 @@ language segment (see [Mixed-language text](#mixed-language-text)):
 
 ```
 $ moon run cmd/main -- --segments "Здравствуйте, заказ не пришёл. Hi, could you check the tracking number for order 4471 please? 谢谢，麻烦尽快处理一下这个问题。"
-[0, 31)      rus  Russian                  not reliable Здравствуйте, заказ не пришёл.
+[0, 31)      rus  Russian                  reliable     Здравствуйте, заказ не пришёл.
 [31, 94)     eng  English                  reliable     Hi, could you check the tracking numb...
-[94, 110)    cmn  Mandarin Chinese         not reliable 谢谢，麻烦尽快处理一下这个问题。
+[94, 110)    cmn  Mandarin Chinese         reliable     谢谢，麻烦尽快处理一下这个问题。
 ```
 
 franc-min's statistics alone prefer Bulgarian for the first sentence; the
 pass for [related languages](#related-languages) settles Russian from its
-letters and words, and the line says that the margin is too small for a
-reliable detection.
+letters and words, and that evidence makes the detection reliable
+although franc's margin is small.
 
 ### Example: routing support tickets
 
@@ -115,11 +116,11 @@ detection is reliable and to manual triage otherwise:
 ```
 $ moon run examples/tickets
 #1001  support-en  (eng English)
-#1002  triage  (spa Spanish, not reliable)
+#1002  support-es  (spa Spanish)
 #1003  support-fr  (fra French)
 #1004  support-de  (deu German)
-#1005  triage  (por Portuguese, not reliable)
-#1006  triage  (rus Russian, not reliable)
+#1005  support-pt  (por Portuguese)
+#1006  support-ru  (rus Russian)
 #1007  support-zh  (cmn Mandarin Chinese)
 #1008  support-ja  (jpn Japanese)
 #1009  support-ar  (arb Standard Arabic)
@@ -130,9 +131,10 @@ $ moon run examples/tickets
 
 franc-min's statistics alone take ticket 1005 for Spanish and 1006 for
 Bulgarian. The pass for [related languages](#related-languages) gets both
-right, but the margins stay small, so they are flagged as not reliable
-and go to triage, which is why the example only trusts reliable
-detections.
+right, and the letters and words that decided it count toward the
+confidence, so both are routed. The Turkish ticket is right too, but
+franc's margin is small and few Turkish words are known, so it goes to
+triage with the two messages that have too little text.
 
 ### Browser demo
 
@@ -195,14 +197,28 @@ distance relative to it. Equal scores keep franc's language order. For a
 script used by one language only (Han, Hangul, Thai, ...) the result has
 that single language with 1.0.
 
-`Detection.confidence` is the margin between the best and second-best
-score (1.0 with a single candidate). `reliable` is true when the margin is
-at least `reliable_min_margin` (0.15) and the text is at least
-`reliable_min_length` (30) UTF-16 code units long. On franc's own test
-fixtures, cut to lengths from 20 to 1000 code units, every detection with a
-margin of 0.14 or more was correct, and most mistakes came from texts of 20
-to 35 code units (mostly Bosnian, Croatian and Serbian). Those fixtures are
-the texts franc was trained on, so treat the flag as a heuristic.
+`Detection.margin` is the gap between the best and second-best score
+(1.0 with a single candidate) and `runner_up` the second language.
+`confidence` is the margin in `Mode::Franc`. In `Mode::Enhanced` it adds
+0.04 for every letter or common word that favours the detected language
+over the runner-up (see [Related languages](#related-languages) and
+[Short texts](#short-texts)), up to 1.0. It ranks detections; it is not
+a probability.
+
+`reliable` says whether to act on a detection without review:
+
+- in `Mode::Franc`, the margin is at least `reliable_min_margin` (0.15)
+  and the text has at least `reliable_min_length` (30) UTF-16 code units;
+- in `Mode::Enhanced`, the confidence is at least
+  `reliable_min_confidence` (0.18), or `short_reliable_min_confidence`
+  (0.4) for texts under 30 code units, and the runner-up is not a related
+  language that the text gives no reason to rule out (Indonesian against
+  Malay with only shared words, for example).
+
+The enhanced weights and thresholds were chosen on the dev half of the
+[benchmark](#benchmark). On the held-out test half they make 58.8% of
+detections reliable instead of 39.0%, and 36.5% of short sentences
+instead of 2.6%, with reliable precision 98.4% against 98.6%.
 
 ### Options
 
@@ -245,9 +261,9 @@ members use:
   `ٻ`, `ڄ`, and common words).
 
 The member with strictly the most evidence moves to the top and swaps
-scores with franc's choice, so the scores and the confidence margin stay
-franc's; without clear evidence the ranking is left alone. franc-min only
-has a profile for Kurdish in Latin script, so Sorani in Arabic script is
+scores with franc's choice, so the scores and the margin stay franc's,
+and the deciding letters and words add to the confidence; without clear
+evidence the ranking is left alone. franc-min only has a profile for Kurdish in Latin script, so Sorani in Arabic script is
 recognised by this pass alone. Norwegian and Danish are not among
 franc-min's languages. The [benchmark](#benchmark) shows the effect;
 `Mode::Franc` turns the pass off.
@@ -271,9 +287,9 @@ this raised accuracy on short sentences from 68.3% (with
 the pass for related languages alone) to 71.2%, and on 31 to 80 code
 units, which include texts under 40, from 84.3% to 85.4%. The weight was
 chosen on all of it (0.02 to 0.25 tried, with gains levelling off above
-0.1), so the test half does not hide it, and other texts may gain less. Short texts still
-are rarely `reliable`, because that needs 30 code units and a clear
-margin. A word shared by several languages can also mislead: in
+0.1), so the test half does not hide it, and other texts may gain less. The words that
+lift a language also count toward its `confidence`, so a short text with
+two or three of them can be `reliable`. A word shared by several languages can also mislead: in
 `je suis très fatigué` French is far down franc's list, and `je`, which
 is also Croatian, lifts Croatian over franc's English.
 
@@ -489,13 +505,13 @@ half:
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.0% | 76.6% | 69.7% | 92.6% | 2.6% |
+| short | enhanced | 1027 | 71.0% | 76.6% | 69.7% | 97.1% | 36.5% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.5% | 90.5% | 85.8% | 97.9% | 62.8% |
+| medium | enhanced | 911 | 85.5% | 90.5% | 85.8% | 98.4% | 67.4% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 92.5% | 98.1% | 93.6% | 99.8% | 58.1% |
+| long | enhanced | 823 | 92.5% | 98.1% | 93.6% | 99.2% | 77.2% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.2% | 87.6% | 79.0% | 98.6% | 39.0% |
+| all | enhanced | 2761 | 82.2% | 87.6% | 79.0% | 98.4% | 58.8% |
 
 Accuracy counts every detection. Group accuracy also counts as right a
 language from the expected language's group: Bosnian, Croatian and

@@ -28,8 +28,13 @@ fn report(text : String) -> Array[String] {
     "language:   \{lang.name()} (\{lang.code()})",
     "script:     \{detection.script.name()}",
     "confidence: \{fixed3(detection.confidence)} (\{verdict})",
-    "top 5:",
   ]
+  if detection.runner_up is Some(other) {
+    lines.push(
+      "runner-up:  \{other.name()} (\{other.code()}), margin \{fixed3(detection.margin)}",
+    )
+  }
+  lines.push("top 5:")
   for i, entry in @mbglot.rank(text) {
     if i == 5 {
       break
@@ -91,8 +96,10 @@ let usage : String =
   #|usage: moon run cmd/main -- "text to identify"
   #|       moon run cmd/main -- --segments "text mixing languages"
   #|
-  #|Prints the most likely language, its script, the confidence (margin to
-  #|the runner-up) and the five best candidates with franc-min's scores.
+  #|Prints the most likely language, its script, the confidence (the score
+  #|margin to the runner-up plus the letters and common words that favour
+  #|the language), the runner-up and the five best candidates with
+  #|franc-min's scores.
   #|With --segments, prints one line per language segment: its UTF-16
   #|offsets, language, reliability and the start of its text.
 
