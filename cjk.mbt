@@ -71,7 +71,7 @@ let min_hangul_share : Double = 0.2
 /// and one whose Hangul reaches `min_hangul_share` is Korean. Languages
 /// the options exclude are not chosen.
 fn refine_cjk(
-  text : String,
+  stats : TextStats,
   script : Script,
   ranked : Array[(Lang, Double)],
   allow : Array[Lang],
@@ -80,7 +80,7 @@ fn refine_cjk(
   if script != Han && script != Kana {
     return (script, ranked)
   }
-  let counts = script_counts(text)
+  let counts = stats.scripts
   let han = counts[script_index(Han)]
   // Han ideographs also count as kana; the difference is kana proper.
   let kana = counts[script_index(Kana)] - han

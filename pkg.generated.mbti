@@ -39,6 +39,16 @@ pub(all) suberror OptionsError {
 } derive(Eq, @debug.Debug)
 
 // Types and methods
+pub struct Accumulator {
+  // private fields
+}
+pub fn Accumulator::detect(Self) -> Detection?
+pub fn Accumulator::feed(Self, String) -> Unit
+pub fn Accumulator::length(Self) -> Int32
+pub fn Accumulator::new(options? : Options) -> Self
+pub fn Accumulator::rank(Self) -> Array[(Lang, Double)]
+pub fn Accumulator::reset(Self) -> Unit
+
 pub(all) enum ChineseVariant {
   Simplified
   Traditional
@@ -56,6 +66,7 @@ pub(all) struct Detection {
 pub struct Detector {
   // private fields
 }
+pub fn Detector::accumulator(Self) -> Accumulator
 pub fn Detector::detect(Self, String) -> Detection?
 pub fn Detector::explain(Self, String) -> Explanation
 pub fn Detector::new(options? : Options) -> Self

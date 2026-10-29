@@ -379,26 +379,27 @@ fn occurrences(haystack : String, needle : String) -> Int32 {
 }
 
 ///|
-/// Evidence for each language of `group` in `text`.
-fn evidence(group : Group, text : String) -> Map[Lang, Int32] {
+/// Evidence for each language of `group` in the words of a text. Markers
+/// never contain a space, so counting them word by word is the same as
+/// counting them in the text.
+fn evidence(group : Group, words : Map[String, Int32]) -> Map[Lang, Int32] {
   let scores : Map[Lang, Int32] = Map([])
   for lang in group.langs {
     scores[lang] = 0
   }
-  let words = words_of(text)
-  let lower = words.join(" ")
   for marker in group.markers {
     let (lang, letters, weight) = marker
-    scores[lang] = scores.get(lang).unwrap_or(0) +
-      weight * occurrences(lower, letters)
+    let mut found = 0
+    for word, n in words {
+      found += n * occurrences(word, letters)
+    }
+    scores[lang] = scores.get(lang).unwrap_or(0) + weight * found
   }
   for entry in group.words {
     let (lang, list) = entry
     let mut hits = 0
-    for word in words {
-      if list.contains(word) {
-        hits += 1
-      }
+    for word in list {
+      hits += words.get_or_default(word, 0)
     }
     scores[lang] = scores.get(lang).unwrap_or(0) + hits
   }
@@ -413,7 +414,7 @@ fn evidence(group : Group, text : String) -> Map[Lang, Int32] {
 /// scores with franc's choice, so the scores stay franc's and only their
 /// order changes. Otherwise the ranking is returned unchanged.
 fn settle_confusables(
-  text : String,
+  stats : TextStats,
   ranked : Array[(Lang, Double)],
   allow : Array[Lang],
   deny : Array[Lang],
@@ -424,7 +425,7 @@ fn settle_confusables(
     if !group.langs.contains(top) {
       continue
     }
-    let scores = evidence(group, text)
+    let scores = evidence(group, stats.words)
     let mut best = top
     let mut best_score = scores.get(top).unwrap_or(0)
     let mut tie = false

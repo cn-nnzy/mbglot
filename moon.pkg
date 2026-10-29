@@ -6,4 +6,5 @@ import {
 
 import {
   "cn-nnzy/mbglot/eval",
+  "cn-nnzy/mbglot/eval/tatoeba",
 } for "test"

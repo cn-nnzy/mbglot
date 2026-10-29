@@ -45,6 +45,8 @@ Milestone 1 is complete. Implemented:
   languages into consecutive segments with their own detection. This is
   mbglot's own procedure on top of franc's scores (franc has no
   segmentation); see below.
+- `Accumulator`: the language of a stream fed in chunks, without
+  re-reading earlier chunks (see [Streams](#streams)).
 - `explain(text, options?)`: the steps that decided a detection and the
   trigrams that weigh for and against it (see
   [Why this language](#why-this-language)).
@@ -63,7 +65,7 @@ Milestone 1 is complete. Implemented:
   files of one text per line, a ticket-routing example in
   `examples/tickets` and a [browser demo](#browser-demo) in `demo`.
 
-Not implemented: languages beyond franc-min's 76, and streaming input.
+Not implemented: languages beyond franc-min's 76.
 There is no release on mooncakes.io yet.
 
 ## Usage
@@ -571,6 +573,35 @@ segments, and a text with nothing identifiable gives one segment whose
 which is usually undone because the short piece is joined back. Short
 sentences in closely related languages can still be misidentified; check
 `reliable` on each segment.
+
+## Streams
+
+An `Accumulator` identifies text that arrives in chunks, such as the
+messages of a chat or the lines of a long file, without reading earlier
+chunks again. It keeps what detection needs (characters per script,
+trigram counts and, in `Mode::Enhanced`, word counts), so `feed` costs
+time in proportion to the chunk and `detect` or `rank` in proportion to
+the number of distinct trigrams seen:
+
+```mbt check
+///|
+test {
+  let chat = @mbglot.Accumulator::new()
+  chat.feed("ok")
+  assert_eq(chat.detect(), None)
+  chat.feed("Hola, ¿cómo estás?")
+  chat.feed("Muy bien, gracias. Tengo una pregunta sobre mi pedido.")
+  assert_eq(chat.detect().map(d => d.lang), Some(@mbglot.Spa))
+}
+```
+
+The result is that of `detect` on the chunks joined with line breaks
+(a test checks this on cut-up benchmark texts in both modes), except on
+long streams: franc looks only at the first 2048 UTF-16 code units of a
+text, while an accumulator uses every chunk, so a long stream that
+changes language follows the change. Markup is removed chunk by chunk.
+`Detector::accumulator()` starts one with a detector's options, and
+`reset` empties it.
 
 ## Script detection
 

@@ -6,7 +6,13 @@ fn franc_all(
   deny : Array[Lang],
   min_length : Int32,
 ) -> (Script, Array[(Lang, Double)])? {
-  franc_masked(text, allow, deny, language_masks(allow, deny), min_length)
+  franc_masked(
+    TextStats::of(text, with_words=false),
+    allow,
+    deny,
+    language_masks(allow, deny),
+    min_length,
+  )
 }
 
 ///|

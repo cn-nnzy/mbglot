@@ -53,15 +53,14 @@ fn language_masks(
 /// and its rank in the profile, or `max_difference` when the profile lacks
 /// it, summed.
 fn distances(
-  grams : Array[(Int64, Int32)],
+  grams : Map[Int64, Int32],
   index : ScriptIndex,
 ) -> FixedArray[Int32] {
   let totals = FixedArray::make(
     index.langs.length(),
     grams.length() * max_difference,
   )
-  for gram in grams {
-    let (key, count) = gram
+  for key, count in grams {
     guard index.postings.get(key) is Some(list) else { continue }
     for posting in list {
       let (i, rank) = posting
@@ -75,19 +74,20 @@ fn distances(
 ///|
 /// Result of franc's `francAll`, without the `und` entry: the script that
 /// decided the outcome and the languages with normalised scores, best
-/// first. `None` where franc returns `und`. `masks` are the languages that
-/// `allow` and `deny` leave, per script index (see `language_masks`).
+/// first, for the text that `stats` describe. `None` where franc returns
+/// `und`. `masks` are the languages that `allow` and `deny` leave, per
+/// script index (see `language_masks`).
 fn franc_masked(
-  text : String,
+  stats : TextStats,
   allow : Array[Lang],
   deny : Array[Lang],
   masks : FixedArray[FixedArray[Bool]],
   min_length : Int32,
 ) -> (Script, Array[(Lang, Double)])? {
-  if text.length() == 0 || text.length() < min_length {
+  if stats.length == 0 || stats.length < min_length {
     return None
   }
-  let (top, _) = top_script(text)
+  let top = stats.top_script()
   if top < 0 {
     return None
   }
@@ -99,19 +99,13 @@ fn franc_masked(
       None
     }
   }
-  let sample = if text.length() > max_sample_length {
-    text.view(end_offset=max_sample_length).to_owned()
-  } else {
-    text
-  }
-  let grams = trigram_keys(sample)
   let found : Array[(Lang, Int32, Int32)] = []
   for k, index in script_indexes {
     if index.script != script {
       continue
     }
     let mask = masks[k]
-    let totals = distances(grams, index)
+    let totals = distances(stats.grams, index)
     for i, lang in index.langs {
       if mask[i] {
         found.push((lang, totals[i], found.length()))
@@ -123,7 +117,7 @@ fn franc_masked(
   }
   found.sort_by((a, b) => if a.1 != b.1 { a.1 - b.1 } else { a.2 - b.2 })
   let min = found[0].1
-  let max = sample.length() * max_difference - min
+  let max = stats.sample_length * max_difference - min
   let ranked = found.map(d => {
     let score = 1.0 - (d.1 - min).to_double() / max.to_double()
     (d.0, if score.is_nan() { 0.0 } else { score })

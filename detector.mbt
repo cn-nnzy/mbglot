@@ -35,10 +35,28 @@ pub fn Detector::options(self : Detector) -> Options {
 }
 
 ///|
+/// The statistics of `text` as this detector's options prepare it.
+fn Detector::stats_of(self : Detector, text : String) -> TextStats {
+  TextStats::of(
+    prepared(text, self.options),
+    with_words=self.options.mode == Enhanced,
+  )
+}
+
+///|
 /// Candidate languages with scores between 0 and 1, best first, as
 /// returned by the free function `rank`.
 pub fn Detector::rank(self : Detector, text : String) -> Array[(Lang, Double)] {
-  match ranking(prepared(text, self.options), self.options, self.masks) {
+  self.ranked(self.stats_of(text))
+}
+
+///|
+/// The ranking for a text that `stats` describe.
+fn Detector::ranked(
+  self : Detector,
+  stats : TextStats,
+) -> Array[(Lang, Double)] {
+  match ranking(stats, self.options, self.masks) {
     Some((_, ranked)) => ranked
     None => []
   }
@@ -48,9 +66,14 @@ pub fn Detector::rank(self : Detector, text : String) -> Array[(Lang, Double)] {
 /// The most likely language of `text`, as returned by the free function
 /// `detect`.
 pub fn Detector::detect(self : Detector, text : String) -> Detection? {
+  self.decide(self.stats_of(text))
+}
+
+///|
+/// The detection for a text that `stats` describe.
+fn Detector::decide(self : Detector, stats : TextStats) -> Detection? {
   let options = self.options
-  let text = prepared(text, options)
-  guard ranking(text, options, self.masks) is Some((script, ranked)) else {
+  guard ranking(stats, options, self.masks) is Some((script, ranked)) else {
     return None
   }
   let lang = ranked[0].0
@@ -63,14 +86,14 @@ pub fn Detector::detect(self : Detector, text : String) -> Detection? {
     Franc =>
       (
         margin,
-        margin >= reliable_min_margin && text.length() >= reliable_min_length,
+        margin >= reliable_min_margin && stats.length >= reliable_min_length,
       )
     Enhanced => {
-      let clues = clues(text, lang, runner_up)
+      let clues = clues(stats.words, lang, runner_up)
       let confidence = (margin + evidence_weight * clues.evidence.to_double()).min(
         1.0,
       )
-      let threshold = if text.length() >= reliable_min_length {
+      let threshold = if stats.length >= reliable_min_length {
         reliable_min_confidence
       } else {
         short_reliable_min_confidence

@@ -155,20 +155,35 @@ fn key_of(gram : StringView) -> Int64 {
 }
 
 ///|
+/// Adds to `counts` the trigrams of `units`, a cleaned text (see
+/// `clean_units`), padded with one space on each side.
+fn add_trigrams(counts : Map[Int64, Int32], units : Array[Int32]) -> Unit {
+  let padded = [0x20]
+  padded.append(units)
+  padded.push(0x20)
+  for i in 0..<(padded.length() - 2) {
+    let key = pack(padded[i], padded[i + 1], padded[i + 2])
+    counts[key] = counts.get_or_default(key, 0) + 1
+  }
+}
+
+///|
+/// The trigrams of `text` with their counts, in order of first
+/// occurrence: those of trigram-utils `asTuples`, each as a key made by
+/// `pack`.
+fn trigram_counts(text : String) -> Map[Int64, Int32] {
+  let counts : Map[Int64, Int32] = Map([])
+  add_trigrams(counts, clean_units(text))
+  counts
+}
+
+///|
 /// trigram-utils `asTuples` with each trigram as a key made by `pack`:
 /// trigrams of UTF-16 code units of the cleaned text padded with one space
 /// on each side, with their counts, ordered by ascending count and then by
 /// first occurrence.
 fn trigram_keys(text : String) -> Array[(Int64, Int32)] {
-  let units = [0x20]
-  units.append(clean_units(text))
-  units.push(0x20)
-  let counts : Map[Int64, Int32] = Map([])
-  for i in 0..<(units.length() - 2) {
-    let key = pack(units[i], units[i + 1], units[i + 2])
-    counts[key] = counts.get_or_default(key, 0) + 1
-  }
-  let indexed = counts.to_array().mapi((i, t) => (t.0, t.1, i))
+  let indexed = trigram_counts(text).to_array().mapi((i, t) => (t.0, t.1, i))
   indexed.sort_by((a, b) => if a.1 != b.1 { a.1 - b.1 } else { a.2 - b.2 })
   indexed.map(t => (t.0, t.1))
 }

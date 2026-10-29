@@ -254,17 +254,14 @@ let stop_words : Array[(Lang, Array[String])] = [
 ]
 
 ///|
-/// Number of `words` that are common words of `lang`.
-fn stop_word_hits(lang : Lang, words : Array[String]) -> Int32 {
+/// Occurrences in `words` (word -> count) of common words of `lang`.
+fn stop_word_hits(lang : Lang, words : Map[String, Int32]) -> Int32 {
   guard stop_words.search_by(entry => entry.0 == lang) is Some(i) else {
     return 0
   }
-  let list = stop_words[i].1
   let mut hits = 0
-  for word in words {
-    if list.contains(word) {
-      hits += 1
-    }
+  for word in stop_words[i].1 {
+    hits += words.get_or_default(word, 0)
   }
   hits
 }
@@ -276,13 +273,13 @@ fn stop_word_hits(lang : Lang, words : Array[String]) -> Int32 {
 /// highest total moves to the top (see `promote`). Ties keep franc's
 /// order, and texts of `short_text_length` or more are left alone.
 fn short_text_signal(
-  text : String,
+  stats : TextStats,
   ranked : Array[(Lang, Double)],
 ) -> Array[(Lang, Double)] {
-  if text.length() >= short_text_length || ranked.length() < 2 {
+  if stats.length >= short_text_length || ranked.length() < 2 {
     return ranked
   }
-  let words = words_of(text)
+  let words = stats.words
   if words.is_empty() {
     return ranked
   }

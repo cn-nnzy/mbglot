@@ -13,16 +13,15 @@ priv struct Clues {
 }
 
 ///|
-/// The clues in `text` for `top` against `runner_up`.
-fn clues(text : String, top : Lang, runner_up : Lang?) -> Clues {
-  let words = words_of(text)
+/// The clues in the words of a text for `top` against `runner_up`.
+fn clues(words : Map[String, Int32], top : Lang, runner_up : Lang?) -> Clues {
   let mut total = 0
   let mut contested = false
   for group in groups {
     if !group.langs.contains(top) {
       continue
     }
-    let scores = evidence(group, text)
+    let scores = evidence(group, words)
     let own = scores.get(top).unwrap_or(0)
     let mut rival = 0
     for lang in group.langs {

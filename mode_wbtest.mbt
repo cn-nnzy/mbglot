@@ -48,7 +48,7 @@ test "occurrences do not overlap" {
 ///|
 test "the pass keeps franc's scores and only reorders" {
   let ranked = [(Spa, 1.0), (Ita, 0.8), (Por, 0.7), (Fra, 0.7), (Ron, 0.1)]
-  let out = settle_confusables("não é o que eu quero", ranked, [], [])
+  let out = settle_confusables(stats("não é o que eu quero"), ranked, [], [])
   assert_eq(out, [(Por, 1.0), (Ita, 0.8), (Fra, 0.7), (Spa, 0.7), (Ron, 0.1)])
   let before = ranked.map(r => r.1)
   let after = out.map(r => r.1)
@@ -61,14 +61,14 @@ test "the pass keeps franc's scores and only reorders" {
 test "no change without clear evidence, or when the winner is denied" {
   let ranked = [(Spa, 1.0), (Por, 0.9)]
   // No markers or listed words.
-  assert_eq(settle_confusables("xyz qwrt", ranked, [], []), ranked)
+  assert_eq(settle_confusables(stats("xyz qwrt"), ranked, [], []), ranked)
   // As much evidence for both: franc's order stays.
-  assert_eq(settle_confusables("el o", ranked, [], []), ranked)
+  assert_eq(settle_confusables(stats("el o"), ranked, [], []), ranked)
   // Evidence for Portuguese, but Portuguese is denied.
-  assert_eq(settle_confusables("não você", ranked, [], [Por]), ranked)
+  assert_eq(settle_confusables(stats("não você"), ranked, [], [Por]), ranked)
   // franc's choice outside every group.
   let eng = [(Eng, 1.0), (Por, 0.5)]
-  assert_eq(settle_confusables("não você", eng, [], []), eng)
+  assert_eq(settle_confusables(stats("não você"), eng, [], []), eng)
 }
 
 ///|
@@ -77,7 +77,7 @@ test "a language without a profile in the script can win" {
   // comes out as Persian.
   let ranked = [(Pes, 1.0), (Urd, 0.9), (Arb, 0.8)]
   let out = settle_confusables(
-    "نامەوێت کارە پیسەکەت بکەم",
+    stats("نامەوێت کارە پیسەکەت بکەم"),
     ranked,
     [],
     [],
@@ -86,7 +86,7 @@ test "a language without a profile in the script can win" {
   // Not when the options exclude it.
   assert_eq(
     settle_confusables(
-      "نامەوێت کارە پیسەکەت بکەم",
+      stats("نامەوێت کارە پیسەکەت بکەم"),
       ranked,
       [Pes, Urd, Arb],
       [],

@@ -39,13 +39,13 @@ fn related(lang : Lang) -> Array[Lang] {
 /// `promote`). Unrelated languages and languages further behind are never
 /// moved.
 fn near_tie_prior(
-  text : String,
+  words : Map[String, Int32],
   ranked : Array[(Lang, Double)],
 ) -> Array[(Lang, Double)] {
   guard ranked.length() > 1 else { return ranked }
   let top = ranked[0]
   let family = related(top.0)
-  if family.is_empty() || clues(text, top.0, Some(ranked[1].0)).evidence > 0 {
+  if family.is_empty() || clues(words, top.0, Some(ranked[1].0)).evidence > 0 {
     return ranked
   }
   let mut best = top.0

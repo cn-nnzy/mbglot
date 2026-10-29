@@ -49,25 +49,28 @@ pub(all) struct Explanation {
 }
 
 ///|
-/// The common words of `lang` in `text`, in order.
-fn common_words_of(lang : Lang, text : String) -> Array[String] {
+/// The common words of `lang` among `words`, in order of first occurrence.
+fn common_words_of(lang : Lang, words : Map[String, Int32]) -> Array[String] {
   guard stop_words.search_by(entry => entry.0 == lang) is Some(i) else {
     return []
   }
   let list = stop_words[i].1
-  words_of(text).filter(word => list.contains(word))
+  words.keys().filter(word => list.contains(word)).collect()
 }
 
 ///|
-/// The letters and words of `text` that point to `lang` rather than to
-/// `previous`, franc's choice before, in their group of related languages.
-fn group_clues(lang : Lang, previous : Lang, text : String) -> Array[String] {
+/// The letters and words among `words` that point to `lang` rather than
+/// to `previous`, franc's choice before, in their group of related
+/// languages.
+fn group_clues(
+  lang : Lang,
+  previous : Lang,
+  words : Map[String, Int32],
+) -> Array[String] {
   guard groups.search_by(group => group.langs.contains(previous)) is Some(g) else {
     return []
   }
   let group = groups[g]
-  let words = words_of(text)
-  let lower = words.join(" ")
   let found = []
   let marks = (target : Lang, letters : String) => {
     group.markers.iter().any(m => m.0 == target && m.1 == letters)
@@ -76,7 +79,7 @@ fn group_clues(lang : Lang, previous : Lang, text : String) -> Array[String] {
     let (target, letters, _) = marker
     if target == lang &&
       !marks(previous, letters) &&
-      occurrences(lower, letters) > 0 &&
+      words.keys().any(word => occurrences(word, letters) > 0) &&
       !found.contains(letters) {
       found.push(letters)
     }
@@ -89,8 +92,8 @@ fn group_clues(lang : Lang, previous : Lang, text : String) -> Array[String] {
   }
   let own = list_of(lang)
   let other = list_of(previous)
-  for word in words {
-    if own.contains(word) && !other.contains(word) && !found.contains(word) {
+  for word in words.keys() {
+    if own.contains(word) && !other.contains(word) {
       found.push(word)
     }
   }
@@ -182,7 +185,12 @@ pub fn Detector::explain(self : Detector, text : String) -> Explanation {
   let detection = self.detect(text)
   let prepared = prepared(text, self.options)
   let steps = []
-  let ranked = ranking(prepared, self.options, self.masks, steps~)
+  let ranked = ranking(
+    TextStats::of(prepared, with_words=self.options.mode == Enhanced),
+    self.options,
+    self.masks,
+    steps~,
+  )
   let trigrams = match (detection, ranked) {
     (Some({ lang, runner_up: Some(other), script, .. }), Some(_)) =>
       trigram_scores(prepared, script, lang, other)

@@ -156,17 +156,17 @@ pub let reliable_min_confidence : Double = 0.18
 pub let short_reliable_min_confidence : Double = 0.4
 
 ///|
-/// franc's result for `text` under `options`, followed in `Enhanced` mode
+/// franc's result for the text `stats` describe under `options`, followed in `Enhanced` mode
 /// by the pass for closely related languages. `masks` are the languages
 /// `options` leave (see `language_masks`).
 fn ranking(
-  text : String,
+  stats : TextStats,
   options : Options,
   masks : FixedArray[FixedArray[Bool]],
   steps? : Array[Step],
 ) -> (Script, Array[(Lang, Double)])? {
   guard franc_masked(
-      text,
+      stats,
       options.allow,
       options.deny,
       masks,
@@ -182,7 +182,7 @@ fn ranking(
     Enhanced => {
       let before = ranked[0].0
       let (script, ranked) = refine_cjk(
-        text,
+        stats,
         script,
         ranked,
         options.allow,
@@ -192,19 +192,29 @@ fn ranking(
         record(ScriptShare(ranked[0].0))
       }
       let before = ranked[0].0
-      let ranked = short_text_signal(text, ranked)
-      if ranked[0].0 != before {
-        record(CommonWords(ranked[0].0, common_words_of(ranked[0].0, text)))
-      }
-      let before = ranked[0].0
-      let ranked = settle_confusables(text, ranked, options.allow, options.deny)
+      let ranked = short_text_signal(stats, ranked)
       if ranked[0].0 != before {
         record(
-          RelatedLanguages(ranked[0].0, group_clues(ranked[0].0, before, text)),
+          CommonWords(ranked[0].0, common_words_of(ranked[0].0, stats.words)),
         )
       }
       let before = ranked[0].0
-      let ranked = near_tie_prior(text, ranked)
+      let ranked = settle_confusables(
+        stats,
+        ranked,
+        options.allow,
+        options.deny,
+      )
+      if ranked[0].0 != before {
+        record(
+          RelatedLanguages(
+            ranked[0].0,
+            group_clues(ranked[0].0, before, stats.words),
+          ),
+        )
+      }
+      let before = ranked[0].0
+      let ranked = near_tie_prior(stats.words, ranked)
       if ranked[0].0 != before {
         record(NearTie(ranked[0].0, before))
       }
