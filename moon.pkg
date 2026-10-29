@@ -1,5 +1,9 @@
 warnings = "-implicit_impl_as_method"
 
 import {
+  "moonbitlang/core/math",
+}
+
+import {
   "cn-nnzy/mbglot/eval",
 } for "test"

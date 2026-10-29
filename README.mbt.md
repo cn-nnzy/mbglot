@@ -268,6 +268,18 @@ recognised by this pass alone. Norwegian and Danish are not among
 franc-min's languages. The [benchmark](#benchmark) shows the effect;
 `Mode::Franc` turns the pass off.
 
+When the text holds nothing that tells the best language from the
+runner-up, a related language whose score is within 0.12 of the best may
+still take first place: each such candidate gets 0.1 times the logarithm
+of its number of speakers (`Lang::speakers`, the figures franc-min lists),
+and the highest total wins. Hindi, Bhojpuri, Maithili and Magahi count as
+related here too. This breaks near ties toward the language a message is
+more likely to be in; no letter or word is outweighed by it. The window
+and weight were chosen on the dev half of the [benchmark](#benchmark),
+where every language is equally frequent; on the test half it raises
+enhanced accuracy from 82.2% to 82.9%, mostly on Hindi, Indonesian and
+Russian, at some cost to Bhojpuri and Malay.
+
 ### Short texts
 
 A text of a few words gives franc too few trigrams. In `Mode::Enhanced`,
@@ -505,13 +517,13 @@ half:
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.0% | 76.6% | 69.7% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.6% | 76.8% | 70.1% | 97.1% | 36.5% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.5% | 90.5% | 85.8% | 98.4% | 67.4% |
+| medium | enhanced | 911 | 85.6% | 90.6% | 85.9% | 98.4% | 67.4% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 92.5% | 98.1% | 93.6% | 99.2% | 77.2% |
+| long | enhanced | 823 | 94.2% | 98.1% | 94.8% | 99.2% | 77.2% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.2% | 87.6% | 79.0% | 98.4% | 58.8% |
+| all | enhanced | 2761 | 82.9% | 87.7% | 79.6% | 98.4% | 58.8% |
 
 Accuracy counts every detection. Group accuracy also counts as right a
 language from the expected language's group: Bosnian, Croatian and

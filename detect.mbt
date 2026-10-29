@@ -177,9 +177,8 @@ fn ranking(
         options.deny,
       )
       let ranked = short_text_signal(text, ranked)
-      Some(
-        (script, settle_confusables(text, ranked, options.allow, options.deny)),
-      )
+      let ranked = settle_confusables(text, ranked, options.allow, options.deny)
+      Some((script, near_tie_prior(text, ranked)))
     }
   }
 }

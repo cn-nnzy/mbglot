@@ -333,6 +333,92 @@ pub fn Lang::name(self : Lang) -> String {
 }
 
 ///|
+/// Number of speakers in millions, as listed by franc-min 6.2.0 (its
+/// readme, from the `speakers` data franc selects languages by). A rough
+/// figure for comparing languages, used to break near ties in
+/// `Mode::Enhanced`.
+pub fn Lang::speakers(self : Lang) -> Int32 {
+  match self {
+    Spa => 332
+    Eng => 322
+    Por => 182
+    Ind => 140
+    Fra => 124
+    Deu => 121
+    Jav => 76
+    Vie => 67
+    Ita => 63
+    Tur => 59
+    Pol => 44
+    Swh => 30
+    Sun => 27
+    Ron => 26
+    Hau => 22
+    Fuv => 22
+    Bos => 21
+    Hrv => 21
+    Nld => 21
+    Srp => 21
+    Ckb => 20
+    Yor => 20
+    Uzn => 18
+    Zlm => 18
+    Ibo => 17
+    Ceb => 15
+    Tgl => 15
+    Hun => 15
+    Azj => 14
+    Ces => 12
+    Run => 11
+    Plt => 10
+    Qug => 10
+    Mad => 10
+    Nya => 10
+    Zyb => 10
+    Kin => 9
+    Zul => 9
+    Swe => 9
+    Lin => 8
+    Som => 8
+    Hms => 8
+    Hnj => 8
+    Ilo => 8
+    Rus => 288
+    Ukr => 41
+    Koi => 13
+    Bel => 10
+    Bul => 9
+    Kaz => 8
+    Arb => 280
+    Urd => 54
+    Pes => 33
+    Skr => 15
+    Pbu => 10
+    Hin => 182
+    Mar => 65
+    Mai => 35
+    Bho => 25
+    Npi => 16
+    Mag => 11
+    Cmn => 885
+    Ben => 196
+    Jpn => 125
+    Kor => 75
+    Tel => 73
+    Tam => 62
+    Guj => 44
+    Kan => 38
+    Mal => 34
+    Mya => 31
+    Pan => 26
+    Amh => 23
+    Tha => 21
+    Sin => 13
+    Ell => 12
+  }
+}
+
+///|
 /// Looks up a language by ISO 639-3 code. Matching ignores ASCII case.
 pub fn Lang::from_code(code : String) -> Lang? {
   match code.to_lower() {

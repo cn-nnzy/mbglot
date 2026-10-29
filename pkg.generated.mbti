@@ -133,6 +133,7 @@ pub fn Lang::all() -> Array[Self]
 pub fn Lang::code(Self) -> String
 pub fn Lang::from_code(String) -> Self?
 pub fn Lang::name(Self) -> String
+pub fn Lang::speakers(Self) -> Int32
 pub impl Show for Lang
 
 pub(all) enum Markup {

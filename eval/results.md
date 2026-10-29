@@ -11,24 +11,24 @@ The samples of each language and length alternate between a dev half and a test 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.0% | 76.6% | 69.7% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.6% | 76.8% | 70.1% | 97.1% | 36.5% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.5% | 90.5% | 85.8% | 98.4% | 67.4% |
+| medium | enhanced | 911 | 85.6% | 90.6% | 85.9% | 98.4% | 67.4% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 92.5% | 98.1% | 93.6% | 99.2% | 77.2% |
+| long | enhanced | 823 | 94.2% | 98.1% | 94.8% | 99.2% | 77.2% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.2% | 87.6% | 79.0% | 98.4% | 58.8% |
+| all | enhanced | 2761 | 82.9% | 87.7% | 79.6% | 98.4% | 58.8% |
 
 ## Every length, enhanced mode, test half
 
-Accuracy: 82.2% (2269 of 2761), unidentified: 1, macro F1: 79.0%
+Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
 
 | Language | Samples | Precision | Recall | F1 |
 |---|---:|---:|---:|---:|
 | spa Spanish | 45 | 88.6% | 86.7% | 87.6% |
 | eng English | 45 | 84.4% | 84.4% | 84.4% |
 | por Portuguese | 45 | 69.0% | 88.9% | 77.7% |
-| ind Indonesian | 45 | 72.7% | 53.3% | 61.5% |
+| ind Indonesian | 45 | 68.9% | 68.9% | 68.9% |
 | fra French | 45 | 86.3% | 97.8% | 91.7% |
 | deu German | 45 | 86.3% | 97.8% | 91.7% |
 | jav Javanese | 45 | 79.5% | 68.9% | 73.8% |
@@ -44,43 +44,43 @@ Accuracy: 82.2% (2269 of 2761), unidentified: 1, macro F1: 79.0%
 | bos Bosnian | 45 | 14.6% | 15.6% | 15.1% |
 | hrv Croatian | 45 | 40.4% | 46.7% | 43.3% |
 | nld Dutch | 45 | 88.6% | 86.7% | 87.6% |
-| srp Serbian | 45 | 48.9% | 48.9% | 48.9% |
+| srp Serbian | 45 | 50.0% | 48.9% | 49.4% |
 | ckb Central Kurdish | 45 | 93.2% | 91.1% | 92.1% |
 | yor Yoruba | 19 | 100.0% | 52.6% | 69.0% |
 | uzn Northern Uzbek | 45 | 79.5% | 68.9% | 73.8% |
-| zlm Malay | 45 | 57.9% | 73.3% | 64.7% |
+| zlm Malay | 45 | 68.9% | 68.9% | 68.9% |
 | ibo Igbo | 17 | 83.3% | 58.8% | 69.0% |
 | ceb Cebuano | 45 | 72.7% | 53.3% | 61.5% |
 | tgl Tagalog | 45 | 61.8% | 93.3% | 74.3% |
 | hun Hungarian | 45 | 97.6% | 88.9% | 93.0% |
 | azj North Azerbaijani | 45 | 91.9% | 75.6% | 82.9% |
 | ces Czech | 45 | 94.1% | 71.1% | 81.0% |
-| run Rundi | 45 | 79.3% | 51.1% | 62.2% |
+| run Rundi | 45 | 80.6% | 55.6% | 65.8% |
 | plt Plateau Malagasy | 21 | 80.8% | 100.0% | 89.4% |
 | mad Madurese | 2 | 6.7% | 50.0% | 11.8% |
 | nya Nyanja | 17 | 62.5% | 58.8% | 60.6% |
-| kin Kinyarwanda | 13 | 18.5% | 38.5% | 25.0% |
+| kin Kinyarwanda | 13 | 20.0% | 38.5% | 26.3% |
 | zul Zulu | 25 | 85.7% | 72.0% | 78.3% |
 | swe Swedish | 45 | 95.0% | 84.4% | 89.4% |
 | lin Lingala | 45 | 68.3% | 95.6% | 79.6% |
 | som Somali | 34 | 93.5% | 85.3% | 89.2% |
 | hnj Hmong Njua | 2 | 100.0% | 50.0% | 66.7% |
 | ilo Iloko | 45 | 78.7% | 82.2% | 80.4% |
-| rus Russian | 45 | 75.5% | 82.2% | 78.7% |
-| ukr Ukrainian | 45 | 95.6% | 95.6% | 95.6% |
+| rus Russian | 45 | 76.9% | 88.9% | 82.5% |
+| ukr Ukrainian | 45 | 97.7% | 95.6% | 96.6% |
 | koi Komi-Permyak | 15 | 100.0% | 60.0% | 75.0% |
 | bel Belarusian | 45 | 97.5% | 86.7% | 91.8% |
-| bul Bulgarian | 45 | 91.5% | 95.6% | 93.5% |
+| bul Bulgarian | 45 | 93.5% | 95.6% | 94.5% |
 | kaz Kazakh | 45 | 100.0% | 88.9% | 94.1% |
 | arb Standard Arabic | 45 | 93.5% | 95.6% | 94.5% |
 | urd Urdu | 45 | 95.6% | 95.6% | 95.6% |
 | pes Iranian Persian | 45 | 97.7% | 93.3% | 95.5% |
 | skr Saraiki | 29 | 90.0% | 93.1% | 91.5% |
 | pbu Northern Pashto | 29 | 96.2% | 86.2% | 90.9% |
-| hin Hindi | 45 | 61.8% | 46.7% | 53.2% |
+| hin Hindi | 45 | 62.3% | 73.3% | 67.3% |
 | mar Marathi | 45 | 97.4% | 82.2% | 89.2% |
-| mai Maithili | 1 | 0.0% | 0.0% | 0.0% |
-| bho Bhojpuri | 24 | 34.4% | 45.8% | 39.3% |
+| mai Maithili | 1 | - | 0.0% | - |
+| bho Bhojpuri | 24 | 41.7% | 41.7% | 41.7% |
 | npi Nepali | 45 | 97.4% | 84.4% | 90.5% |
 | cmn Mandarin Chinese | 45 | 100.0% | 100.0% | 100.0% |
 | ben Bengali | 45 | 100.0% | 100.0% | 100.0% |
@@ -102,16 +102,16 @@ Accuracy: 82.2% (2269 of 2761), unidentified: 1, macro F1: 79.0%
 |---|---|---:|
 | bos | hrv | 23 |
 | srp | bos | 16 |
-| run | kin | 16 |
-| hin | bho | 15 |
 | ceb | tgl | 14 |
-| ind | zlm | 13 |
+| run | kin | 14 |
 | hrv | bos | 13 |
+| bho | hin | 13 |
 | bos | srp | 10 |
-| hin | mag | 9 |
-| bho | hin | 8 |
+| hin | bho | 10 |
 | hrv | srp | 7 |
+| ind | zlm | 6 |
 | jav | sun | 6 |
+| zlm | ind | 6 |
 | fuv | hau | 5 |
 | azj | tur | 5 |
 | kin | run | 5 |
@@ -126,10 +126,10 @@ Accuracy: 82.2% (2269 of 2761), unidentified: 1, macro F1: 79.0%
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1032 | 66.4% | 70.7% | 65.8% | 84.8% | 3.2% |
-| short | enhanced | 1032 | 71.4% | 76.3% | 70.9% | 98.1% | 36.4% |
+| short | enhanced | 1032 | 71.4% | 76.1% | 70.8% | 98.1% | 36.4% |
 | medium | franc | 918 | 80.5% | 86.5% | 79.0% | 96.6% | 64.1% |
-| medium | enhanced | 918 | 85.3% | 90.4% | 83.9% | 97.8% | 70.0% |
+| medium | enhanced | 918 | 85.8% | 90.4% | 84.3% | 97.8% | 70.0% |
 | long | franc | 830 | 90.8% | 96.0% | 91.5% | 99.8% | 60.6% |
-| long | enhanced | 830 | 94.5% | 98.4% | 95.3% | 99.7% | 77.2% |
+| long | enhanced | 830 | 95.1% | 98.4% | 95.7% | 99.7% | 77.2% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
-| all | enhanced | 2780 | 82.9% | 87.6% | 80.7% | 98.6% | 59.7% |
+| all | enhanced | 2780 | 83.2% | 87.5% | 80.8% | 98.6% | 59.7% |
