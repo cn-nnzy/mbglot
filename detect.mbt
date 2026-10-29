@@ -157,12 +157,20 @@ pub let short_reliable_min_confidence : Double = 0.4
 
 ///|
 /// franc's result for `text` under `options`, followed in `Enhanced` mode
-/// by the pass for closely related languages.
+/// by the pass for closely related languages. `masks` are the languages
+/// `options` leave (see `language_masks`).
 fn ranking(
   text : String,
   options : Options,
+  masks : FixedArray[FixedArray[Bool]],
 ) -> (Script, Array[(Lang, Double)])? {
-  guard franc_all(text, options.allow, options.deny, options.min_length)
+  guard franc_masked(
+      text,
+      options.allow,
+      options.deny,
+      masks,
+      options.min_length,
+    )
     is Some((script, ranked)) else {
     return None
   }
@@ -200,10 +208,7 @@ pub fn rank(
   text : String,
   options~ : Options = default_options,
 ) -> Array[(Lang, Double)] {
-  match ranking(prepared(text, options), options) {
-    Some((_, ranked)) => ranked
-    None => []
-  }
+  detector_for(options).rank(text)
 }
 
 ///|
@@ -214,32 +219,5 @@ pub fn detect(
   text : String,
   options~ : Options = default_options,
 ) -> Detection? {
-  let text = prepared(text, options)
-  guard ranking(text, options) is Some((script, ranked)) else { return None }
-  let lang = ranked[0].0
-  let (margin, runner_up) = if ranked.length() > 1 {
-    (ranked[0].1 - ranked[1].1, Some(ranked[1].0))
-  } else {
-    (1.0, None)
-  }
-  let (confidence, reliable) = match options.mode {
-    Franc =>
-      (
-        margin,
-        margin >= reliable_min_margin && text.length() >= reliable_min_length,
-      )
-    Enhanced => {
-      let clues = clues(text, lang, runner_up)
-      let confidence = (margin + evidence_weight * clues.evidence.to_double()).min(
-        1.0,
-      )
-      let threshold = if text.length() >= reliable_min_length {
-        reliable_min_confidence
-      } else {
-        short_reliable_min_confidence
-      }
-      (confidence, confidence >= threshold && !clues.contested)
-    }
-  }
-  Some({ lang, script, confidence, reliable, margin, runner_up, })
+  detector_for(options).detect(text)
 }

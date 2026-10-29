@@ -129,26 +129,34 @@ fn clean_units(text : String) -> Array[Int32] {
 }
 
 ///|
-fn units_to_string(units : ArrayView[Int32]) -> String {
-  let b = StringBuilder()
-  for unit in units {
-    b.write_char(unit.unsafe_to_char())
-  }
-  b.to_string()
+/// Three UTF-16 code units packed into one integer, first unit highest.
+fn pack(a : Int32, b : Int32, c : Int32) -> Int64 {
+  (a.to_int64() << 32) | (b.to_int64() << 16) | c.to_int64()
 }
 
 ///|
-/// trigram-utils `asTuples`: trigrams of UTF-16 code units of the cleaned
-/// text padded with one space on each side, with their counts, ordered by
-/// ascending count and then by first occurrence.
-fn trigrams(text : String) -> Array[(String, Int32)] {
+/// The trigram string `gram` (three UTF-16 code units) as a key.
+fn key_of(gram : StringView) -> Int64 {
+  pack(
+    gram.unsafe_get(0).to_int(),
+    gram.unsafe_get(1).to_int(),
+    gram.unsafe_get(2).to_int(),
+  )
+}
+
+///|
+/// trigram-utils `asTuples` with each trigram as a key made by `pack`:
+/// trigrams of UTF-16 code units of the cleaned text padded with one space
+/// on each side, with their counts, ordered by ascending count and then by
+/// first occurrence.
+fn trigram_keys(text : String) -> Array[(Int64, Int32)] {
   let units = [0x20]
   units.append(clean_units(text))
   units.push(0x20)
-  let counts : Map[String, Int32] = Map([])
+  let counts : Map[Int64, Int32] = Map([])
   for i in 0..<(units.length() - 2) {
-    let gram = units_to_string(units[i:i + 3])
-    counts[gram] = counts.get_or_default(gram, 0) + 1
+    let key = pack(units[i], units[i + 1], units[i + 2])
+    counts[key] = counts.get_or_default(key, 0) + 1
   }
   let indexed = counts.to_array().mapi((i, t) => (t.0, t.1, i))
   indexed.sort_by((a, b) => if a.1 != b.1 { a.1 - b.1 } else { a.2 - b.2 })

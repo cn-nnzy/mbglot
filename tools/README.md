@@ -89,3 +89,14 @@ export gives the same corpus. Tatoeba updates its exports weekly, so a
 later export can change the selection where sentences were removed; the
 file header records the export date. The script's docstring lists the
 length classes and the mapping from mbglot's language codes to Tatoeba's.
+
+## bench_franc.mjs
+
+Times franc-min 6.2.0's `francAll` on the texts of
+`eval/tatoeba/corpus.mbt`, for comparison with
+`moon run eval/speed --release --target js`. Needs Node.js.
+
+```
+npm install --prefix "$TMP/franc" --no-save --ignore-scripts franc-min@6.2.0
+node tools/bench_franc.mjs "$TMP/franc/node_modules/franc-min"
+```

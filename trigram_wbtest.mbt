@@ -1,6 +1,39 @@
 ///|
+fn units_to_string(units : ArrayView[Int32]) -> String {
+  let b = StringBuilder()
+  for unit in units {
+    b.write_char(unit.unsafe_to_char())
+  }
+  b.to_string()
+}
+
+///|
 fn clean(text : String) -> String {
   units_to_string(clean_units(text))
+}
+
+///|
+/// The trigram string of a key made by `pack`.
+fn unpack(key : Int64) -> String {
+  let b = StringBuilder()
+  for shift in [32, 16, 0] {
+    b.write_char(((key >> shift).to_int() & 0xFFFF).unsafe_to_char())
+  }
+  b.to_string()
+}
+
+///|
+/// `trigram_keys` with the trigrams as strings.
+fn trigrams(text : String) -> Array[(String, Int32)] {
+  trigram_keys(text).map(t => (unpack(t.0), t.1))
+}
+
+///|
+test "trigram keys pack three code units" {
+  let key = pack(0x20, 0xD801, 0xDC28)
+  assert_eq(unpack(key), " \u{10428}")
+  assert_eq(key_of(" ab"), pack(0x20, 0x61, 0x62))
+  assert_eq(unpack(key_of("ж б")), "ж б")
 }
 
 ///|

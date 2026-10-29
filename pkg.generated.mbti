@@ -51,6 +51,15 @@ pub(all) struct Detection {
   runner_up : Lang?
 } derive(Eq, @debug.Debug)
 
+pub struct Detector {
+  // private fields
+}
+pub fn Detector::detect(Self, String) -> Detection?
+pub fn Detector::new(options? : Options) -> Self
+pub fn Detector::options(Self) -> Options
+pub fn Detector::rank(Self, String) -> Array[(Lang, Double)]
+pub fn Detector::segments(Self, String) -> Array[Segment]
+
 pub(all) enum Lang {
   Spa
   Eng

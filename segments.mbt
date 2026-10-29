@@ -98,8 +98,25 @@ fn slice(text : String, start : Int32, end : Int32) -> String {
 }
 
 ///|
-fn piece(text : String, start : Int32, end : Int32, options : Options) -> Piece {
-  { start, end, detection: detect(slice(text, start, end), options~), }
+/// Detections of the stretches of one text, each computed once: merging
+/// pieces asks for the same stretch again.
+priv struct Pieces {
+  text : String
+  detector : Detector
+  cache : Map[(Int32, Int32), Detection?]
+}
+
+///|
+fn Pieces::piece(self : Pieces, start : Int32, end : Int32) -> Piece {
+  let detection = match self.cache.get((start, end)) {
+    Some(d) => d
+    None => {
+      let d = self.detector.detect(slice(self.text, start, end))
+      self.cache[(start, end)] = d
+      d
+    }
+  }
+  { start, end, detection, }
 }
 
 ///|
@@ -123,16 +140,24 @@ pub fn segments(
   text : String,
   options~ : Options = default_options,
 ) -> Array[Segment] {
+  detector_for(options).segments(text)
+}
+
+///|
+/// Splits `text` into consecutive segments in different languages, as the
+/// free function `segments` does.
+pub fn Detector::segments(self : Detector, text : String) -> Array[Segment] {
   if text.length() == 0 {
     return []
   }
-  if !options.strip_markup {
-    return segments_of(text, options)
+  if !self.options.strip_markup {
+    return segments_of(text, self)
   }
   // Segment the text without markup, then map the boundaries back. A
   // removed stretch stays in the segment of the text before it.
   let stripped = strip_markup(text)
-  let raw = segments_of(stripped.text, { ..options, strip_markup: false, })
+  let plain = { ..self, options: { ..self.options, strip_markup: false, }, }
+  let raw = segments_of(stripped.text, plain)
   raw.mapi((i, s) => {
     let start = stripped.original_offset(s.start)
     let end = if i == raw.length() - 1 {
@@ -146,12 +171,13 @@ pub fn segments(
 
 ///|
 /// `segments` on text that is identified as it is.
-fn segments_of(text : String, options : Options) -> Array[Segment] {
+fn segments_of(text : String, detector : Detector) -> Array[Segment] {
+  let pieces_of = Pieces::{ text, detector, cache: Map([]), }
   let points = split_points(text)
   let pieces = []
   for i in 0..<(points.length() - 1) {
     if points[i] < points[i + 1] {
-      pieces.push(piece(text, points[i], points[i + 1], options))
+      pieces.push(pieces_of.piece(points[i], points[i + 1]))
     }
   }
   while pieces.length() > 1 {
@@ -167,7 +193,7 @@ fn segments_of(text : String, options : Options) -> Array[Segment] {
       piece_script(text, pieces[i + 1]) != script
     }
     let (a, b) = if left { (i - 1, i) } else { (i, i + 1) }
-    pieces[a] = piece(text, pieces[a].start, pieces[b].end, options)
+    pieces[a] = pieces_of.piece(pieces[a].start, pieces[b].end)
     pieces.remove(b) |> ignore
   }
   let merged : Array[Piece] = []
@@ -176,7 +202,7 @@ fn segments_of(text : String, options : Options) -> Array[Segment] {
       Some(prev) if prev.detection is Some(d) &&
         p.detection is Some(e) &&
         d.lang == e.lang =>
-        merged[merged.length() - 1] = piece(text, prev.start, p.end, options)
+        merged[merged.length() - 1] = pieces_of.piece(prev.start, p.end)
       _ => merged.push(p)
     }
   }

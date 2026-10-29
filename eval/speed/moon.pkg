@@ -1,0 +1,7 @@
+import {
+  "cn-nnzy/mbglot",
+  "cn-nnzy/mbglot/eval/tatoeba",
+  "moonbitlang/core/env",
+}
+
+pkgtype(kind: "executable")

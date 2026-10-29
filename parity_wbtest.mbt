@@ -1,4 +1,15 @@
 ///|
+/// franc's `francAll` for the given options; see `franc_masked`.
+fn franc_all(
+  text : String,
+  allow : Array[Lang],
+  deny : Array[Lang],
+  min_length : Int32,
+) -> (Script, Array[(Lang, Double)])? {
+  franc_masked(text, allow, deny, language_masks(allow, deny), min_length)
+}
+
+///|
 fn codes_to_langs(codes : Array[String]) -> Array[Lang] {
   codes.map(code => Lang::from_code(code).unwrap())
 }

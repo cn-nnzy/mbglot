@@ -24,7 +24,7 @@ SKIP_DIRS = {"_build", ".mooncakes", "node_modules", ".git", "_site"}
 DATA_FILES = {"script_ranges.mbt"}
 
 # Packages that are programs or demos built on the library, not library code.
-APP_DIRS = ("cmd/", "examples/", "demo/", "eval/run/")
+APP_DIRS = ("cmd/", "examples/", "demo/", "eval/run/", "eval/speed/")
 
 GROUPS = ("core", "apps", "tests", "generated")
 
