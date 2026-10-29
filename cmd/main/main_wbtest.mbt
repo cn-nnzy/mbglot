@@ -77,7 +77,7 @@ test "options reach the detector" {
     run([text, "--deny", "por,ita", "--top", "0"])[0],
     "language:   Spanish (spa)",
   )
-  assert_eq(run([text, "--allow", "eng", "--allow", "fra", "--top", "2"]), [
+  assert_eq(run([text, "--allow", "en", "--allow", "fra", "--top", "2"]), [
     "language:   French (fra)", "script:     Latin", "confidence: 0.158 (not reliable)",
     "runner-up:  English (eng), margin 0.158", "top 2:", "  1. fra  French                   1.000",
     "  2. eng  English                  0.842",
@@ -100,7 +100,7 @@ test "usage errors" {
   )
   assert_eq(
     usage_error(["text", "--allow", "eng,xx"]),
-    "error: --allow: unknown language code \"xx\"; use ISO 639-3 codes such as eng or cmn",
+    "error: --allow: unknown language \"xx\"; use language codes such as en, pt-BR or cmn",
   )
   assert_eq(
     usage_error(["text", "--allow", "eng", "--deny", "eng"]),
@@ -153,7 +153,7 @@ test "json" {
       "--json", "--top", "2", "Hola, mi pedido llegó incompleto y falta una de las piezas.",
     ]),
     [
-      "{\"detection\":{\"lang\":\"spa\",\"name\":\"Spanish\",\"script\":\"Latin\",\"confidence\":0.506,\"margin\":0.226,\"reliable\":true,\"runner_up\":\"ita\"},\"top\":[{\"lang\":\"spa\",\"score\":1},{\"lang\":\"ita\",\"score\":0.774}]}",
+      "{\"detection\":{\"lang\":\"spa\",\"bcp47\":\"es\",\"name\":\"Spanish\",\"script\":\"Latin\",\"confidence\":0.506,\"margin\":0.226,\"reliable\":true,\"runner_up\":\"ita\"},\"top\":[{\"lang\":\"spa\",\"score\":1},{\"lang\":\"ita\",\"score\":0.774}]}",
     ],
   )
   assert_eq(run(["--json", "ok"]), ["{\"detection\":null,\"top\":[]}"])

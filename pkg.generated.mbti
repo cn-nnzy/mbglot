@@ -139,9 +139,13 @@ pub(all) enum Lang {
   Ell
 } derive(Eq, Hash, @debug.Debug)
 pub fn Lang::all() -> Array[Self]
+pub fn Lang::bcp47(Self) -> String
 pub fn Lang::code(Self) -> String
+pub fn Lang::from_bcp47(String) -> Self?
 pub fn Lang::from_code(String) -> Self?
+pub fn Lang::iso639_1(Self) -> String?
 pub fn Lang::name(Self) -> String
+pub fn Lang::native_name(Self) -> String
 pub fn Lang::speakers(Self) -> Int32
 pub impl Show for Lang
 

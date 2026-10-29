@@ -42,8 +42,9 @@ function renderVerdict(detection, text) {
     return;
   }
   const head = el("p", "lang");
-  head.append(el("strong", "", detection.name), " ", el("code", "", detection.lang),
-    " ", el("span", "script", detection.script));
+  head.append(el("strong", "", detection.name), " ");
+  if (detection.native !== detection.name) head.append(el("span", "native", detection.native), " ");
+  head.append(el("code", "", detection.bcp47), " ", el("span", "script", detection.script));
   if (detection.variant) head.append(" ", el("span", "script", `(${detection.variant})`));
   const conf = el("p", "conf", `confidence ${detection.confidence.toFixed(3)} `);
   conf.append(el("span", detection.reliable ? "badge ok" : "badge warn",

@@ -23,7 +23,9 @@ Milestone 1 is complete. Implemented:
   for a stream of texts, with the options worked out once (see
   [Speed](#speed)).
 - `Lang`: the 76 languages of franc-min 6.2.0, with `code()` (ISO 639-3),
-  `name()` (English), `Lang::from_code` and `Lang::all()`.
+  `name()` (English), `native_name()`, `iso639_1()`, `bcp47()`,
+  `speakers()`, `Lang::from_code`, `Lang::from_bcp47` and `Lang::all()`
+  (see [Languages](#languages)).
 - `Script`: the 20 writing systems franc-min distinguishes, with `name()`
   and `Script::all()`.
 - `detect_script(text) -> Script?`: the writing system used by most
@@ -131,12 +133,12 @@ $ moon run cmd/main -- --file messages.txt
 
 ```
 $ moon run cmd/main -- --json --top 2 "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio."
-{"detection":{"lang":"por","name":"Portuguese","script":"Latin","confidence":0.428,"margin":0.068,"reliable":true,"runner_up":"spa"},"top":[{"lang":"por","score":1},{"lang":"spa","score":0.932}]}
+{"detection":{"lang":"por","bcp47":"pt","name":"Portuguese","script":"Latin","confidence":0.428,"margin":0.068,"reliable":true,"runner_up":"spa"},"top":[{"lang":"por","score":1},{"lang":"spa","score":0.932}]}
 ```
 
 `--top N` sets how many candidates are listed (5 for a text, none for a
-file), `--allow` and `--deny` take ISO 639-3 codes separated by commas
-(`--allow eng,fra,deu`), `--mode franc` turns off the enhanced passes and
+file), `--allow` and `--deny` take language tags or ISO 639 codes
+separated by commas (`--allow en,fr,deu`), `--mode franc` turns off the enhanced passes and
 `--min-length` sets the minimum text length. Wrong options give a message
 and exit status 2; a file that cannot be read gives exit status 1. The
 tool reads files with `moonbitlang/x`; MoonBit has no portable way to
@@ -204,6 +206,27 @@ Merging those gives 76 distinct ISO 639-3 codes:
   Gujarati, Kannada, Malayalam, Burmese, Panjabi (Gurmukhi), Amharic
   (Ethiopic), Thai, Sinhala and Modern Greek. Javanese script also maps to
   Javanese, which has a Latin profile as well.
+
+Each `Lang` has its ISO 639-3 `code()`, an English `name()`, a
+`native_name()` (`Deutsch`, `日本語`), `speakers()` in millions as franc-min
+lists them, `iso639_1()` and `bcp47()`. Languages that are the main
+member of a macrolanguage take its two-letter code, as they are usually
+tagged (Mandarin `zh`, Standard Arabic `ar`, Iranian Persian `fa`,
+Malay `ms`); languages without a two-letter code keep their three-letter
+one (`ceb`). `Lang::from_bcp47` reads the language of a tag such as an
+`Accept-Language` entry or a locale, ignoring script and region:
+
+```mbt check
+///|
+test {
+  assert_eq(@mbglot.Lang::from_bcp47("pt-BR"), Some(@mbglot.Por))
+  assert_eq(@mbglot.Lang::from_bcp47("zh-Hant-TW"), Some(@mbglot.Cmn))
+  assert_eq(@mbglot.Lang::from_bcp47("zh-yue"), None)
+  assert_eq(@mbglot.Cmn.bcp47(), "zh")
+  assert_eq(@mbglot.Ceb.bcp47(), "ceb")
+  assert_eq(@mbglot.Rus.native_name(), "русский")
+}
+```
 
 ## Detecting a language
 

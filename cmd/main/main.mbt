@@ -55,12 +55,12 @@ fn command() -> @argparse.Command {
       @argparse.OptionArg(
         "allow",
         action=Append,
-        about="only consider these languages: ISO 639-3 codes separated by commas, such as eng,fra,deu",
+        about="only consider these languages: BCP 47 tags or ISO 639 codes separated by commas, such as en,fr,de",
       ),
       @argparse.OptionArg(
         "deny",
         action=Append,
-        about="never return these languages: ISO 639-3 codes separated by commas",
+        about="never return these languages: BCP 47 tags or ISO 639 codes separated by commas",
       ),
       @argparse.OptionArg(
         "mode",
@@ -101,9 +101,9 @@ fn languages(
   for list in lists {
     for code in list.split(",") {
       let code = code.trim().to_owned()
-      guard @mbglot.Lang::from_code(code) is Some(lang) else {
+      guard @mbglot.Lang::from_bcp47(code) is Some(lang) else {
         raise Usage(
-          "error: --\{name}: unknown language code \"\{code}\"; use ISO 639-3 codes such as eng or cmn",
+          "error: --\{name}: unknown language \"\{code}\"; use language codes such as en, pt-BR or cmn",
         )
       }
       if !langs.contains(lang) {
@@ -286,6 +286,7 @@ fn detection_json(detection : @mbglot.Detection?) -> Json {
   guard detection is Some(d) else { return Json::null() }
   {
     "lang": Json(d.lang.code()),
+    "bcp47": Json(d.lang.bcp47()),
     "name": Json(d.lang.name()),
     "script": Json(d.script.name()),
     "confidence": round3(d.confidence),

@@ -14,7 +14,9 @@ fn detection_json(detection : @mbglot.Detection, text : String) -> Json {
   {
     "variant": variant,
     "lang": Json(detection.lang.code()),
+    "bcp47": Json(detection.lang.bcp47()),
     "name": Json(detection.lang.name()),
+    "native": Json(detection.lang.native_name()),
     "script": Json(detection.script.name()),
     "confidence": Json(detection.confidence),
     "reliable": Json(detection.reliable),

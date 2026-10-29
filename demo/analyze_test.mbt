@@ -4,7 +4,13 @@ test "analyze reports detection, top candidates and segments" {
   let result = @json.parse(@demo.analyze(text))
   guard result
     is {
-      "detection": { "lang": "eng", "reliable": true, .. },
+      "detection": {
+        "lang": "eng",
+        "bcp47": "en",
+        "native": "English",
+        "reliable": true,
+        ..
+      },
       "top": [{ "lang": "eng", "score": 1, .. }, _, _, _, _],
       "segments": [
         { "start": 0, "end": 31, "detection": { "lang": "rus", .. }, .. },
