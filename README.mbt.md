@@ -54,7 +54,8 @@ Milestone 1 is complete. Implemented:
   labelled samples (see [Measuring accuracy](#measuring-accuracy)), and a
   public benchmark on 5,541 Tatoeba sentences in 72 languages
   (see [Benchmark](#benchmark)).
-- A command-line tool in `cmd/main`, a ticket-routing example in
+- A command-line tool in `cmd/main` with JSON output and a mode for
+  files of one text per line, a ticket-routing example in
   `examples/tickets` and a [browser demo](#browser-demo) in `demo`.
 
 Not implemented: languages beyond franc-min's 76, and streaming input.
@@ -95,9 +96,10 @@ top 5:
   5. fra  French                   0.687
 ```
 
-Without an argument it prints a usage line; for text it cannot identify it
-says so instead of guessing. With `--segments` it prints one line per
-language segment (see [Mixed-language text](#mixed-language-text)):
+Without a text it prints a usage error (`--help` lists the options); for
+text it cannot identify it says so instead of guessing. With `--segments`
+it prints one line per language segment (see
+[Mixed-language text](#mixed-language-text)):
 
 ```
 $ moon run cmd/main -- --segments "Здравствуйте, заказ не пришёл. Hi, could you check the tracking number for order 4471 please? 谢谢，麻烦尽快处理一下这个问题。"
@@ -110,6 +112,35 @@ franc-min's statistics alone prefer Bulgarian for the first sentence; the
 pass for [related languages](#related-languages) settles Russian from its
 letters and words, and that evidence makes the detection reliable
 although franc's margin is small.
+
+`--file PATH` identifies every line of a file and prints one
+tab-separated result per line: the line number, the language, the
+confidence and whether it is reliable, or dashes when nothing was
+detected. Output line N always belongs to input line N:
+
+```
+$ moon run cmd/main -- --file messages.txt
+1	eng	0.680	reliable
+2	-	-	-
+3	fra	0.263	reliable
+4	bos	0.040	not reliable
+```
+
+`--json` prints the same as JSON, one object per line with `--file`
+(JSON Lines), with the margin and the runner-up:
+
+```
+$ moon run cmd/main -- --json --top 2 "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio."
+{"detection":{"lang":"por","name":"Portuguese","script":"Latin","confidence":0.428,"margin":0.068,"reliable":true,"runner_up":"spa"},"top":[{"lang":"por","score":1},{"lang":"spa","score":0.932}]}
+```
+
+`--top N` sets how many candidates are listed (5 for a text, none for a
+file), `--allow` and `--deny` take ISO 639-3 codes separated by commas
+(`--allow eng,fra,deu`), `--mode franc` turns off the enhanced passes and
+`--min-length` sets the minimum text length. Wrong options give a message
+and exit status 2; a file that cannot be read gives exit status 1. The
+tool reads files with `moonbitlang/x`; MoonBit has no portable way to
+read standard input yet, so there is no stdin mode.
 
 ### Example: routing support tickets
 
@@ -595,6 +626,7 @@ carries over.
 ## Development
 
 ```
+moon update                # once: fetches the registry index for moonbitlang/x
 moon fmt
 moon info
 moon check --target all

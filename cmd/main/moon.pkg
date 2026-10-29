@@ -1,6 +1,13 @@
 import {
   "cn-nnzy/mbglot",
-  "moonbitlang/core/env",
+  "moonbitlang/core/argparse",
+  "moonbitlang/core/string",
+  "moonbitlang/x/fs",
+  "moonbitlang/x/sys",
 }
+
+import {
+  "moonbitlang/core/json",
+} for "wbtest"
 
 pkgtype(kind: "executable")

@@ -45,6 +45,11 @@ jobs:
       - name: Toolchain version
         run: moon version --all
 
+      # The command-line tool depends on moonbitlang/x, and a fresh
+      # installation has no registry index to resolve it.
+      - name: Fetch the registry index
+        run: moon update
+
       - name: Format check
         run: moon fmt --check
 
@@ -72,6 +77,17 @@ jobs:
       - name: Test native
         run: moon test --target native
 
+      - name: Command line
+        shell: bash
+        run: |
+          printf 'Hi, I was charged twice for my subscription this month.\nok\n' > "$RUNNER_TEMP/lines.txt"
+          printf '1\teng\t0.680\treliable\n2\t-\t-\t-\n' > "$RUNNER_TEMP/expected.txt"
+          for target in wasm wasm-gc js native; do
+            echo "== $target"
+            moon run cmd/main --target "$target" -- --file "$RUNNER_TEMP/lines.txt" > "$RUNNER_TEMP/actual.txt"
+            diff --strip-trailing-cr "$RUNNER_TEMP/expected.txt" "$RUNNER_TEMP/actual.txt"
+          done
+
       - name: Benchmark results are up to date
         shell: bash
         run: |
@@ -92,6 +108,9 @@ jobs:
         run: |
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch the registry index
+        run: moon update
 
       - name: Install franc-min 6.2.0
         run: npm install --prefix "$RUNNER_TEMP/franc" --no-save --ignore-scripts franc-min@6.2.0
