@@ -10,7 +10,7 @@ import {
 // Values
 pub fn languages() -> Array[@mbglot.Lang]
 
-pub fn samples(length? : Length) -> Array[@eval.Sample]
+pub fn samples(length? : Length, split? : Split) -> Array[@eval.Sample]
 
 // Errors
 
@@ -22,6 +22,12 @@ pub(all) enum Length {
 } derive(Eq, Hash, @debug.Debug)
 pub fn Length::all() -> Array[Self]
 pub fn Length::name(Self) -> String
+
+pub(all) enum Split {
+  Dev
+  Test
+} derive(Eq, @debug.Debug)
+pub fn Split::name(Self) -> String
 
 // Type aliases
 

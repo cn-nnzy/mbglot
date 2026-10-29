@@ -34,3 +34,21 @@ test "covered languages" {
     assert_true(langs.contains(sample.lang))
   }
 }
+
+///|
+test "dev and test split every language and length in half" {
+  for length in @tatoeba.Length::all() {
+    let all = @tatoeba.samples(length~)
+    let dev = @tatoeba.samples(length~, split=Dev)
+    let test_ = @tatoeba.samples(length~, split=Test)
+    assert_eq(dev.length() + test_.length(), all.length())
+    for lang in @tatoeba.languages() {
+      let d = dev.filter(s => s.lang == lang).length()
+      let t = test_.filter(s => s.lang == lang).length()
+      assert_true(d == t || d == t + 1)
+    }
+    for sample in dev {
+      assert_false(test_.contains(sample))
+    }
+  }
+}

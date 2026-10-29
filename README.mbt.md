@@ -266,11 +266,12 @@ candidate with the highest total moves to the top. One word lifts a
 language over close competitors but not over ones far behind, and
 languages without a list are scored by franc alone.
 
-On the benchmark this raises accuracy on short sentences from 68.3% (with
+On the whole benchmark, before it was split into dev and test halves,
+this raised accuracy on short sentences from 68.3% (with
 the pass for related languages alone) to 71.2%, and on 31 to 80 code
 units, which include texts under 40, from 84.3% to 85.4%. The weight was
-chosen on this benchmark (0.02 to 0.25 tried, with gains levelling off
-above 0.1), so expect a smaller gain on other texts. Short texts still
+chosen on all of it (0.02 to 0.25 tried, with gains levelling off above
+0.1), so the test half does not hide it, and other texts may gain less. Short texts still
 are rarely `reliable`, because that needs 30 code units and a clear
 margin. A word shared by several languages can also mislead: in
 `je suis très fatigué` French is far down franc's list, and `je`, which
@@ -478,29 +479,40 @@ test {
 [Tatoeba](https://tatoeba.org) (CC BY 2.0 FR) in 72 of the 76 languages,
 in three lengths: one sentence of 10 to 30 UTF-16 code units, one of 31 to
 80, and several sentences joined to at least 150, with franc's ranking
-alone (`Mode::Franc`) and with the default `Mode::Enhanced`:
+alone (`Mode::Franc`) and with the default `Mode::Enhanced`.
 
-| Length | Mode | Samples | Accuracy | Macro F1 | Reliable precision | Coverage |
-|---|---|---:|---:|---:|---:|---:|
-| short | franc | 2059 | 65.6% | 64.6% | 88.3% | 2.9% |
-| short | enhanced | 2059 | 71.2% | 70.5% | 93.3% | 2.9% |
-| medium | franc | 1829 | 80.4% | 79.0% | 96.6% | 63.4% |
-| medium | enhanced | 1829 | 85.4% | 84.2% | 97.6% | 63.4% |
-| long | franc | 1653 | 90.0% | 90.9% | 99.6% | 59.3% |
-| long | enhanced | 1653 | 93.5% | 94.6% | 99.9% | 59.3% |
-| all | franc | 5541 | 77.8% | 75.1% | 97.7% | 39.7% |
-| all | enhanced | 5541 | 82.5% | 79.9% | 98.5% | 39.7% |
+The samples of each language and length alternate between a dev half and
+a test half, in the corpus's SHA-256 order. Weights and thresholds are
+chosen on the dev half, and the figures below are for the held-out test
+half:
 
-Accuracy counts every detection. Reliable precision is the share of
-detections flagged `reliable` that are right, and coverage the share of
-samples that get a reliable detection: a router that trusts only reliable
-detections is right 98.5% of the time and sends 60.3% of messages to
-manual triage. [eval/results.md](eval/results.md) has precision, recall
-and F1 for every language and the most frequent confusions, which are
-still led by closely related languages (Bosnian, Croatian and Serbian;
-Indonesian and Malay; Rundi and Kinyarwanda; Hindi, Magahi and
-Bhojpuri). CI reruns the
-benchmark and fails if `eval/results.md` is out of date.
+| Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
+|---|---|---:|---:|---:|---:|---:|---:|
+| short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
+| short | enhanced | 1027 | 71.0% | 76.6% | 69.7% | 92.6% | 2.6% |
+| medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
+| medium | enhanced | 911 | 85.5% | 90.5% | 85.8% | 97.9% | 62.8% |
+| long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
+| long | enhanced | 823 | 92.5% | 98.1% | 93.6% | 99.8% | 58.1% |
+| all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
+| all | enhanced | 2761 | 82.2% | 87.6% | 79.0% | 98.6% | 39.0% |
+
+Accuracy counts every detection. Group accuracy also counts as right a
+language from the expected language's group: Bosnian, Croatian and
+Serbian; Indonesian and Malay; Hindi, Bhojpuri, Maithili and Magahi;
+Rundi and Kinyarwanda. These are standards of one language or dialect
+continua that short written text often cannot separate, and they still
+lead the confusions. Reliable precision is the share of detections
+flagged `reliable` that are right, and coverage the share of samples that
+get a reliable detection. [eval/results.md](eval/results.md) has the dev
+half's figures, precision, recall and F1 for every language and the most
+frequent confusions. CI reruns the benchmark and fails if
+`eval/results.md` is out of date.
+
+The split came after the short-text word weight and the word lists for
+related languages were chosen on the whole corpus, so the enhanced
+figures still profit from them somewhat; everything tuned since uses the
+dev half only.
 
 Tatoeba has no sentences in Chimborazo Highland Quichua (qug), Hmong
 (hms), Yongbei Zhuang (zyb) and Magahi (mag), and fewer than 30 per
