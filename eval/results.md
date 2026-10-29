@@ -133,3 +133,12 @@ Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
 | long | enhanced | 830 | 95.1% | 98.4% | 95.7% | 99.7% | 77.2% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
 | all | enhanced | 2780 | 83.2% | 87.5% | 80.8% | 98.6% | 59.7% |
+
+## Custom profiles
+
+A `Classifier` with franc-min's profiles of the Latin-script languages against one with 300-trigram profiles trained on the dev half (`Profile::train`), on the test half. Trigram distance only, without the passes of `Mode::Enhanced`.
+
+| Profiles | Languages | Samples | Accuracy | Macro F1 |
+|---|---:|---:|---:|---:|
+| franc-min | 39 | 1469 | 70.1% | 66.4% |
+| trained on the dev half | 39 | 1469 | 84.8% | 80.9% |

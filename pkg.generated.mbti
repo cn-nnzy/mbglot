@@ -38,6 +38,16 @@ pub(all) suberror OptionsError {
   NegativeMinLength(Int32)
 } derive(Eq, @debug.Debug)
 
+pub(all) suberror ProfileError {
+  BadName(String)
+  NoTrigrams
+  BadSize(Int32)
+  BadHeader
+  BadTrigram(Int32)
+  NoProfiles
+  DuplicateName(String)
+} derive(Eq, @debug.Debug)
+
 // Types and methods
 pub struct Accumulator {
   // private fields
@@ -53,6 +63,14 @@ pub(all) enum ChineseVariant {
   Simplified
   Traditional
 } derive(Eq, @debug.Debug)
+
+pub struct Classifier {
+  // private fields
+}
+pub fn Classifier::classify(Self, String, min_length? : Int32) -> String?
+pub fn Classifier::names(Self) -> Array[String]
+pub fn Classifier::new(Array[Profile]) -> Self raise ProfileError
+pub fn Classifier::rank(Self, String, min_length? : Int32) -> Array[(String, Double)]
 
 pub(all) struct Detection {
   lang : Lang
@@ -197,6 +215,16 @@ pub fn Options::min_length(Self) -> Int32
 pub fn Options::mode(Self) -> Mode
 pub fn Options::new(allow? : Array[Lang], deny? : Array[Lang], min_length? : Int32, mode? : Mode, strip_markup? : Bool) -> Self raise OptionsError
 pub fn Options::strip_markup(Self) -> Bool
+
+pub struct Profile {
+  // private fields
+}
+pub fn Profile::name(Self) -> String
+pub fn Profile::of_lang(Lang, script? : Script) -> Self?
+pub fn Profile::parse(String) -> Self raise ProfileError
+pub fn Profile::save(Self) -> String
+pub fn Profile::train(String, String, size? : Int32) -> Self raise ProfileError
+pub fn Profile::trigrams(Self) -> Array[String]
 
 pub(all) struct Removed {
   start : Int32

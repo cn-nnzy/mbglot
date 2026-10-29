@@ -45,6 +45,9 @@ Milestone 1 is complete. Implemented:
   languages into consecutive segments with their own detection. This is
   mbglot's own procedure on top of franc's scores (franc has no
   segmentation); see below.
+- `Profile::train` and `Classifier`: profiles trained from sample text,
+  saved as plain text and compared with franc's method, alone or with
+  the built-in ones (see [Custom profiles](#custom-profiles)).
 - `Accumulator`: the language of a stream fed in chunks, without
   re-reading earlier chunks (see [Streams](#streams)).
 - `explain(text, options?)`: the steps that decided a detection and the
@@ -573,6 +576,57 @@ segments, and a text with nothing identifiable gives one segment whose
 which is usually undone because the short piece is joined back. Short
 sentences in closely related languages can still be misidentified; check
 `reliable` on each segment.
+
+## Custom profiles
+
+franc's method works for any set of trigram profiles. `Profile::train`
+makes one from sample text, the way franc-min's own were made from the
+Universal Declaration of Human Rights, so a language franc-min lacks, a
+dialect, or the style of your own messages can be added. A `Classifier`
+ranks texts against any mix of trained and built-in (`Profile::of_lang`)
+profiles by franc's trigram distance, without the passes of
+`Mode::Enhanced`:
+
+```mbt check
+///|
+test {
+  let esperanto = @mbglot.Profile::train(
+    "epo",
+    "Saluton, mia nomo estas Petro kaj mi loĝas en granda urbo. " +
+    "Mi tre ŝatas legi librojn kaj promeni en la parko kun mia hundo. " +
+    "Hodiaŭ la vetero estas bela, do ni iros al la maro. " +
+    "Ĉu vi volas veni kun ni? Ni manĝos fiŝojn kaj trinkos kafon.",
+  )
+  let profiles = [@mbglot.Eng, @mbglot.Spa, @mbglot.Ita].map(lang => {
+    @mbglot.Profile::of_lang(lang).unwrap()
+  })
+  profiles.push(esperanto)
+  let classifier = @mbglot.Classifier::new(profiles)
+  assert_eq(
+    classifier.classify("Ĉu vi scias, kie estas la stacidomo?"),
+    Some("epo"),
+  )
+  // A profile saves to plain text and reads back.
+  let saved = esperanto.save()
+  assert_eq(@mbglot.Profile::parse(saved).trigrams(), esperanto.trigrams())
+}
+```
+
+Profiles trained on text like the text to identify can beat the
+built-in ones. The [benchmark](#benchmark) trains 300-trigram profiles
+for its 39 Latin-script languages on the dev half and compares them with
+franc-min's on the test half, both with trigram distance alone:
+
+| Profiles | Languages | Samples | Accuracy | Macro F1 |
+|---|---:|---:|---:|---:|
+| franc-min | 39 | 1469 | 70.1% | 66.4% |
+| trained on the dev half | 39 | 1469 | 84.8% | 80.9% |
+
+Keep the default of 300 trigrams: in a trial on the same data, 1,000 gave
+49.4% and 3,000 gave 35.3%, because franc's distance charges a fixed 300
+for every trigram a profile lacks and compares counts with ranks, which
+suits short profiles. A `Classifier` with franc-min's profiles of the
+languages that `rank` lists gives franc's scores, which a test checks.
 
 ## Streams
 

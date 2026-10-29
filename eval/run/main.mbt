@@ -114,6 +114,48 @@ fn summary_table(buf : StringBuilder, split : @tatoeba.Split) -> Unit raise {
 }
 
 ///|
+/// The languages with franc-min profiles whose benchmark samples are in
+/// Latin script.
+fn latin_languages() -> Array[@mbglot.Lang] {
+  @tatoeba.languages().filter(lang => {
+    let samples = @tatoeba.samples(split=Dev).filter(s => s.lang == lang)
+    @mbglot.Profile::of_lang(lang) is Some(_) &&
+    samples.length() > 0 &&
+    @mbglot.detect_script(samples[0].text) == Some(Latin)
+  })
+}
+
+///|
+/// Accuracy on the test half of a classifier with franc-min's profiles
+/// and of one with profiles trained on the dev half, for the Latin-script
+/// languages.
+fn custom_profiles(buf : StringBuilder) -> Unit raise {
+  let langs = latin_languages()
+  let samples = @tatoeba.samples(split=Test).filter(s => langs.contains(s.lang))
+  let franc = langs.map(lang => @mbglot.Profile::of_lang(lang).unwrap())
+  let trained = langs.map(lang => {
+    let text = @tatoeba.samples(split=Dev)
+      .filter(s => s.lang == lang)
+      .map(s => s.text)
+      .join("\n")
+    @mbglot.Profile::train(lang.code(), text)
+  })
+  buf.write_string(
+    "| Profiles | Languages | Samples | Accuracy | Macro F1 |\n|---|---:|---:|---:|---:|\n",
+  )
+  for entry in [("franc-min", franc), ("trained on the dev half", trained)] {
+    let classifier = @mbglot.Classifier::new(entry.1)
+    let report = @eval.evaluate(samples, text => {
+      classifier.classify(text).bind(@mbglot.Lang::from_code)
+    })
+    buf.write_string(
+      "| \{entry.0} | \{langs.length()} | \{report.total()} | " +
+      "\{@eval.percent(report.accuracy())} | \{@eval.percent(report.macro_f1())} |\n",
+    )
+  }
+}
+
+///|
 /// The benchmark report in Markdown. `eval/results.md` holds its output;
 /// CI checks that it is up to date.
 fn benchmark() -> String raise {
@@ -143,6 +185,14 @@ fn benchmark() -> String raise {
   )
   buf.write_string("\n## Dev half\n\n")
   summary_table(buf, Dev)
+  buf.write_string(
+    "\n## Custom profiles\n\n" +
+    "A `Classifier` with franc-min's profiles of the Latin-script languages " +
+    "against one with 300-trigram profiles trained on the dev half " +
+    "(`Profile::train`), on the test half. Trigram distance only, without " +
+    "the passes of `Mode::Enhanced`.\n\n",
+  )
+  custom_profiles(buf)
   buf.to_string()
 }
 
