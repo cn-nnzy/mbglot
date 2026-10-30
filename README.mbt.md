@@ -360,13 +360,13 @@ When the text holds nothing that tells the best language from the
 runner-up, a related language whose score is within 0.12 of the best may
 still take first place: each such candidate gets 0.1 times the logarithm
 of its number of speakers (`Lang::speakers`, the figures franc-min lists),
-and the highest total wins. Hindi, Bhojpuri, Maithili and Magahi count as
-related here too. This breaks near ties toward the language a message is
-more likely to be in; no letter or word is outweighed by it. The window
-and weight were chosen on the dev half of the [benchmark](#benchmark),
-where every language is equally frequent; on the test half it raises
-enhanced accuracy from 82.2% to 82.9%, mostly on Hindi, Indonesian and
-Russian, at some cost to Bhojpuri and Malay.
+and the highest total wins. This breaks near ties toward the language a
+message is more likely to be in; no letter or word is outweighed by it.
+The window and weight were chosen on the dev half of the
+[benchmark](#benchmark), where every language is equally frequent.
+Hindi, Bhojpuri, Maithili and Magahi get no prior: a pull toward Hindi
+helped on Tatoeba, which has no Magahi, but cost more on the FLORES-200
+dev set, where the four are equally frequent.
 
 ### Short texts
 
@@ -765,13 +765,13 @@ half:
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.6% | 76.8% | 70.1% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.1% | 76.8% | 69.7% | 97.1% | 36.5% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.6% | 90.6% | 85.9% | 98.4% | 67.4% |
+| medium | enhanced | 911 | 85.3% | 90.6% | 85.6% | 98.4% | 67.2% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 94.2% | 98.1% | 94.8% | 99.2% | 77.2% |
+| long | enhanced | 823 | 93.2% | 98.1% | 94.2% | 99.2% | 77.2% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.9% | 87.7% | 79.6% | 98.4% | 58.8% |
+| all | enhanced | 2761 | 82.4% | 87.7% | 79.2% | 98.4% | 58.7% |
 
 Accuracy counts every detection. Group accuracy also counts as right a
 language from the expected language's group: Bosnian, Croatian and
@@ -812,13 +812,16 @@ the 68 of mbglot's languages it covers. Nothing was tuned on it:
 | flores | enhanced | 2720 | 90.4% | 97.4% | 89.9% | 99.4% | 72.6% |
 
 Enhanced mode is right more often and makes 72.6% of detections reliable
-instead of 63.2%, with the same reliable precision. The gain is smaller
-than on Tatoeba, and the near-tie rule costs Malay, Magahi and Maithili
-on this corpus: in enhanced mode 35 of 40 Standard Malay sentences come
-out as Indonesian (18 with franc's ranking alone), and Magahi and
-Maithili mostly as Hindi. Group accuracy, which counts those as right,
-rises from 95.7% to 97.4%. `tools/gen_flores.py` generates the corpus;
-Northern Pashto and Chimborazo Highland Quichua are missing because
+instead of 63.2%, with the same reliable precision. Standard Malay is the
+weak spot: 26 of its 40 sentences come out as Indonesian, against 18
+with franc's ranking alone, because news Malay shares most of its words
+with Indonesian and the near-tie rule then favours the larger language.
+Group accuracy, which counts those as right, rises from 95.7% to 97.4%.
+These figures showed the problem first; the fix (news words in the
+Indonesian and Malay lists, and no prior for the Hindi belt) was then
+chosen on the FLORES-200 dev set, a different set of sentences that is
+not committed, and the Tatoeba dev half. `tools/gen_flores.py` generates
+the corpus; Northern Pashto and Chimborazo Highland Quichua are missing because
 FLORES-200 has Southern Pashto and Ayacucho Quechua instead.
 
 ### Speed

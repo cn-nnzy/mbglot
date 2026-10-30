@@ -8,20 +8,16 @@ let tie_window : Double = 0.12
 /// a near tie. Chosen with `tie_window` on the dev half of the Tatoeba
 /// benchmark, whose languages are equally frequent; with real traffic the
 /// larger language is likelier still.
+///
+/// Hindi, Bhojpuri, Maithili and Magahi are left out: on the FLORES-200
+/// dev set, where the four are equally frequent, a pull toward Hindi cost
+/// more than it gained on Tatoeba, which has no Magahi.
 let speakers_weight : Double = 0.1
 
 ///|
-/// Hindi and the languages of the Hindi belt, which franc-min ranks close
-/// together but no rule of `groups` separates.
-let hindi_belt : Array[Lang] = [Hin, Bho, Mai, Mag]
-
-///|
-/// The languages related to `lang`: its group in `groups`, or the Hindi
-/// belt. Empty when there are none.
+/// The languages related to `lang`: its group in `groups`. Empty when
+/// there is none.
 fn related(lang : Lang) -> Array[Lang] {
-  if hindi_belt.contains(lang) {
-    return hindi_belt
-  }
   for group in groups {
     if group.langs.contains(lang) {
       return group.langs

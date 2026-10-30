@@ -11,24 +11,24 @@ The samples of each language and length alternate between a dev half and a test 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.6% | 76.8% | 70.1% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.1% | 76.8% | 69.7% | 97.1% | 36.5% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.6% | 90.6% | 85.9% | 98.4% | 67.4% |
+| medium | enhanced | 911 | 85.3% | 90.6% | 85.6% | 98.4% | 67.2% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 94.2% | 98.1% | 94.8% | 99.2% | 77.2% |
+| long | enhanced | 823 | 93.2% | 98.1% | 94.2% | 99.2% | 77.2% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.9% | 87.7% | 79.6% | 98.4% | 58.8% |
+| all | enhanced | 2761 | 82.4% | 87.7% | 79.2% | 98.4% | 58.7% |
 
 ## Every length, enhanced mode, test half
 
-Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
+Accuracy: 82.4% (2274 of 2761), unidentified: 1, macro F1: 79.2%
 
 | Language | Samples | Precision | Recall | F1 |
 |---|---:|---:|---:|---:|
 | spa Spanish | 45 | 88.6% | 86.7% | 87.6% |
 | eng English | 45 | 84.4% | 84.4% | 84.4% |
 | por Portuguese | 45 | 69.0% | 88.9% | 77.7% |
-| ind Indonesian | 45 | 68.9% | 68.9% | 68.9% |
+| ind Indonesian | 45 | 62.7% | 71.1% | 66.7% |
 | fra French | 45 | 86.3% | 97.8% | 91.7% |
 | deu German | 45 | 86.3% | 97.8% | 91.7% |
 | jav Javanese | 45 | 79.5% | 68.9% | 73.8% |
@@ -48,7 +48,7 @@ Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
 | ckb Central Kurdish | 45 | 93.2% | 91.1% | 92.1% |
 | yor Yoruba | 19 | 100.0% | 52.6% | 69.0% |
 | uzn Northern Uzbek | 45 | 79.5% | 68.9% | 73.8% |
-| zlm Malay | 45 | 68.9% | 68.9% | 68.9% |
+| zlm Malay | 45 | 64.1% | 55.6% | 59.5% |
 | ibo Igbo | 17 | 83.3% | 58.8% | 69.0% |
 | ceb Cebuano | 45 | 72.7% | 53.3% | 61.5% |
 | tgl Tagalog | 45 | 61.8% | 93.3% | 74.3% |
@@ -77,10 +77,10 @@ Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
 | pes Iranian Persian | 45 | 97.7% | 93.3% | 95.5% |
 | skr Saraiki | 29 | 90.0% | 93.1% | 91.5% |
 | pbu Northern Pashto | 29 | 96.2% | 86.2% | 90.9% |
-| hin Hindi | 45 | 62.3% | 73.3% | 67.3% |
+| hin Hindi | 45 | 61.8% | 46.7% | 53.2% |
 | mar Marathi | 45 | 97.4% | 82.2% | 89.2% |
-| mai Maithili | 1 | - | 0.0% | - |
-| bho Bhojpuri | 24 | 41.7% | 41.7% | 41.7% |
+| mai Maithili | 1 | 0.0% | 0.0% | 0.0% |
+| bho Bhojpuri | 24 | 34.4% | 45.8% | 39.3% |
 | npi Nepali | 45 | 97.4% | 84.4% | 90.5% |
 | cmn Mandarin Chinese | 45 | 100.0% | 100.0% | 100.0% |
 | ben Bengali | 45 | 100.0% | 100.0% | 100.0% |
@@ -102,16 +102,17 @@ Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
 |---|---|---:|
 | bos | hrv | 23 |
 | srp | bos | 16 |
+| hin | bho | 15 |
 | ceb | tgl | 14 |
 | run | kin | 14 |
 | hrv | bos | 13 |
-| bho | hin | 13 |
+| zlm | ind | 12 |
 | bos | srp | 10 |
-| hin | bho | 10 |
+| hin | mag | 9 |
+| bho | hin | 8 |
 | hrv | srp | 7 |
-| ind | zlm | 6 |
 | jav | sun | 6 |
-| zlm | ind | 6 |
+| ind | zlm | 5 |
 | fuv | hau | 5 |
 | azj | tur | 5 |
 | kin | run | 5 |
@@ -119,7 +120,6 @@ Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
 | sun | tgl | 4 |
 | srp | hrv | 4 |
 | ckb | zlm | 4 |
-| yor | swh | 4 |
 
 ## FLORES-200
 
@@ -128,33 +128,33 @@ A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news a
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 90.4% | 97.4% | 89.9% | 99.4% | 72.6% |
+| flores | enhanced | 2720 | 91.4% | 97.4% | 91.2% | 99.4% | 72.6% |
 
 | Expected | Predicted (enhanced) | Count |
 |---|---|---:|
-| zlm | ind | 35 |
-| mag | hin | 26 |
-| mai | hin | 16 |
+| zlm | ind | 26 |
 | srp | bos | 15 |
 | bos | srp | 14 |
 | hrv | srp | 14 |
 | kin | run | 14 |
-| bho | hin | 14 |
 | bos | hrv | 13 |
 | hrv | bos | 13 |
+| fuv | hau | 11 |
+| mai | mag | 11 |
+| mag | hin | 10 |
 
 ## Dev half
 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1032 | 66.4% | 70.7% | 65.8% | 84.8% | 3.2% |
-| short | enhanced | 1032 | 71.4% | 76.1% | 70.8% | 98.1% | 36.4% |
+| short | enhanced | 1032 | 71.5% | 76.1% | 71.0% | 98.1% | 36.4% |
 | medium | franc | 918 | 80.5% | 86.5% | 79.0% | 96.6% | 64.1% |
-| medium | enhanced | 918 | 85.8% | 90.4% | 84.3% | 97.8% | 70.0% |
+| medium | enhanced | 918 | 85.7% | 90.4% | 84.3% | 97.8% | 69.9% |
 | long | franc | 830 | 90.8% | 96.0% | 91.5% | 99.8% | 60.6% |
-| long | enhanced | 830 | 95.1% | 98.4% | 95.7% | 99.7% | 77.2% |
+| long | enhanced | 830 | 94.8% | 98.4% | 95.7% | 99.7% | 77.0% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
-| all | enhanced | 2780 | 83.2% | 87.5% | 80.8% | 98.6% | 59.7% |
+| all | enhanced | 2780 | 83.2% | 87.5% | 80.9% | 98.6% | 59.6% |
 
 ## Custom profiles
 

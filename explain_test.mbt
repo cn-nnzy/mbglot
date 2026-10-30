@@ -14,13 +14,10 @@ test "explain names the pass that decided" {
       [Trigrams(Jpn), ScriptShare(Cmn)],
     ),
     (
-      "मैं कल बाजार गया था और वहाँ से सब्जियाँ खरीदीं।",
-      [Trigrams(Bho), NearTie(Hin, Bho)],
+      "Mereka sudah lama tinggal di kota ini.",
+      [Trigrams(Zlm), NearTie(Ind, Zlm)],
     ),
-    (
-      "Saya tidak tahu di mana dia.",
-      [Trigrams(Ind), RelatedLanguages(Zlm, ["saya"])],
-    ),
+    ("Saya tidak tahu di mana dia.", [Trigrams(Ind)]),
     ("Hi, I was charged twice for my subscription this month.", [Trigrams(Eng)]),
   ]
   for case in cases {

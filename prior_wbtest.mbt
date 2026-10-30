@@ -1,12 +1,21 @@
 ///|
-test "a near tie in the Hindi belt goes to the language with more speakers" {
-  let ranked = [(Bho, 1.0), (Mag, 0.97), (Hin, 0.95), (Mar, 0.9)]
-  assert_eq(near_tie_prior(stats("कुछ शब्द").words, ranked), [
-    (Hin, 1.0),
-    (Mag, 0.97),
-    (Bho, 0.95),
-    (Mar, 0.9),
+test "a near tie between related languages goes to the one with more speakers" {
+  // Rundi has 11 million speakers, Kinyarwanda 9 million.
+  let ranked = [(Kin, 1.0), (Run, 0.995), (Mar, 0.97)]
+  assert_eq(near_tie_prior(stats("kuri bo").words, ranked), [
+    (Run, 1.0),
+    (Kin, 0.995),
+    (Mar, 0.97),
   ])
+}
+
+///|
+test "the Hindi belt has no prior" {
+  let ranked = [(Bho, 1.0), (Mag, 0.97), (Hin, 0.95), (Mar, 0.9)]
+  assert_eq(
+    near_tie_prior(stats("कुछ शब्द").words, ranked),
+    ranked,
+  )
 }
 
 ///|
@@ -20,9 +29,12 @@ test "the prior leaves clear leads and unrelated languages alone" {
 
 ///|
 test "evidence in the text overrides the prior" {
-  // `tak` and `nak` are Malay; Indonesian has far more speakers.
+  // `nak` and `kerana` are Malay; Indonesian has far more speakers.
   let ranked = [(Zlm, 1.0), (Ind, 0.99)]
-  assert_eq(near_tie_prior(stats("saya tak nak pergi").words, ranked), ranked)
+  assert_eq(
+    near_tie_prior(stats("saya nak pergi kerana").words, ranked),
+    ranked,
+  )
   assert_eq(near_tie_prior(stats("dia pergi").words, ranked), [
     (Ind, 1.0),
     (Zlm, 0.99),
