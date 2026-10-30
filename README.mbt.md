@@ -25,8 +25,8 @@ test {
 | Held-out benchmark | franc-min's ranking | mbglot (default) |
 |---|---:|---:|
 | Accuracy, Tatoeba test half (2,761 texts) | 77.2% | 83.1% |
-| Accuracy, FLORES-200 devtest (2,720 texts) | 89.2% | 92.5% |
-| Answered as `reliable`, Tatoeba test half | 39.0% | 59.9% |
+| Accuracy, FLORES-200 devtest (2,720 texts) | 89.2% | 92.6% |
+| Answered as `reliable`, Tatoeba test half | 39.0% | 60.1% |
 
 The figures come from [eval/results.md](eval/results.md), which CI
 regenerates; `tools/readme_tables.py` keeps this table and the copies
@@ -319,8 +319,8 @@ a probability.
   Malay with only shared words, for example).
 
 The enhanced weights and thresholds were chosen on the dev half of the
-[benchmark](#benchmark). On the held-out test half they make 59.9% of
-detections reliable instead of 39.0%, and 36.5% of short sentences
+[benchmark](#benchmark). On the held-out test half they make 60.1% of
+detections reliable instead of 39.0%, and 36.6% of short sentences
 instead of 2.6%, with reliable precision 98.4%.
 
 ### Options
@@ -807,13 +807,13 @@ half:
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.7% | 76.8% | 70.3% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.7% | 76.8% | 70.3% | 97.1% | 36.6% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.7% | 90.7% | 85.9% | 98.5% | 67.9% |
+| medium | enhanced | 911 | 85.7% | 90.7% | 85.9% | 98.5% | 68.1% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 94.5% | 98.4% | 95.3% | 99.2% | 80.3% |
+| long | enhanced | 823 | 94.5% | 98.4% | 95.3% | 99.2% | 80.6% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 83.1% | 87.8% | 79.9% | 98.5% | 59.9% |
+| all | enhanced | 2761 | 83.1% | 87.8% | 79.9% | 98.5% | 60.1% |
 
 Accuracy counts every detection. Group accuracy also counts as right a
 language from the expected language's group: Bosnian, Croatian and
@@ -852,7 +852,7 @@ devtest sentences:
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 92.5% | 97.8% | 92.2% | 99.4% | 76.5% |
+| flores | enhanced | 2720 | 92.6% | 97.9% | 92.4% | 99.6% | 76.5% |
 
 Enhanced mode is right more often and makes 76.5% of detections reliable
 instead of 63.2%, with the same reliable precision. Standard Malay is the

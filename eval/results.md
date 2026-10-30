@@ -11,13 +11,13 @@ The samples of each language and length alternate between a dev half and a test 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.7% | 76.8% | 70.3% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.7% | 76.8% | 70.3% | 97.1% | 36.6% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.7% | 90.7% | 85.9% | 98.5% | 67.9% |
+| medium | enhanced | 911 | 85.7% | 90.7% | 85.9% | 98.5% | 68.1% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 94.5% | 98.4% | 95.3% | 99.2% | 80.3% |
+| long | enhanced | 823 | 94.5% | 98.4% | 95.3% | 99.2% | 80.6% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 83.1% | 87.8% | 79.9% | 98.5% | 59.9% |
+| all | enhanced | 2761 | 83.1% | 87.8% | 79.9% | 98.5% | 60.1% |
 
 ## Every length, enhanced mode, test half
 
@@ -128,7 +128,7 @@ A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news a
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 92.5% | 97.8% | 92.2% | 99.4% | 76.5% |
+| flores | enhanced | 2720 | 92.6% | 97.9% | 92.4% | 99.6% | 76.5% |
 
 | Expected | Predicted (enhanced) | Count |
 |---|---|---:|
@@ -150,11 +150,11 @@ A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news a
 | short | franc | 1032 | 66.4% | 70.7% | 65.8% | 84.8% | 3.2% |
 | short | enhanced | 1032 | 72.0% | 76.3% | 71.5% | 98.2% | 36.7% |
 | medium | franc | 918 | 80.5% | 86.5% | 79.0% | 96.6% | 64.1% |
-| medium | enhanced | 918 | 86.5% | 91.1% | 85.0% | 97.9% | 71.1% |
+| medium | enhanced | 918 | 86.6% | 91.2% | 85.1% | 97.9% | 71.1% |
 | long | franc | 830 | 90.8% | 96.0% | 91.5% | 99.8% | 60.6% |
 | long | enhanced | 830 | 95.3% | 98.7% | 96.1% | 99.7% | 80.8% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
-| all | enhanced | 2780 | 83.7% | 87.8% | 81.5% | 98.6% | 61.3% |
+| all | enhanced | 2780 | 83.8% | 87.9% | 81.6% | 98.6% | 61.3% |
 
 ## Custom profiles
 
