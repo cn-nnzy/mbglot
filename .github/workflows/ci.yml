@@ -127,6 +127,9 @@ jobs:
           node tools/gen_full.mjs "$RUNNER_TEMP/franc-full/node_modules/franc" "$RUNNER_TEMP/fixtures.js" full
           moon fmt
 
+      - name: README tables match eval/results.md
+        run: python3 tools/readme_tables.py
+
       - name: Generated files match the committed ones
         run: |
           git status --porcelain

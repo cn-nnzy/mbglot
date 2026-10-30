@@ -137,3 +137,11 @@ Times franc-min 6.2.0's `francAll` on the texts of
 npm install --prefix "$TMP/franc" --no-save --ignore-scripts franc-min@6.2.0
 node tools/bench_franc.mjs "$TMP/franc/node_modules/franc-min"
 ```
+
+## readme_tables.py
+
+Checks that `README.mbt.md` quotes `eval/results.md` correctly: the
+tables copied from it (the Tatoeba test half, FLORES-200, custom
+profiles) and the summary under "At a glance". After rerunning the
+benchmark, `python tools/readme_tables.py --write` updates the README.
+The `franc data` CI job runs the check.

@@ -8,9 +8,40 @@ wasm, wasm-gc, js and native backends.
 [Try it in your browser](https://cn-nnzy.github.io/mbglot/): the
 [demo page](#browser-demo) runs mbglot compiled to JavaScript.
 
+## At a glance
+
+```mbt check
+///|
+test {
+  let d = @mbglot.detect(
+    "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio.",
+  ).unwrap()
+  assert_eq(d.lang, @mbglot.Por) // franc-min alone says Spanish
+  assert_eq(d.lang.bcp47(), "pt")
+  assert_true(d.reliable)
+}
+```
+
+| Held-out benchmark | franc-min's ranking | mbglot (default) |
+|---|---:|---:|
+| Accuracy, Tatoeba test half (2,761 texts) | 77.2% | 82.4% |
+| Accuracy, FLORES-200 devtest (2,720 texts) | 89.2% | 91.4% |
+| Answered as `reliable`, Tatoeba test half | 39.0% | 58.7% |
+
+The figures come from [eval/results.md](eval/results.md), which CI
+regenerates; `tools/readme_tables.py` keeps this table and the copies
+further down in step with it, and CI fails if they differ. In
+`Mode::Franc` the rankings and scores are franc-min's, checked by a
+golden test, and `detect` runs about 2.3 times as fast as franc-min on
+the same Node.js ([Speed](#speed)). Beyond franc, mbglot offers language
+segments for mixed text, markup removal, an explanation of each
+decision, streaming input, trained profiles, BCP 47 tags, a command-line
+tool with JSON output, and all 186 of franc's languages in a separate
+package.
+
 ## Status
 
-Milestone 1 is complete. Implemented:
+Implemented:
 
 - `detect(text, options?) -> Detection?` and
   `rank(text, options?) -> Array[(Lang, Double)]`, with `Options` for
@@ -804,12 +835,13 @@ weights were chosen on them. To see whether the enhanced passes help on
 other text, the benchmark also runs on
 [FLORES-200](https://github.com/facebookresearch/flores) (CC BY-SA 4.0):
 the same 40 devtest sentences, from English news and travel articles, in
-the 68 of mbglot's languages it covers. Nothing was tuned on it:
+the 68 of mbglot's languages it covers. Nothing was tuned on these
+devtest sentences:
 
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 90.4% | 97.4% | 89.9% | 99.4% | 72.6% |
+| flores | enhanced | 2720 | 91.4% | 97.4% | 91.2% | 99.4% | 72.6% |
 
 Enhanced mode is right more often and makes 72.6% of detections reliable
 instead of 63.2%, with the same reliable precision. Standard Malay is the
