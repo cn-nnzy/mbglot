@@ -7,5 +7,5 @@ import {
 } for "test"
 
 options(
-  link: { "js": { "exports": [ "analyze" ], "format": "esm" } },
+  link: { "js": { "exports": [ "analyze", "analyze_in" ], "format": "esm" } },
 )

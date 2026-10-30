@@ -221,9 +221,13 @@ triage with the two messages that have too little text.
 ### Browser demo
 
 `demo/` is a web page that runs mbglot compiled to JavaScript: type or
-paste text and it shows the detected language, the confidence, the five
-best candidates and the text coloured by language segment, updated on
-every keystroke. Nothing is sent to a server. It is published at
+paste text and it shows the detected language, the confidence, the steps
+that decided it, the five best candidates and the text coloured by
+language segment, updated on every keystroke. A switch shows franc-min's
+trigrams alone instead, and when the two differ the page says what
+franc-min would have answered; sample buttons include pairs that franc-min
+gets wrong (Portuguese taken for Spanish, Russian and Cyrillic Serbian
+taken for Bulgarian). Nothing is sent to a server. It is published at
 <https://cn-nnzy.github.io/mbglot/> by the `Demo` workflow
 (`.github/workflows/pages.yml`) on every push to `main`, after a check
 that the built page identifies a German sentence. To build and serve it
@@ -235,8 +239,9 @@ python -m http.server -d _site
 ```
 
 and open <http://localhost:8000>. The page calls one exported function,
-`analyze(text)` in `demo/analyze.mbt`, which returns the detection, the
-top candidates and the segments as JSON; segment offsets are UTF-16 code
+`analyze_in(text, mode)` in `demo/analyze.mbt`, which returns the
+detection, the top candidates, the segments, the steps of the decision
+and franc-min's own answer as JSON; segment offsets are UTF-16 code
 units, so they index JavaScript strings directly.
 
 ## Languages

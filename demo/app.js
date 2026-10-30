@@ -1,4 +1,4 @@
-import { analyze } from "./mbglot.js";
+import { analyze_in } from "./mbglot.js";
 
 const samples = [
   ["English", "The quick brown fox jumps over the lazy dog while the farmer watches from the porch."],
@@ -7,6 +7,11 @@ const samples = [
   ["Japanese", "ご注文の商品が届いておりません。至急確認していただけますでしょうか。"],
   ["Chinese", "我們這個月的訂單還沒有到，請幫忙查一下物流資訊，謝謝。"],
   ["Arabic", "مرحبا، لم يصل طلبي بعد، هل يمكنكم التحقق من رقم التتبع من فضلكم؟"],
+  ["Portuguese, not Spanish", "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio."],
+  ["Russian, not Bulgarian", "Здравствуйте! После оплаты подписка так и не активировалась, а деньги списались."],
+  ["Serbian (Cyrillic)", "Наручио сам књигу прошле недеље, али још увек није стигла. Можете ли да проверите?"],
+  ["Malay", "Saya mahu tahu bila pesanan saya akan sampai, kerana saya perlu pergi ke pejabat."],
+  ["Short chat", "Ich habe eine Frage."],
   ["Mixed", "Здравствуйте, заказ не пришёл. Hi, could you check the tracking number for order 4471 please? 谢谢，麻烦尽快处理一下这个问题。"],
 ];
 
@@ -45,7 +50,7 @@ function describeStep(step) {
   }
 }
 
-function renderVerdict(detection, text, why) {
+function renderVerdict(detection, text, why, franc) {
   verdict.replaceChildren();
   if (!detection) {
     const message = text.trim().length === 0
@@ -64,6 +69,9 @@ function renderVerdict(detection, text, why) {
     detection.reliable ? "reliable" : "not reliable"));
   verdict.append(head, conf);
   if (why.length > 0) verdict.append(el("p", "why", why.map(describeStep).join(" ")));
+  if (franc && franc.lang !== detection.lang) {
+    verdict.append(el("p", "why", `franc-min's trigrams alone would say ${franc.name}.`));
+  }
 }
 
 function renderTop(entries) {
@@ -106,10 +114,14 @@ function renderSegments(text, segments) {
   }
 }
 
+function mode() {
+  return document.querySelector('input[name="mode"]:checked').value;
+}
+
 function update() {
   const text = input.value;
-  const result = JSON.parse(analyze(text));
-  renderVerdict(result.detection, text, result.why);
+  const result = JSON.parse(analyze_in(text, mode()));
+  renderVerdict(result.detection, text, result.why, result.franc);
   renderTop(result.top);
   renderSegments(text, text.length === 0 ? [] : result.segments);
 }
@@ -126,5 +138,8 @@ for (const [label, text] of samples) {
 }
 
 input.addEventListener("input", update);
+for (const radio of document.querySelectorAll('input[name="mode"]')) {
+  radio.addEventListener("change", update);
+}
 input.value = samples[samples.length - 1][1];
 update();

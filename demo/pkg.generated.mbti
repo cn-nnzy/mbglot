@@ -4,6 +4,8 @@ package "cn-nnzy/mbglot/demo"
 // Values
 pub fn analyze(String) -> String
 
+pub fn analyze_in(String, String) -> String
+
 // Errors
 
 // Types and methods

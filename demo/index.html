@@ -20,6 +20,13 @@
   <textarea id="input" rows="6" spellcheck="false"
     placeholder="Type or paste text in any of 76 languages"></textarea>
   <div id="samples" aria-label="Sample texts"></div>
+  <fieldset id="mode">
+    <legend>Method</legend>
+    <label><input type="radio" name="mode" value="enhanced" checked>
+      mbglot (franc-min plus letters and words of related languages)</label>
+    <label><input type="radio" name="mode" value="franc">
+      franc-min's trigrams alone</label>
+  </fieldset>
 
   <section id="result" aria-live="polite">
     <div id="verdict"></div>

@@ -47,18 +47,37 @@ fn step_json(step : @mbglot.Step) -> Json {
 }
 
 ///|
-/// Everything the demo page shows for `text`, as a JSON string: the
-/// detection (or null), the five best candidates, the language segments
-/// with UTF-16 offsets, which index JavaScript strings directly, and the
-/// steps that decided the language.
+/// Everything the demo page shows for `text` in the default mode; see
+/// `analyze_in`.
 pub fn analyze(text : String) -> String {
-  let detection : Json = match @mbglot.detect(text) {
+  analyze_in(text, "enhanced")
+}
+
+///|
+/// Everything the demo page shows for `text` in `mode` ("enhanced" or
+/// "franc"), as a JSON string: the detection (or null), the five best
+/// candidates, the language segments with UTF-16 offsets, which index
+/// JavaScript strings directly, the steps that decided the language, and
+/// what franc-min's ranking alone would say (`franc`, the language or
+/// null), so the page can show where the enhanced passes changed it.
+pub fn analyze_in(text : String, mode : String) -> String {
+  let franc_options = @mbglot.Options::new(mode=Franc) catch {
+    _ => abort("unreachable")
+  }
+  let options = if mode == "franc" {
+    franc_options
+  } else {
+    @mbglot.Options::new() catch {
+      _ => abort("unreachable")
+    }
+  }
+  let detector = @mbglot.Detector::new(options~)
+  let detection : Json = match detector.detect(text) {
     Some(d) => detection_json(d, text)
     None => Json::null()
   }
-  let ranked = @mbglot.rank(text)
   let top : Array[Json] = []
-  for i, entry in ranked {
+  for i, entry in detector.rank(text) {
     if i == 5 {
       break
     }
@@ -69,19 +88,26 @@ pub fn analyze(text : String) -> String {
       "score": Json(score),
     })
   }
-  let segments : Array[Json] = @mbglot.segments(text).map(segment => {
-    "start": Json(segment.start),
-    "end": Json(segment.end),
-    "detection": match segment.detection {
-      Some(d) => detection_json(d, segment.text)
-      None => Json::null()
-    },
-  })
+  let segments : Array[Json] = detector
+    .segments(text)
+    .map(segment => {
+      "start": Json(segment.start),
+      "end": Json(segment.end),
+      "detection": match segment.detection {
+        Some(d) => detection_json(d, segment.text)
+        None => Json::null()
+      },
+    })
+  let franc : Json = match @mbglot.detect(text, options=franc_options) {
+    Some(d) => { "lang": Json(d.lang.code()), "name": Json(d.lang.name()) }
+    None => Json::null()
+  }
   let result : Json = {
     "detection": detection,
     "top": Json::array(top),
     "segments": Json::array(segments),
-    "why": Json::array(@mbglot.explain(text).steps.map(step_json)),
+    "why": Json::array(detector.explain(text).steps.map(step_json)),
+    "franc": franc,
   }
   result.stringify()
 }

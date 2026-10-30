@@ -38,6 +38,11 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   border-radius: 999px; cursor: pointer;
 }
 #samples button:hover { border-color: var(--accent); }
+#mode {
+  margin: 12px 0 0; padding: 0; border: 0; font-size: 14px; color: var(--muted);
+}
+#mode legend { padding: 0; margin-bottom: 2px; font-weight: 600; color: var(--fg); }
+#mode label { display: block; font-weight: normal; margin: 2px 0; }
 #result {
   margin-top: 24px; padding: 16px; background: var(--panel);
   border: 1px solid var(--line); border-radius: 8px;

@@ -99,3 +99,30 @@ test "analyze lists the steps that decided" {
     fail("unexpected result: \{result.stringify()}")
   }
 }
+
+///|
+test "analyze_in compares the modes" {
+  let text = "Olá, gostaria de mudar o endereço de entrega do meu pedido antes do envio."
+  guard @json.parse(@demo.analyze_in(text, "enhanced"))
+    is {
+      "detection": { "lang": "por", .. },
+      "franc": { "lang": "spa", "name": "Spanish", .. },
+      ..
+    } else {
+    fail("unexpected enhanced result")
+  }
+  guard @json.parse(@demo.analyze_in(text, "franc"))
+    is {
+      "detection": { "lang": "spa", .. },
+      "why": [{ "step": "trigrams", .. }],
+      "franc": { "lang": "spa", .. },
+      ..
+    } else {
+    fail("unexpected franc result")
+  }
+  assert_eq(@demo.analyze(text), @demo.analyze_in(text, "enhanced"))
+  guard @json.parse(@demo.analyze_in("ok", "enhanced"))
+    is { "detection": Null, "franc": Null, .. } else {
+    fail("unexpected result for ok")
+  }
+}
