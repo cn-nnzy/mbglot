@@ -4,6 +4,16 @@ All notable changes to mbglot. Accuracy figures are from
 [eval/results.md](eval/results.md) on the held-out halves of the
 benchmarks.
 
+## Unreleased
+
+- Faster: `detect` in `Mode::Enhanced` about twice as fast (66,800 texts/s
+  on wasm-gc instead of 31,500), `Mode::Franc` about 1.8 times and
+  `segments` about 2.2 times. Results are unchanged, except that the
+  Cebuano word `kaayo`, listed twice, now counts once.
+- The demo compares mbglot with franc-min's trigrams alone.
+- Ukrainian is no longer taken for Belarusian when it lacks ї, є and ґ.
+- CI checks that the module packages for mooncakes.io.
+
 ## 0.1.0 (2026-10-30)
 
 The first release.

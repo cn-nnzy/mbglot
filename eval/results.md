@@ -152,9 +152,9 @@ A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news a
 | medium | franc | 918 | 80.5% | 86.5% | 79.0% | 96.6% | 64.1% |
 | medium | enhanced | 918 | 86.6% | 91.2% | 85.1% | 97.9% | 71.1% |
 | long | franc | 830 | 90.8% | 96.0% | 91.5% | 99.8% | 60.6% |
-| long | enhanced | 830 | 95.3% | 98.7% | 96.1% | 99.7% | 80.8% |
+| long | enhanced | 830 | 95.2% | 98.6% | 96.0% | 99.7% | 80.7% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
-| all | enhanced | 2780 | 83.8% | 87.9% | 81.6% | 98.6% | 61.3% |
+| all | enhanced | 2780 | 83.7% | 87.8% | 81.5% | 98.6% | 61.2% |
 
 ## Custom profiles
 

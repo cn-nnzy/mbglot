@@ -20,6 +20,25 @@ fn in_ranges(ranges : FixedArray[Int32], cp : Int32) -> Bool {
 }
 
 ///|
+/// Code points below this get their scripts from `script_masks` instead of
+/// a search in every script's ranges: it covers the alphabetic scripts and
+/// leaves Han, kana and Hangul to the search.
+let mask_limit : Int32 = 0x3100
+
+///|
+/// For each code point below `mask_limit`, a bit per script of
+/// `script_ranges` that contains it.
+let script_masks : FixedArray[Int32] = FixedArray::makei(mask_limit, cp => {
+  let mut mask = 0
+  for s in 0..<script_ranges.length() {
+    if in_ranges(script_ranges[s], cp) {
+      mask = mask | (1 << s)
+    }
+  }
+  mask
+})
+
+///|
 /// Counts, per script, the code points of the first `max_sample_length`
 /// code units of `text`. A surrogate pair cut by the limit and unpaired
 /// surrogates count for no script, as in franc's regular expressions.
@@ -45,6 +64,17 @@ fn script_counts(text : String) -> FixedArray[Int32] {
     }
     i += 1
     if cp < 0 {
+      continue
+    }
+    if cp < mask_limit {
+      let mask = script_masks[cp]
+      if mask != 0 {
+        for s in 0..<script_ranges.length() {
+          if (mask & (1 << s)) != 0 {
+            counts[s] += 1
+          }
+        }
+      }
       continue
     }
     for s in 0..<script_ranges.length() {

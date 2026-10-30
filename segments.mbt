@@ -15,8 +15,17 @@ pub(all) struct Segment {
 /// Kana and Hangul share a class because Japanese mixes kanji and kana and
 /// Korean may mix in hanja; `detect` tells them apart within a piece.
 fn letter_class(cp : Int32) -> Int32 {
+  let mask = if cp >= 0 && cp < mask_limit { script_masks[cp] } else { -1 }
+  if mask == 0 {
+    return -1
+  }
   for s in 0..<script_ranges.length() {
-    if in_ranges(script_ranges[s], cp) {
+    let inside = if mask > 0 {
+      (mask & (1 << s)) != 0
+    } else {
+      in_ranges(script_ranges[s], cp)
+    }
+    if inside {
       return if all_scripts[s] == Kana || all_scripts[s] == Hangul {
         0
       } else {

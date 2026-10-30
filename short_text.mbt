@@ -254,14 +254,29 @@ let stop_words : Array[(Lang, Array[String])] = [
 ]
 
 ///|
+/// The languages whose list in `stop_words` holds each word.
+let stop_word_index : Map[String, Array[Lang]] = {
+  let index : Map[String, Array[Lang]] = Map([])
+  for entry in stop_words {
+    let (lang, list) = entry
+    for word in list {
+      match index.get(word) {
+        Some(langs) => langs.push(lang)
+        None => index[word] = [lang]
+      }
+    }
+  }
+  index
+}
+
+///|
 /// Occurrences in `words` (word -> count) of common words of `lang`.
 fn stop_word_hits(lang : Lang, words : Map[String, Int32]) -> Int32 {
-  guard stop_words.search_by(entry => entry.0 == lang) is Some(i) else {
-    return 0
-  }
   let mut hits = 0
-  for word in stop_words[i].1 {
-    hits += words.get_or_default(word, 0)
+  for word, n in words {
+    if stop_word_index.get(word) is Some(langs) && langs.contains(lang) {
+      hits += n
+    }
   }
   hits
 }

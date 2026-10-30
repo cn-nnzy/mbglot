@@ -96,3 +96,16 @@ test "a language without a profile in the script can win" {
     ranked,
   )
 }
+
+///|
+test "each group lists a word at most once per language" {
+  for group in groups {
+    for entry in group.words {
+      let seen : Set[String] = Set([])
+      for word in entry.1 {
+        assert_false(seen.contains(word), msg="\{entry.0.code()}: \{word}")
+        seen.add(word)
+      }
+    }
+  }
+}

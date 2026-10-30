@@ -295,7 +295,7 @@ let groups : Array[Group] = [
           "ug", "og", "dili", "kini", "kana", "unsa", "ngano", "naa", "kaayo", "nga",
           "imong", "akong", "nimo", "niini", "adto", "diha", "asa", "pud", "sad",
           "gyud", "usa", "gikan", "miingon", "giingon", "kaniadtong", "karon", "diin",
-          "kining", "pinaagi", "apan", "tungod", "aron", "didto", "kaayo",
+          "kining", "pinaagi", "apan", "tungod", "aron", "didto",
         ],
       ),
     ],
@@ -488,12 +488,24 @@ fn words_of(text : String) -> Array[String] {
 ///|
 /// Occurrences of `needle` in `haystack`, not overlapping.
 fn occurrences(haystack : String, needle : String) -> Int32 {
+  let n = needle.length()
+  if n == 0 {
+    return 0
+  }
+  let first = needle.unsafe_get(0)
   let mut count = 0
   let mut i = 0
-  while i + needle.length() <= haystack.length() {
-    if haystack.view(start_offset=i, end_offset=i + needle.length()) == needle {
+  while i + n <= haystack.length() {
+    // Compare code units in place: this runs for every marker and word.
+    let mut matched = haystack.unsafe_get(i) == first
+    let mut k = 1
+    while matched && k < n {
+      matched = haystack.unsafe_get(i + k) == needle.unsafe_get(k)
+      k += 1
+    }
+    if matched {
       count += 1
-      i += needle.length()
+      i += n
     } else {
       i += 1
     }
@@ -502,29 +514,90 @@ fn occurrences(haystack : String, needle : String) -> Int32 {
 }
 
 ///|
+/// For each group of `groups`, its markers by their first code unit, so
+/// that a word is scanned once for all of them.
+let marker_indexes : Array[Map[Int32, Array[Int32]]] = groups.map(group => {
+  let index : Map[Int32, Array[Int32]] = Map([])
+  for m, marker in group.markers {
+    let first = marker.1.unsafe_get(0).to_int()
+    match index.get(first) {
+      Some(list) => list.push(m)
+      None => index[first] = [m]
+    }
+  }
+  index
+})
+
+///|
+/// For each group of `groups`, the languages whose list holds each word.
+let word_indexes : Array[Map[String, Array[Lang]]] = groups.map(group => {
+  let index : Map[String, Array[Lang]] = Map([])
+  for entry in group.words {
+    let (lang, list) = entry
+    for word in list {
+      match index.get(word) {
+        Some(langs) => if !langs.contains(lang) { langs.push(lang) }
+        None => index[word] = [lang]
+      }
+    }
+  }
+  index
+})
+
+///|
+/// Whether `needle` occurs in `word` at code unit `at`.
+fn occurs_at(word : String, at : Int32, needle : String) -> Bool {
+  if at + needle.length() > word.length() {
+    return false
+  }
+  for k in 1..<needle.length() {
+    if word.unsafe_get(at + k) != needle.unsafe_get(k) {
+      return false
+    }
+  }
+  true
+}
+
+///|
 /// Evidence for each language of `group` in the words of a text. Markers
 /// never contain a space, so counting them word by word is the same as
-/// counting them in the text.
+/// counting them in the text, and none can overlap itself, so every
+/// occurrence counts.
 fn evidence(group : Group, words : Map[String, Int32]) -> Map[Lang, Int32] {
   let scores : Map[Lang, Int32] = Map([])
   for lang in group.langs {
     scores[lang] = 0
   }
-  for marker in group.markers {
-    let (lang, letters, weight) = marker
-    let mut found = 0
-    for word, n in words {
-      found += n * occurrences(word, letters)
-    }
-    scores[lang] = scores.get(lang).unwrap_or(0) + weight * found
+  guard groups.search_by(g => physical_equal(g, group)) is Some(g) else {
+    return scores
   }
-  for entry in group.words {
-    let (lang, list) = entry
-    let mut hits = 0
-    for word in list {
-      hits += words.get_or_default(word, 0)
+  let index = marker_indexes[g]
+  let found = FixedArray::make(group.markers.length(), 0)
+  if !index.is_empty() {
+    for word, n in words {
+      for i in 0..<word.length() {
+        guard index.get(word.unsafe_get(i).to_int()) is Some(list) else {
+          continue
+        }
+        for m in list {
+          if occurs_at(word, i, group.markers[m].1) {
+            found[m] += n
+          }
+        }
+      }
     }
-    scores[lang] = scores.get(lang).unwrap_or(0) + hits
+  }
+  for m, marker in group.markers {
+    let (lang, _, weight) = marker
+    scores[lang] = scores.get(lang).unwrap_or(0) + weight * found[m]
+  }
+  let listed = word_indexes[g]
+  for word, n in words {
+    if listed.get(word) is Some(langs) {
+      for lang in langs {
+        scores[lang] = scores.get(lang).unwrap_or(0) + n
+      }
+    }
   }
   scores
 }

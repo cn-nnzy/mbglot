@@ -96,6 +96,9 @@ fn lowercase(units : Array[Int32]) -> Array[Int32] {
   let out = []
   for i, cp in cps {
     match cp {
+      // ASCII needs no table lookup.
+      0x41..<=0x5A => out.push(cp + 0x20)
+      0x00..<=0x7F => out.push(cp)
       0x130 => {
         out.push(0x69)
         out.push(0x307)

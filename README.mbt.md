@@ -32,7 +32,7 @@ The figures come from [eval/results.md](eval/results.md), which CI
 regenerates; `tools/readme_tables.py` keeps this table and the copies
 further down in step with it, and CI fails if they differ. In
 `Mode::Franc` the rankings and scores are franc-min's, checked by a
-golden test, and `detect` runs about 2.3 times as fast as franc-min on
+golden test, and `detect` runs about 3 times as fast as franc-min on
 the same Node.js ([Speed](#speed)). Beyond franc, mbglot offers language
 segments for mixed text, markup removal, an explanation of each
 decision, streaming input, trained profiles, BCP 47 tags, a command-line
@@ -883,19 +883,23 @@ laptop (Node.js 24 for `js`):
 
 | Backend | `detect`, `Mode::Franc` | `detect`, `Mode::Enhanced` | `segments` |
 |---|---:|---:|---:|
-| wasm-gc | 66,800 texts/s | 31,500 texts/s | 935 texts/s |
-| js | 36,900 texts/s | 17,200 texts/s | 518 texts/s |
+| wasm-gc | 123,000 texts/s | 66,800 texts/s | 2,070 texts/s |
+| js | 55,400 texts/s | 35,700 texts/s | 960 texts/s |
 
 Each text trigram is looked up once in an index of all the script's
-profiles instead of once per language, and `segments` identifies each
-stretch of text only once while it merges pieces. Before that, the same
-machine managed 19,400 texts/s on wasm-gc and 15,700 on js in
-`Mode::Franc`. `tools/bench_franc.mjs` times franc-min 6.2.0's
-`francAll` on the same texts: 15,700 texts/s on the same Node.js, so
-mbglot's JavaScript build is about 2.3 times as fast and its wasm-gc
-build about 4 times, with identical rankings and scores on all 5,541
-texts. Timings vary between machines and runs; the ratios are what
-carries over.
+profiles instead of once per language; the script of a character below
+U+3100 comes from a table instead of a search in every script's ranges;
+the enhanced passes look up a text's words in per-group indexes instead
+of scanning every word list; and `segments` identifies each stretch of
+text only once while it merges pieces. The first version managed 19,400
+texts/s on wasm-gc and 15,700 on js in `Mode::Franc`.
+`tools/bench_franc.mjs` times franc-min 6.2.0's `francAll` on the same
+texts: about 18,000 texts/s on the same Node.js, so mbglot's JavaScript
+build is about 3 times as fast in `Mode::Franc` and twice as fast with
+the enhanced passes, and its wasm-gc build about 6.8 times, with
+identical rankings and scores in `Mode::Franc` on all 5,541 texts.
+Timings vary between machines and runs; the ratios are what carries
+over.
 
 ## Development
 
