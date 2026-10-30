@@ -4,7 +4,9 @@ All notable changes to mbglot. Accuracy figures are from
 [eval/results.md](eval/results.md) on the held-out halves of the
 benchmarks.
 
-## Unreleased
+## 0.2.0 (2026-10-31)
+
+The first version published on mooncakes.io.
 
 - Faster: `detect` in `Mode::Enhanced` about twice as fast (66,800 texts/s
   on wasm-gc instead of 31,500), `Mode::Franc` about 1.8 times and

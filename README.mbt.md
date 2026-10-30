@@ -103,8 +103,8 @@ Implemented:
 
 All 186 of franc's languages are in the `full` package; the enhanced
 passes cover franc-min's 76.
-Changes are listed in [CHANGELOG.md](CHANGELOG.md). Version 0.1.0 is tagged
-on GitHub; there is no release on mooncakes.io yet.
+Changes are listed in [CHANGELOG.md](CHANGELOG.md); each version is
+tagged on GitHub.
 
 ## Usage
 
@@ -122,10 +122,9 @@ import {
 }
 ```
 
-`moon add` works once the module is published on mooncakes.io; until
-then, depend on a checkout of this repository. CI runs `moon package` on
-every push, which builds and checks the archive that `moon publish` would
-upload, so publishing takes only `moon login` and `moon publish`.
+The module is published on [mooncakes.io](https://mooncakes.io/docs/cn-nnzy/mbglot).
+CI runs `moon package` on every push, which builds and checks the archive
+that `moon publish` uploads.
 
 ### Command line
 
