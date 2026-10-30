@@ -121,6 +121,28 @@ Accuracy: 82.9% (2290 of 2761), unidentified: 1, macro F1: 79.6%
 | ckb | zlm | 4 |
 | yor | swh | 4 |
 
+## FLORES-200
+
+A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news and travel articles translated from English, CC BY-SA 4.0) in 68 of the languages (see eval/flores). Nothing was tuned on it.
+
+| Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
+|---|---|---:|---:|---:|---:|---:|---:|
+| flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
+| flores | enhanced | 2720 | 90.4% | 97.4% | 89.9% | 99.4% | 72.6% |
+
+| Expected | Predicted (enhanced) | Count |
+|---|---|---:|
+| zlm | ind | 35 |
+| mag | hin | 26 |
+| mai | hin | 16 |
+| srp | bos | 15 |
+| bos | srp | 14 |
+| hrv | srp | 14 |
+| kin | run | 14 |
+| bho | hin | 14 |
+| bos | hrv | 13 |
+| hrv | bos | 13 |
+
 ## Dev half
 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |

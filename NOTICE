@@ -125,3 +125,16 @@ Tatoeba
   https://tatoeba.org/sentences/show/N. Sentences were only joined with
   spaces and had runs of whitespace collapsed; they are not otherwise
   modified.
+
+FLORES-200
+  eval/flores/corpus.mbt holds 40 devtest sentences per language from
+  FLORES-200 (https://github.com/facebookresearch/flores, archive
+  https://dl.fbaipublicfiles.com/nllb/flores200_dataset.tar.gz), selected
+  by tools/gen_flores.py. FLORES-200 is licensed under the Creative
+  Commons Attribution-ShareAlike 4.0 International license (CC BY-SA 4.0,
+  https://creativecommons.org/licenses/by-sa/4.0/), and so is that file.
+  The sentences only had runs of whitespace collapsed; they are not
+  otherwise modified. Reference: NLLB Team et al., "No Language Left
+  Behind: Scaling Human-Centered Machine Translation", 2022; Goyal et al.,
+  "The FLORES-101 Evaluation Benchmark for Low-Resource and Multilingual
+  Machine Translation", 2022.

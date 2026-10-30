@@ -1,0 +1,20 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "cn-nnzy/mbglot/eval/flores"
+
+import {
+  "cn-nnzy/mbglot",
+  "cn-nnzy/mbglot/eval",
+}
+
+// Values
+pub fn languages() -> Array[@mbglot.Lang]
+
+pub fn samples() -> Array[@eval.Sample]
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

@@ -88,28 +88,66 @@ fn summary_table(buf : StringBuilder, split : @tatoeba.Split) -> Unit raise {
     Some(Long),
     None,
   ]
-  let modes : Array[@mbglot.Mode] = [Franc, Enhanced]
   for length in lengths {
-    let samples = @tatoeba.samples(length?, split~)
     let name = match length {
       Some(l) => l.name()
       None => "all"
     }
-    for mode in modes {
-      let options = @mbglot.Options::new(mode~)
-      let all = @eval.evaluate(samples, any_detection(options))
-      let reliable = @eval.evaluate(samples, reliable_detection(options))
-      let coverage = 1.0 -
-        reliable.unidentified().to_double() / reliable.total().to_double()
-      buf.write_string(
-        "| \{name} | \{mode_name(mode)} | \{all.total()} | " +
-        "\{@eval.percent(all.accuracy())} | " +
-        "\{@eval.percent(group_accuracy(samples, any_detection(options)))} | " +
-        "\{@eval.percent(all.macro_f1())} | " +
-        "\{@eval.percent(answered_precision(reliable))} | " +
-        "\{@eval.percent(coverage)} |\n",
-      )
+    mode_rows(buf, name, @tatoeba.samples(length?, split~))
+  }
+}
+
+///|
+/// One row per mode for `samples`, labelled `name`.
+fn mode_rows(
+  buf : StringBuilder,
+  name : String,
+  samples : Array[@eval.Sample],
+) -> Unit raise {
+  let modes : Array[@mbglot.Mode] = [Franc, Enhanced]
+  for mode in modes {
+    let options = @mbglot.Options::new(mode~)
+    let all = @eval.evaluate(samples, any_detection(options))
+    let reliable = @eval.evaluate(samples, reliable_detection(options))
+    let coverage = 1.0 -
+      reliable.unidentified().to_double() / reliable.total().to_double()
+    buf.write_string(
+      "| \{name} | \{mode_name(mode)} | \{all.total()} | " +
+      "\{@eval.percent(all.accuracy())} | " +
+      "\{@eval.percent(group_accuracy(samples, any_detection(options)))} | " +
+      "\{@eval.percent(all.macro_f1())} | " +
+      "\{@eval.percent(answered_precision(reliable))} | " +
+      "\{@eval.percent(coverage)} |\n",
+    )
+  }
+}
+
+///|
+/// Both modes on the FLORES-200 sentences, and enhanced mode's most
+/// frequent mistakes there.
+fn flores_section(buf : StringBuilder) -> Unit raise {
+  let samples = @flores.samples()
+  buf.write_string(
+    "\n## FLORES-200\n\n" +
+    "A second, out-of-domain corpus: the same 40 FLORES-200 devtest " +
+    "sentences (news and travel articles translated from English, CC BY-SA " +
+    "4.0) in \{@flores.languages().length()} of the languages (see " +
+    "eval/flores). Nothing was tuned on it.\n\n",
+  )
+  buf.write_string(
+    "| Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |\n",
+  )
+  buf.write_string("|---|---|---:|---:|---:|---:|---:|---:|\n")
+  mode_rows(buf, "flores", samples)
+  let report = @eval.evaluate(samples, any_detection(@mbglot.Options::new()))
+  buf.write_string("\n| Expected | Predicted (enhanced) | Count |\n")
+  buf.write_string("|---|---|---:|\n")
+  for m in report.top_confusions(10) {
+    let predicted = match m.1 {
+      Some(lang) => lang.code()
+      None => "none"
     }
+    buf.write_string("| \{m.0.code()} | \{predicted} | \{m.2} |\n")
   }
 }
 
@@ -183,6 +221,7 @@ fn benchmark() -> String raise {
       any_detection(@mbglot.Options::new()),
     ).to_markdown(confusions=20),
   )
+  flores_section(buf)
   buf.write_string("\n## Dev half\n\n")
   summary_table(buf, Dev)
   buf.write_string(

@@ -90,6 +90,26 @@ later export can change the selection where sentences were removed; the
 file header records the export date. The script's docstring lists the
 length classes and the mapping from mbglot's language codes to Tatoeba's.
 
+## gen_flores.py
+
+Writes `eval/flores/corpus.mbt`: 40 FLORES-200 devtest sentences (CC
+BY-SA 4.0, see NOTICE) for each of mbglot's languages that FLORES-200
+has, the same sentence positions in every language. Needs Python 3 and
+the unpacked dataset; uses only the standard library.
+
+```
+curl -fsSL -o "$TMP/flores200_dataset.tar.gz" https://dl.fbaipublicfiles.com/nllb/flores200_dataset.tar.gz
+sha256sum "$TMP/flores200_dataset.tar.gz"   # b8b0b767...44011f6
+tar -xzf "$TMP/flores200_dataset.tar.gz" -C "$TMP"
+python tools/gen_flores.py "$TMP/flores200_dataset" eval/flores/corpus.mbt
+moon fmt
+moon run eval/run > eval/results.md
+```
+
+The positions are the first 40 in the order of SHA-256 of
+`flores:<position>`. The archive's full SHA-256 is
+`b8b0b76783024b85797e5cc75064eb83fc5288b41e9654dabc7be6ae944011f6`.
+
 ## gen_full.mjs
 
 Writes `full/data.mbt` (the Unicode ranges of franc 6.2.0's 30 script
