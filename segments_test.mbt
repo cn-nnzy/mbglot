@@ -122,3 +122,80 @@ test "neighbouring segments differ in language" {
     }
   }
 }
+
+///|
+/// Pieces of text that random inputs are built from: sentences in several
+/// scripts, markup, emoji, digits, punctuation, line breaks and an
+/// unpaired surrogate.
+let fragments : Array[String] = [
+  "Hello, my order has not arrived yet. ",
+  "Hola, ¿dónde está mi pedido? ",
+  "Здравствуйте, заказ не пришёл. ",
+  "谢谢，麻烦尽快处理。",
+  "ご確認ください。",
+  "مرحبا، لم يصل طلبي بعد. ",
+  "Merci beaucoup ! ",
+  "ok ",
+  "😀😃 ",
+  "4471 ",
+  "!!! ",
+  "\n",
+  "\n\n",
+  "https://example.com/a?b=c ",
+  "@dana ",
+  "#urgent ",
+  "<b>bold</b> ",
+  "`code` ",
+  "mail@example.org ",
+  "Dobar dan. ",
+  "Saya tidak tahu. ",
+  "a",
+  ".",
+  "\u{1F600}",
+  // An unpaired high surrogate between two letters.
+  "x" + (0xD800).unsafe_to_char().to_string() + "y ",
+]
+
+///|
+/// A string of `count` fragments chosen by a linear congruential
+/// generator seeded with `seed`.
+fn random_text(seed : Int32, count : Int32) -> String {
+  let b = StringBuilder()
+  let mut state = seed
+  for _ in 0..<count {
+    state = (state * 1103515245 + 12345) & 0x7FFFFFFF
+    b.write_string(fragments[state % fragments.length()])
+  }
+  b.to_string()
+}
+
+///|
+test "segments cover random mixed text exactly, with and without markup removal" {
+  let all_options = [
+    @mbglot.Options::new(),
+    @mbglot.Options::new(strip_markup=false),
+    @mbglot.Options::new(mode=Franc),
+    @mbglot.Options::new(mode=Franc, strip_markup=true),
+  ]
+  for seed in 0..<150 {
+    let text = random_text(seed, 1 + seed % 12)
+    for options in all_options {
+      let result = @mbglot.segments(text, options~)
+      assert_covers(text, result)
+      // Only a text with nothing identifiable gives an unidentified segment.
+      for s in result {
+        if s.detection is None {
+          assert_eq(result.length(), 1, msg=text)
+        }
+      }
+      // Neighbours differ in language.
+      for i in 1..<result.length() {
+        assert_true(
+          result[i - 1].detection.map(d => d.lang) !=
+          result[i].detection.map(d => d.lang),
+          msg=text,
+        )
+      }
+    }
+  }
+}
