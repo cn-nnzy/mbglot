@@ -10,11 +10,14 @@ pub(all) enum Length {
 } derive(Eq, Hash, Debug)
 
 ///|
+/// Every length class, shortest first.
 pub fn Length::all() -> Array[Length] {
   [Short, Medium, Long]
 }
 
 ///|
+/// The class's name as the benchmark tables print it: "short", "medium"
+/// or "long".
 pub fn Length::name(self : Length) -> String {
   match self {
     Short => "short"
@@ -46,6 +49,7 @@ pub(all) enum Split {
 } derive(Eq, Debug)
 
 ///|
+/// The half's name as the benchmark tables print it: "dev" or "test".
 pub fn Split::name(self : Split) -> String {
   match self {
     Dev => "dev"

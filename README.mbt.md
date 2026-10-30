@@ -122,8 +122,10 @@ import {
 }
 ```
 
-`moon add` works once the module is published; until then, depend on a
-checkout of this repository.
+`moon add` works once the module is published on mooncakes.io; until
+then, depend on a checkout of this repository. CI runs `moon package` on
+every push, which builds and checks the archive that `moon publish` would
+upload, so publishing takes only `moon login` and `moon publish`.
 
 ### Command line
 

@@ -88,6 +88,11 @@ jobs:
             diff --strip-trailing-cr "$RUNNER_TEMP/expected.txt" "$RUNNER_TEMP/actual.txt"
           done
 
+      # The archive `moon publish` would upload to mooncakes.io: it must
+      # build and pass moon's own checks.
+      - name: Package for mooncakes.io
+        run: moon package
+
       - name: Benchmark results are up to date
         shell: bash
         run: |
