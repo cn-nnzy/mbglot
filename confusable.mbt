@@ -244,15 +244,27 @@ let groups : Array[Group] = [
   {
     script: Latin,
     langs: [Run, Kin],
-    markers: [(Kin, "cy", 2), (Kin, "jy", 2), (Kin, "shy", 2), (Run, "vy", 2)],
+    markers: [
+      (Kin, "cy", 2),
+      (Kin, "jy", 2),
+      (Kin, "shy", 2),
+      (Kin, "by", 2),
+      (Run, "vy", 2),
+    ],
     words: [
       (
         Kin,
-        ["ni", "cyane", "ibyo", "byose", "nta", "uyu", "ubu", "iki", "kandi"],
+        [
+          "cyane", "ibyo", "byose", "iki", "cyangwa", "kuko", "ndetse", "nyuma",
+          "ariko", "u", "ubwo", "rwa",
+        ],
       ),
       (
         Run,
-        ["ni", "cane", "ivyo", "vyose", "nta", "uyu", "ubu", "ico", "kandi"],
+        [
+          "cane", "ivyo", "vyose", "ico", "canke", "kubera", "ningoga", "inyuma",
+          "mugabo", "yuko", "kuri", "rya",
+        ],
       ),
     ],
   },
@@ -265,16 +277,18 @@ let groups : Array[Group] = [
         Tgl,
         [
           "ng", "hindi", "ito", "iyan", "iyon", "ay", "po", "niya", "ko", "mo", "kayo",
-          "akin", "kanya", "bakit", "paano", "saan", "may", "lang", "din", "rin",
-          "ba", "talaga",
+          "akin", "kanya", "bakit", "paano", "saan", "may", "din", "rin", "talaga",
+          "noong", "nang", "mula", "ayon", "isang", "kanilang", "nito", "dahil",
+          "upang", "sinabi", "ngunit", "subalit", "pa", "rito",
         ],
       ),
       (
         Ceb,
         [
           "ug", "og", "dili", "kini", "kana", "unsa", "ngano", "naa", "kaayo", "nga",
-          "imong", "akong", "nimo", "niini", "adto", "diha", "asa", "lang", "pud",
-          "sad", "gyud", "ba",
+          "imong", "akong", "nimo", "niini", "adto", "diha", "asa", "pud", "sad",
+          "gyud", "usa", "gikan", "miingon", "giingon", "kaniadtong", "karon", "diin",
+          "kining", "pinaagi", "apan", "tungod", "aron", "didto", "kaayo",
         ],
       ),
     ],

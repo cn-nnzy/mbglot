@@ -11,17 +11,17 @@ The samples of each language and length alternate between a dev half and a test 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.3% | 76.7% | 69.7% | 97.1% | 36.4% |
+| short | enhanced | 1027 | 71.6% | 76.7% | 70.1% | 97.1% | 36.4% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.6% | 90.5% | 85.8% | 98.4% | 67.3% |
+| medium | enhanced | 911 | 85.6% | 90.6% | 85.8% | 98.5% | 67.2% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 94.2% | 98.2% | 95.0% | 99.2% | 77.0% |
+| long | enhanced | 823 | 94.3% | 98.2% | 95.1% | 99.2% | 77.5% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.8% | 87.6% | 79.4% | 98.4% | 58.7% |
+| all | enhanced | 2761 | 83.0% | 87.7% | 79.6% | 98.5% | 58.8% |
 
 ## Every length, enhanced mode, test half
 
-Accuracy: 82.8% (2287 of 2761), unidentified: 1, macro F1: 79.4%
+Accuracy: 83.0% (2291 of 2761), unidentified: 1, macro F1: 79.6%
 
 | Language | Samples | Precision | Recall | F1 |
 |---|---:|---:|---:|---:|
@@ -50,16 +50,16 @@ Accuracy: 82.8% (2287 of 2761), unidentified: 1, macro F1: 79.4%
 | uzn Northern Uzbek | 45 | 79.5% | 68.9% | 73.8% |
 | zlm Malay | 45 | 64.1% | 55.6% | 59.5% |
 | ibo Igbo | 17 | 83.3% | 58.8% | 69.0% |
-| ceb Cebuano | 45 | 72.7% | 53.3% | 61.5% |
-| tgl Tagalog | 45 | 61.8% | 93.3% | 74.3% |
+| ceb Cebuano | 45 | 73.5% | 55.6% | 63.3% |
+| tgl Tagalog | 45 | 62.7% | 93.3% | 75.0% |
 | hun Hungarian | 45 | 97.6% | 88.9% | 93.0% |
 | azj North Azerbaijani | 45 | 91.9% | 75.6% | 82.9% |
 | ces Czech | 45 | 94.1% | 71.1% | 81.0% |
-| run Rundi | 45 | 80.6% | 55.6% | 65.8% |
+| run Rundi | 45 | 82.4% | 62.2% | 70.9% |
 | plt Plateau Malagasy | 21 | 80.8% | 100.0% | 89.4% |
 | mad Madurese | 2 | 6.7% | 50.0% | 11.8% |
 | nya Nyanja | 17 | 62.5% | 58.8% | 60.6% |
-| kin Kinyarwanda | 13 | 20.0% | 38.5% | 26.3% |
+| kin Kinyarwanda | 13 | 22.7% | 38.5% | 28.6% |
 | zul Zulu | 25 | 85.7% | 72.0% | 78.3% |
 | swe Swedish | 45 | 95.0% | 84.4% | 89.4% |
 | lin Lingala | 45 | 68.3% | 95.6% | 79.6% |
@@ -102,10 +102,10 @@ Accuracy: 82.8% (2287 of 2761), unidentified: 1, macro F1: 79.4%
 |---|---|---:|
 | bos | hrv | 21 |
 | hin | bho | 15 |
-| ceb | tgl | 14 |
-| run | kin | 14 |
 | hrv | bos | 13 |
+| ceb | tgl | 13 |
 | zlm | ind | 12 |
+| run | kin | 11 |
 | bos | srp | 9 |
 | hin | mag | 9 |
 | bho | hin | 8 |
@@ -128,19 +128,19 @@ A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news a
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 92.0% | 97.5% | 91.7% | 99.4% | 73.1% |
+| flores | enhanced | 2720 | 92.2% | 97.5% | 91.9% | 99.4% | 73.3% |
 
 | Expected | Predicted (enhanced) | Count |
 |---|---|---:|
 | zlm | ind | 26 |
 | bos | hrv | 15 |
 | hrv | bos | 14 |
-| kin | run | 14 |
 | bos | srp | 12 |
 | hrv | srp | 12 |
 | fuv | hau | 11 |
 | mai | mag | 11 |
 | mag | hin | 10 |
+| kin | run | 9 |
 | bho | mag | 8 |
 
 ## Dev half
@@ -150,11 +150,11 @@ A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news a
 | short | franc | 1032 | 66.4% | 70.7% | 65.8% | 84.8% | 3.2% |
 | short | enhanced | 1032 | 71.9% | 76.2% | 71.3% | 98.1% | 36.4% |
 | medium | franc | 918 | 80.5% | 86.5% | 79.0% | 96.6% | 64.1% |
-| medium | enhanced | 918 | 86.1% | 90.6% | 84.6% | 97.8% | 70.3% |
+| medium | enhanced | 918 | 86.1% | 90.6% | 84.6% | 97.8% | 70.4% |
 | long | franc | 830 | 90.8% | 96.0% | 91.5% | 99.8% | 60.6% |
-| long | enhanced | 830 | 94.9% | 98.4% | 95.8% | 99.7% | 76.9% |
+| long | enhanced | 830 | 95.2% | 98.6% | 95.9% | 99.7% | 77.2% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
-| all | enhanced | 2780 | 83.5% | 87.6% | 81.1% | 98.6% | 59.7% |
+| all | enhanced | 2780 | 83.5% | 87.6% | 81.2% | 98.6% | 59.8% |
 
 ## Custom profiles
 
