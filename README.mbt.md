@@ -103,7 +103,8 @@ Implemented:
 
 All 186 of franc's languages are in the `full` package; the enhanced
 passes cover franc-min's 76.
-There is no release on mooncakes.io yet.
+Changes are listed in [CHANGELOG.md](CHANGELOG.md). Version 0.1.0 is tagged
+on GitHub; there is no release on mooncakes.io yet.
 
 ## Usage
 
