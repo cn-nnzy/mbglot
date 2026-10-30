@@ -294,6 +294,52 @@ let groups : Array[Group] = [
     ],
   },
   {
+    script: Latin,
+    langs: [Hau, Fuv],
+    markers: [(Hau, "ƙ", 2), (Hau, "ts", 1), (Fuv, "ŋ", 3), (Fuv, "ɲ", 3)],
+    words: [
+      (
+        Hau,
+        [
+          "da", "na", "ta", "ya", "wanda", "wadda", "shi", "ita", "sun", "su", "kuma",
+          "amma", "daga", "zai", "za", "iya", "wannan", "don", "ga", "suka", "ake",
+          "yana", "tana", "akwai", "kamar", "bayan", "shekara",
+        ],
+      ),
+      (
+        Fuv,
+        [
+          "je", "ha", "be", "nde", "ɗum", "mari", "der", "ko", "e", "kanko", "kanjum",
+          "ngam", "nden", "fu", "fuu", "ɓe", "ɗon", "ndu", "ngal", "dow", "nder",
+          "ka", "noone", "woni", "wonaa",
+        ],
+      ),
+    ],
+  },
+  {
+    script: Latin,
+    langs: [Jav, Sun],
+    markers: [(Jav, "dh", 1), (Jav, "th", 1), (Sun, "eu", 1)],
+    words: [
+      (
+        Jav,
+        [
+          "ing", "sing", "lan", "kanggo", "iku", "ora", "wis", "kang", "menawa",
+          "saka", "uga", "dadi", "marang", "karo", "iki", "ana", "kabeh", "banjur",
+          "bakal", "isih", "nanging",
+        ],
+      ),
+      (
+        Sun,
+        [
+          "anu", "jeung", "teh", "téh", "sareng", "ti", "ka", "éta", "ieu", "henteu",
+          "tiasa", "nu", "oge", "ogé", "geus", "kana", "pikeun", "keur", "jang",
+          "urang", "sanés", "tapi", "bari",
+        ],
+      ),
+    ],
+  },
+  {
     script: Arabic,
     langs: [Arb, Pes, Urd, Skr, Ckb, Pbu],
     markers: [

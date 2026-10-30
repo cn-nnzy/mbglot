@@ -233,8 +233,9 @@ fn ranking(
 /// that a closely related language is meant (Spanish or Portuguese;
 /// Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Kazakh or Bosnian
 /// in Cyrillic script; Croatian, Serbian or Bosnian in Latin script;
-/// Indonesian or Malay; Rundi or Kinyarwanda; Tagalog or Cebuano; or the
-/// languages written in Arabic script), that language
+/// Indonesian or Malay; Rundi or Kinyarwanda; Tagalog or Cebuano; Hausa
+/// or Nigerian Fulfulde; Javanese or Sundanese; or the languages written
+/// in Arabic script), that language
 /// moves to the top and swaps scores with franc's choice. Returns an empty
 /// array when the text is shorter than `min_length` or contains no letters
 /// of a supported script.

@@ -24,9 +24,9 @@ test {
 
 | Held-out benchmark | franc-min's ranking | mbglot (default) |
 |---|---:|---:|
-| Accuracy, Tatoeba test half (2,761 texts) | 77.2% | 83.0% |
-| Accuracy, FLORES-200 devtest (2,720 texts) | 89.2% | 92.2% |
-| Answered as `reliable`, Tatoeba test half | 39.0% | 58.8% |
+| Accuracy, Tatoeba test half (2,761 texts) | 77.2% | 83.1% |
+| Accuracy, FLORES-200 devtest (2,720 texts) | 89.2% | 92.5% |
+| Answered as `reliable`, Tatoeba test half | 39.0% | 59.9% |
 
 The figures come from [eval/results.md](eval/results.md), which CI
 regenerates; `tools/readme_tables.py` keeps this table and the copies
@@ -318,8 +318,8 @@ a probability.
   Malay with only shared words, for example).
 
 The enhanced weights and thresholds were chosen on the dev half of the
-[benchmark](#benchmark). On the held-out test half they make 58.8% of
-detections reliable instead of 39.0%, and 36.4% of short sentences
+[benchmark](#benchmark). On the held-out test half they make 59.9% of
+detections reliable instead of 39.0%, and 36.5% of short sentences
 instead of 2.6%, with reliable precision 98.4%.
 
 ### Options
@@ -375,6 +375,10 @@ members use:
   `ko`, `što`, `šta`, ekavian and ijekavian forms);
 - Indonesian and Malay, Rundi and Kinyarwanda, Tagalog and Cebuano
   (common words, and `cy`, `jy`, `by` against `vy`);
+- Hausa and Nigerian Fulfulde (`ƙ` against `ŋ`, `ɲ`, and common words
+  such as `kuma`, `wanda` against `je`, `nde`), Javanese and Sundanese
+  (`dh`, `th` against `eu`, and words such as `sing`, `lan` against
+  `anu`, `jeung`);
 - Standard Arabic, Persian, Urdu, Saraiki, Sorani Kurdish and Pashto in
   Arabic script (letters such as `ة`, `ڕ`, `ێ`, `ە`, `ټ`, `ښ`, `ٹ`, `ے`,
   `ٻ`, `ڄ`, and common words).
@@ -802,13 +806,13 @@ half:
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.6% | 76.7% | 70.1% | 97.1% | 36.4% |
+| short | enhanced | 1027 | 71.7% | 76.8% | 70.3% | 97.1% | 36.5% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.6% | 90.6% | 85.8% | 98.5% | 67.2% |
+| medium | enhanced | 911 | 85.7% | 90.7% | 85.9% | 98.5% | 67.9% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 94.3% | 98.2% | 95.1% | 99.2% | 77.5% |
+| long | enhanced | 823 | 94.5% | 98.4% | 95.3% | 99.2% | 80.3% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 83.0% | 87.7% | 79.6% | 98.5% | 58.8% |
+| all | enhanced | 2761 | 83.1% | 87.8% | 79.9% | 98.5% | 59.9% |
 
 Accuracy counts every detection. Group accuracy also counts as right a
 language from the expected language's group: Bosnian, Croatian and
@@ -847,9 +851,9 @@ devtest sentences:
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 92.2% | 97.5% | 91.9% | 99.4% | 73.3% |
+| flores | enhanced | 2720 | 92.5% | 97.8% | 92.2% | 99.4% | 76.5% |
 
-Enhanced mode is right more often and makes 73.3% of detections reliable
+Enhanced mode is right more often and makes 76.5% of detections reliable
 instead of 63.2%, with the same reliable precision. Standard Malay is the
 weak spot: 26 of its 40 sentences come out as Indonesian, against 18
 with franc's ranking alone, because news Malay shares most of its words
