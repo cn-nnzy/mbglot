@@ -13,14 +13,17 @@ priv struct Clues {
 }
 
 ///|
-/// The clues in the words of a text for `top` against `runner_up`.
-fn clues(words : Map[String, Int32], top : Lang, runner_up : Lang?) -> Clues {
+/// The clues in the words of a text for `top` against `runner_up`, in
+/// the group of related languages of `script`.
+fn clues(
+  words : Map[String, Int32],
+  top : Lang,
+  runner_up : Lang?,
+  script~ : Script = Latin,
+) -> Clues {
   let mut total = 0
   let mut contested = false
-  for group in groups {
-    if !group.langs.contains(top) {
-      continue
-    }
+  if group_of(top, script) is Some(group) {
     let scores = evidence(group, words)
     let own = scores.get(top).unwrap_or(0)
     let mut rival = 0
@@ -34,7 +37,6 @@ fn clues(words : Map[String, Int32], top : Lang, runner_up : Lang?) -> Clues {
     } else if runner_up is Some(r) && group.langs.contains(r) {
       contested = true
     }
-    break
   }
   if runner_up is Some(r) {
     let lead = stop_word_hits(top, words) - stop_word_hits(r, words)

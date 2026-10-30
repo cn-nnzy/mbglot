@@ -16,6 +16,8 @@ pub(all) enum Mode {
 /// the language it points to and a weight per occurrence; `words` are
 /// common words (lowercase) that each count once per occurrence.
 priv struct Group {
+  /// The script the group's evidence is written in.
+  script : Script
   langs : Array[Lang]
   markers : Array[(Lang, String, Int32)]
   words : Array[(Lang, Array[String])]
@@ -24,6 +26,7 @@ priv struct Group {
 ///|
 let groups : Array[Group] = [
   {
+    script: Latin,
     langs: [Spa, Por],
     markers: [
       (Spa, "ñ", 3),
@@ -61,7 +64,8 @@ let groups : Array[Group] = [
     ],
   },
   {
-    langs: [Rus, Ukr, Bel, Bul, Srp, Kaz],
+    script: Cyrillic,
+    langs: [Rus, Ukr, Bel, Bul, Srp, Kaz, Bos],
     markers: [
       (Rus, "ы", 2),
       (Rus, "э", 2),
@@ -137,11 +141,26 @@ let groups : Array[Group] = [
           "шта", "што", "ко", "који", "она", "он", "ми", "ви",
           "они", "од", "много", "само", "мене", "тебе", "њега",
           "већ", "када", "ако", "овде", "сада", "зашто", "хоћу",
+          "време", "дете", "лепо", "река", "где", "увек",
+          "млеко", "недеља", "хтео", "хтела", "универзитета",
+          "научници", "научника", "јануара", "фебруара",
+          "марта", "априла", "јула", "августа", "септембра",
+          "октобра", "новембра", "децембра", "извештај",
+          "општина",
+        ],
+      ),
+      (
+        Bos,
+        [
+          "вријеме", "дијете", "лијепо", "ријека", "гдје",
+          "увијек", "млијеко", "сједмица", "хтио", "хтјела",
+          "извјештај", "општина", "кахва", "хисторија",
         ],
       ),
     ],
   },
   {
+    script: Latin,
     langs: [Hrv, Srp, Bos],
     markers: [],
     words: [
@@ -152,7 +171,12 @@ let groups : Array[Group] = [
           "sveučilište", "zrakoplov", "kazalište", "vlak", "kava", "jesi", "jeste",
           "lijepo", "mlijeko", "rijeka", "vrijeme", "dijete", "htio", "htjela", "gdje",
           "uvijek", "nisam", "tjedan", "siječanj", "kolovoz", "obitelj", "zrak",
-          "povijest", "bok", "hvala", "molim", "kćer", "kći",
+          "povijest", "bok", "hvala", "molim", "kćer", "kći", "znanstvenici", "znanstvenika",
+          "znanstveni", "znanstvene", "znanstvenik", "sveučilišta", "sveučilištu",
+          "tisuća", "siječnja", "veljače", "ožujka", "travnja", "svibnja", "lipnja",
+          "srpnja", "kolovoza", "rujna", "listopada", "studenoga", "prosinca", "nogomet",
+          "nogometni", "europske", "europski", "europska", "izvješće", "izvješća",
+          "momčad", "zrakoplova",
         ],
       ),
       (
@@ -162,7 +186,11 @@ let groups : Array[Group] = [
           "univerzitet", "avion", "pozorište", "voz", "kafa", "lepo", "mleko", "reka",
           "vreme", "dete", "hteo", "htela", "gde", "uvek", "nedelja", "nedelju",
           "porodica", "vazduh", "istorija", "hoću", "lep", "lepa", "devojka", "pevati",
-          "videti", "voleti", "razumem", "ćerka", "beše",
+          "videti", "voleti", "razumem", "ćerka", "beše", "naučnici", "naučnika",
+          "naučni", "naučne", "naučnik", "univerziteta", "univerzitetu", "januara",
+          "februara", "marta", "aprila", "maja", "juna", "jula", "avgusta", "septembra",
+          "oktobra", "novembra", "decembra", "fudbal", "fudbalski", "evropske", "evropski",
+          "evropska", "izveštaj", "izveštaja", "opština", "opštine",
         ],
       ),
       (
@@ -172,12 +200,17 @@ let groups : Array[Group] = [
           "univerzitet", "avion", "pozorište", "voz", "kahva", "kafa", "lijepo",
           "mlijeko", "rijeka", "vrijeme", "dijete", "htio", "htjela", "gdje", "uvijek",
           "sedmica", "sedmicu", "porodica", "zrak", "historija", "lahko", "mehko",
-          "hoću", "hvala", "ćerka", "ahbab",
+          "hoću", "hvala", "ćerka", "ahbab", "naučnici", "naučnika", "naučni",
+          "naučne", "naučnik", "univerziteta", "univerzitetu", "januara", "februara",
+          "marta", "aprila", "maja", "juna", "jula", "augusta", "septembra", "oktobra",
+          "novembra", "decembra", "fudbal", "fudbalski", "evropske", "evropski",
+          "evropska", "izvještaj", "izvještaja", "općina", "općine",
         ],
       ),
     ],
   },
   {
+    script: Latin,
     langs: [Ind, Zlm],
     markers: [],
     words: [
@@ -209,6 +242,7 @@ let groups : Array[Group] = [
     ],
   },
   {
+    script: Latin,
     langs: [Run, Kin],
     markers: [(Kin, "cy", 2), (Kin, "jy", 2), (Kin, "shy", 2), (Run, "vy", 2)],
     words: [
@@ -223,6 +257,7 @@ let groups : Array[Group] = [
     ],
   },
   {
+    script: Latin,
     langs: [Tgl, Ceb],
     markers: [],
     words: [
@@ -245,6 +280,7 @@ let groups : Array[Group] = [
     ],
   },
   {
+    script: Arabic,
     langs: [Arb, Pes, Urd, Skr, Ckb, Pbu],
     markers: [
       (Arb, "ة", 2),
@@ -335,6 +371,19 @@ let groups : Array[Group] = [
 ]
 
 ///|
+/// The group of related languages that holds `lang` in `script`, if any.
+/// Serbian and Bosnian are in one group for Cyrillic and another for
+/// Latin script.
+fn group_of(lang : Lang, script : Script) -> Group? {
+  for group in groups {
+    if group.script == script && group.langs.contains(lang) {
+      return Some(group)
+    }
+  }
+  None
+}
+
+///|
 /// Lowercase words of `text`: runs of units that are not spaces, ASCII
 /// punctuation or digits, or general punctuation.
 fn words_of(text : String) -> Array[String] {
@@ -415,49 +464,43 @@ fn evidence(group : Group, words : Map[String, Int32]) -> Map[Lang, Int32] {
 
 ///|
 /// The ranking after the confusable-pair pass. When franc's best language
-/// belongs to a group, the group's member with the most evidence in
-/// `text` (letters and words) takes first place if it has strictly more
-/// evidence than every other member and the options allow it; it swaps
-/// scores with franc's choice, so the scores stay franc's and only their
-/// order changes. Otherwise the ranking is returned unchanged.
+/// belongs to a group in `script`, the members with the most evidence in
+/// the text (letters and words) are found; if they have more than franc's
+/// choice, the one franc ranks highest among them takes first place, when
+/// the options allow it. It swaps scores with franc's choice, so the
+/// scores stay franc's and only their order changes. Otherwise the ranking
+/// is returned unchanged.
 fn settle_confusables(
   stats : TextStats,
   ranked : Array[(Lang, Double)],
   allow : Array[Lang],
   deny : Array[Lang],
+  script~ : Script = Latin,
 ) -> Array[(Lang, Double)] {
   guard ranked.length() > 1 else { return ranked }
   let top = ranked[0].0
-  for group in groups {
-    if !group.langs.contains(top) {
-      continue
-    }
-    let scores = evidence(group, stats.words)
-    let mut best = top
-    let mut best_score = scores.get(top).unwrap_or(0)
-    let mut tie = false
-    for lang in group.langs {
-      if lang == top {
-        continue
-      }
-      let s = scores.get(lang).unwrap_or(0)
-      if s > best_score {
-        best = lang
-        best_score = s
-        tie = false
-      } else if s == best_score && best != top {
-        tie = true
-      }
-    }
-    if best == top || tie || best_score <= 0 {
-      return ranked
-    }
-    if !allowed(best, allow, deny) {
-      return ranked
-    }
-    return promote(ranked, best)
+  guard group_of(top, script) is Some(group) else { return ranked }
+  let scores = evidence(group, stats.words)
+  let mut best_score = scores.get(top).unwrap_or(0)
+  for lang in group.langs {
+    best_score = best_score.max(scores.get(lang).unwrap_or(0))
   }
-  ranked
+  if best_score <= 0 || scores.get(top).unwrap_or(0) == best_score {
+    return ranked
+  }
+  // The leaders in franc's order; members franc did not rank come last.
+  let leaders = group.langs.filter(lang => {
+    scores.get(lang).unwrap_or(0) == best_score
+  })
+  let position = (lang : Lang) => {
+    ranked.search_by(r => r.0 == lang).unwrap_or(ranked.length())
+  }
+  leaders.sort_by((a, b) => position(a) - position(b))
+  let best = leaders[0]
+  if !allowed(best, allow, deny) {
+    return ranked
+  }
+  promote(ranked, best)
 }
 
 ///|

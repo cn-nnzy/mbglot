@@ -11,17 +11,17 @@ The samples of each language and length alternate between a dev half and a test 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.1% | 76.8% | 69.7% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.3% | 76.7% | 69.7% | 97.1% | 36.4% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.3% | 90.6% | 85.6% | 98.4% | 67.2% |
+| medium | enhanced | 911 | 85.6% | 90.5% | 85.8% | 98.4% | 67.3% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 93.2% | 98.1% | 94.2% | 99.2% | 77.2% |
+| long | enhanced | 823 | 94.2% | 98.2% | 95.0% | 99.2% | 77.0% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.4% | 87.7% | 79.2% | 98.4% | 58.7% |
+| all | enhanced | 2761 | 82.8% | 87.6% | 79.4% | 98.4% | 58.7% |
 
 ## Every length, enhanced mode, test half
 
-Accuracy: 82.4% (2274 of 2761), unidentified: 1, macro F1: 79.2%
+Accuracy: 82.8% (2287 of 2761), unidentified: 1, macro F1: 79.4%
 
 | Language | Samples | Precision | Recall | F1 |
 |---|---:|---:|---:|---:|
@@ -41,10 +41,10 @@ Accuracy: 82.4% (2274 of 2761), unidentified: 1, macro F1: 79.2%
 | ron Romanian | 45 | 92.5% | 82.2% | 87.1% |
 | hau Hausa | 45 | 67.8% | 88.9% | 76.9% |
 | fuv Nigerian Fulfulde | 14 | 33.3% | 7.1% | 11.8% |
-| bos Bosnian | 45 | 14.6% | 15.6% | 15.1% |
-| hrv Croatian | 45 | 40.4% | 46.7% | 43.3% |
+| bos Bosnian | 45 | 27.8% | 22.2% | 24.7% |
+| hrv Croatian | 45 | 44.4% | 53.3% | 48.5% |
 | nld Dutch | 45 | 88.6% | 86.7% | 87.6% |
-| srp Serbian | 45 | 50.0% | 48.9% | 49.4% |
+| srp Serbian | 45 | 58.3% | 62.2% | 60.2% |
 | ckb Central Kurdish | 45 | 93.2% | 91.1% | 92.1% |
 | yor Yoruba | 19 | 100.0% | 52.6% | 69.0% |
 | uzn Northern Uzbek | 45 | 79.5% | 68.9% | 73.8% |
@@ -66,17 +66,17 @@ Accuracy: 82.4% (2274 of 2761), unidentified: 1, macro F1: 79.2%
 | som Somali | 34 | 93.5% | 85.3% | 89.2% |
 | hnj Hmong Njua | 2 | 100.0% | 50.0% | 66.7% |
 | ilo Iloko | 45 | 78.7% | 82.2% | 80.4% |
-| rus Russian | 45 | 76.9% | 88.9% | 82.5% |
-| ukr Ukrainian | 45 | 97.7% | 95.6% | 96.6% |
+| rus Russian | 45 | 76.8% | 95.6% | 85.1% |
+| ukr Ukrainian | 45 | 100.0% | 95.6% | 97.7% |
 | koi Komi-Permyak | 15 | 100.0% | 60.0% | 75.0% |
-| bel Belarusian | 45 | 97.5% | 86.7% | 91.8% |
-| bul Bulgarian | 45 | 93.5% | 95.6% | 94.5% |
-| kaz Kazakh | 45 | 100.0% | 88.9% | 94.1% |
+| bel Belarusian | 45 | 95.2% | 88.9% | 92.0% |
+| bul Bulgarian | 45 | 89.4% | 93.3% | 91.3% |
+| kaz Kazakh | 45 | 97.5% | 86.7% | 91.8% |
 | arb Standard Arabic | 45 | 93.5% | 95.6% | 94.5% |
-| urd Urdu | 45 | 95.6% | 95.6% | 95.6% |
-| pes Iranian Persian | 45 | 97.7% | 93.3% | 95.5% |
-| skr Saraiki | 29 | 90.0% | 93.1% | 91.5% |
-| pbu Northern Pashto | 29 | 96.2% | 86.2% | 90.9% |
+| urd Urdu | 45 | 93.5% | 95.6% | 94.5% |
+| pes Iranian Persian | 45 | 100.0% | 93.3% | 96.6% |
+| skr Saraiki | 29 | 87.1% | 93.1% | 90.0% |
+| pbu Northern Pashto | 29 | 96.0% | 82.8% | 88.9% |
 | hin Hindi | 45 | 61.8% | 46.7% | 53.2% |
 | mar Marathi | 45 | 97.4% | 82.2% | 89.2% |
 | mai Maithili | 1 | 0.0% | 0.0% | 0.0% |
@@ -100,25 +100,25 @@ Accuracy: 82.4% (2274 of 2761), unidentified: 1, macro F1: 79.2%
 
 | Expected | Predicted | Count |
 |---|---|---:|
-| bos | hrv | 23 |
-| srp | bos | 16 |
+| bos | hrv | 21 |
 | hin | bho | 15 |
 | ceb | tgl | 14 |
 | run | kin | 14 |
 | hrv | bos | 13 |
 | zlm | ind | 12 |
-| bos | srp | 10 |
+| bos | srp | 9 |
 | hin | mag | 9 |
 | bho | hin | 8 |
-| hrv | srp | 7 |
+| srp | bos | 7 |
 | jav | sun | 6 |
 | ind | zlm | 5 |
 | fuv | hau | 5 |
+| srp | hrv | 5 |
 | azj | tur | 5 |
 | kin | run | 5 |
 | bel | rus | 5 |
 | sun | tgl | 4 |
-| srp | hrv | 4 |
+| hrv | srp | 4 |
 | ckb | zlm | 4 |
 
 ## FLORES-200
@@ -128,33 +128,33 @@ A second, out-of-domain corpus: the same 40 FLORES-200 devtest sentences (news a
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 91.4% | 97.4% | 91.2% | 99.4% | 72.6% |
+| flores | enhanced | 2720 | 92.0% | 97.5% | 91.7% | 99.4% | 73.1% |
 
 | Expected | Predicted (enhanced) | Count |
 |---|---|---:|
 | zlm | ind | 26 |
-| srp | bos | 15 |
-| bos | srp | 14 |
-| hrv | srp | 14 |
+| bos | hrv | 15 |
+| hrv | bos | 14 |
 | kin | run | 14 |
-| bos | hrv | 13 |
-| hrv | bos | 13 |
+| bos | srp | 12 |
+| hrv | srp | 12 |
 | fuv | hau | 11 |
 | mai | mag | 11 |
 | mag | hin | 10 |
+| bho | mag | 8 |
 
 ## Dev half
 
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1032 | 66.4% | 70.7% | 65.8% | 84.8% | 3.2% |
-| short | enhanced | 1032 | 71.5% | 76.1% | 71.0% | 98.1% | 36.4% |
+| short | enhanced | 1032 | 71.9% | 76.2% | 71.3% | 98.1% | 36.4% |
 | medium | franc | 918 | 80.5% | 86.5% | 79.0% | 96.6% | 64.1% |
-| medium | enhanced | 918 | 85.7% | 90.4% | 84.3% | 97.8% | 69.9% |
+| medium | enhanced | 918 | 86.1% | 90.6% | 84.6% | 97.8% | 70.3% |
 | long | franc | 830 | 90.8% | 96.0% | 91.5% | 99.8% | 60.6% |
-| long | enhanced | 830 | 94.8% | 98.4% | 95.7% | 99.7% | 77.0% |
+| long | enhanced | 830 | 94.9% | 98.4% | 95.8% | 99.7% | 76.9% |
 | all | franc | 2780 | 78.3% | 83.5% | 76.2% | 97.7% | 40.4% |
-| all | enhanced | 2780 | 83.2% | 87.5% | 80.9% | 98.6% | 59.6% |
+| all | enhanced | 2780 | 83.5% | 87.6% | 81.1% | 98.6% | 59.7% |
 
 ## Custom profiles
 

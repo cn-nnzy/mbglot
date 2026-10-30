@@ -66,11 +66,9 @@ fn group_clues(
   lang : Lang,
   previous : Lang,
   words : Map[String, Int32],
+  script : Script,
 ) -> Array[String] {
-  guard groups.search_by(group => group.langs.contains(previous)) is Some(g) else {
-    return []
-  }
-  let group = groups[g]
+  guard group_of(previous, script) is Some(group) else { return [] }
   let found = []
   let marks = (target : Lang, letters : String) => {
     group.markers.iter().any(m => m.0 == target && m.1 == letters)

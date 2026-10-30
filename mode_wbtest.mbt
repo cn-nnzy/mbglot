@@ -81,6 +81,7 @@ test "a language without a profile in the script can win" {
     ranked,
     [],
     [],
+    script=Arabic,
   )
   assert_eq(out, [(Ckb, 1.0), (Urd, 0.9), (Pes, 0.9), (Arb, 0.8)])
   // Not when the options exclude it.
@@ -90,6 +91,7 @@ test "a language without a profile in the script can win" {
       ranked,
       [Pes, Urd, Arb],
       [],
+      script=Arabic,
     ),
     ranked,
   )

@@ -89,7 +89,7 @@ fn Detector::decide(self : Detector, stats : TextStats) -> Detection? {
         margin >= reliable_min_margin && stats.length >= reliable_min_length,
       )
     Enhanced => {
-      let clues = clues(stats.words, lang, runner_up)
+      let clues = clues(stats.words, lang, runner_up, script~)
       let confidence = (margin + evidence_weight * clues.evidence.to_double()).min(
         1.0,
       )

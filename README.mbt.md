@@ -24,8 +24,8 @@ test {
 
 | Held-out benchmark | franc-min's ranking | mbglot (default) |
 |---|---:|---:|
-| Accuracy, Tatoeba test half (2,761 texts) | 77.2% | 82.4% |
-| Accuracy, FLORES-200 devtest (2,720 texts) | 89.2% | 91.4% |
+| Accuracy, Tatoeba test half (2,761 texts) | 77.2% | 82.8% |
+| Accuracy, FLORES-200 devtest (2,720 texts) | 89.2% | 92.0% |
 | Answered as `reliable`, Tatoeba test half | 39.0% | 58.7% |
 
 The figures come from [eval/results.md](eval/results.md), which CI
@@ -318,9 +318,9 @@ a probability.
   Malay with only shared words, for example).
 
 The enhanced weights and thresholds were chosen on the dev half of the
-[benchmark](#benchmark). On the held-out test half they make 58.8% of
-detections reliable instead of 39.0%, and 36.5% of short sentences
-instead of 2.6%, with reliable precision 98.4% against 98.6%.
+[benchmark](#benchmark). On the held-out test half they make 58.7% of
+detections reliable instead of 39.0%, and 36.4% of short sentences
+instead of 2.6%, with reliable precision 98.4%.
 
 ### Options
 
@@ -367,7 +367,7 @@ members use:
 
 - Spanish and Portuguese (`ñ`, `¿` against `ã`, `õ`, `ç`, `lh`, `nh`;
   articles and pronouns);
-- Russian, Ukrainian, Belarusian, Bulgarian, Serbian and Kazakh in
+- Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Kazakh and Bosnian in
   Cyrillic (`ы`, `э`, `ё`; `ї`, `є`, `ґ`; `ў`; `ђ`, `ј`, `љ`, `њ`, `ћ`, `џ`;
   `ә`, `қ`, `ң`, `ө`, `ұ`, `ү`; and common words such as Bulgarian `е`,
   `са`, `ще`, `това`);
@@ -379,11 +379,17 @@ members use:
   Arabic script (letters such as `ة`, `ڕ`, `ێ`, `ە`, `ټ`, `ښ`, `ٹ`, `ے`,
   `ٻ`, `ڄ`, and common words).
 
-The member with strictly the most evidence moves to the top and swaps
-scores with franc's choice, so the scores and the margin stay franc's,
-and the deciding letters and words add to the confidence; without clear
-evidence the ranking is left alone. franc-min only has a profile for Kurdish in Latin script, so Sorani in Arabic script is
-recognised by this pass alone. Norwegian and Danish are not among
+When some members have more evidence than franc's choice, the one franc
+ranks highest among them moves to the top and swaps scores with franc's
+choice, so the scores and the margin stay franc's, and the deciding
+letters and words add to the confidence; without such evidence the
+ranking is left alone. Groups belong to a script: Serbian and Bosnian
+are settled among the Cyrillic languages in Cyrillic text (Serbian by
+`ђ`, `ћ`, `ј` and ekavian words such as `време`, Bosnian by ijekavian
+ones) and with Croatian in Latin text, where words such as `znanstvenici`
+against `naučnici`, Croatian month names and `općina` against `opština`
+count too. franc-min only has a profile for Kurdish in Latin script, so
+Sorani in Arabic script is recognised by this pass alone. Norwegian and Danish are not among
 franc-min's languages. The [benchmark](#benchmark) shows the effect;
 `Mode::Franc` turns the pass off.
 
@@ -796,13 +802,13 @@ half:
 | Length | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | short | franc | 1027 | 64.8% | 70.2% | 63.0% | 92.6% | 2.6% |
-| short | enhanced | 1027 | 71.1% | 76.8% | 69.7% | 97.1% | 36.5% |
+| short | enhanced | 1027 | 71.3% | 76.7% | 69.7% | 97.1% | 36.4% |
 | medium | franc | 911 | 80.2% | 85.7% | 80.2% | 96.5% | 62.8% |
-| medium | enhanced | 911 | 85.3% | 90.6% | 85.6% | 98.4% | 67.2% |
+| medium | enhanced | 911 | 85.6% | 90.5% | 85.8% | 98.4% | 67.3% |
 | long | franc | 823 | 89.2% | 95.7% | 89.8% | 99.4% | 58.1% |
-| long | enhanced | 823 | 93.2% | 98.1% | 94.2% | 99.2% | 77.2% |
+| long | enhanced | 823 | 94.2% | 98.2% | 95.0% | 99.2% | 77.0% |
 | all | franc | 2761 | 77.2% | 82.9% | 73.8% | 97.7% | 39.0% |
-| all | enhanced | 2761 | 82.4% | 87.7% | 79.2% | 98.4% | 58.7% |
+| all | enhanced | 2761 | 82.8% | 87.6% | 79.4% | 98.4% | 58.7% |
 
 Accuracy counts every detection. Group accuracy also counts as right a
 language from the expected language's group: Bosnian, Croatian and
@@ -841,9 +847,9 @@ devtest sentences:
 | Corpus | Mode | Samples | Accuracy | Group accuracy | Macro F1 | Reliable precision | Coverage |
 |---|---|---:|---:|---:|---:|---:|---:|
 | flores | franc | 2720 | 89.2% | 95.7% | 88.6% | 99.4% | 63.2% |
-| flores | enhanced | 2720 | 91.4% | 97.4% | 91.2% | 99.4% | 72.6% |
+| flores | enhanced | 2720 | 92.0% | 97.5% | 91.7% | 99.4% | 73.1% |
 
-Enhanced mode is right more often and makes 72.6% of detections reliable
+Enhanced mode is right more often and makes 73.1% of detections reliable
 instead of 63.2%, with the same reliable precision. Standard Malay is the
 weak spot: 26 of its 40 sentences come out as Indonesian, against 18
 with franc's ranking alone, because news Malay shares most of its words

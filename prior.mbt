@@ -15,15 +15,13 @@ let tie_window : Double = 0.12
 let speakers_weight : Double = 0.1
 
 ///|
-/// The languages related to `lang`: its group in `groups`. Empty when
-/// there is none.
-fn related(lang : Lang) -> Array[Lang] {
-  for group in groups {
-    if group.langs.contains(lang) {
-      return group.langs
-    }
+/// The languages related to `lang` in `script`: its group in `groups`.
+/// Empty when there is none.
+fn related(lang : Lang, script : Script) -> Array[Lang] {
+  match group_of(lang, script) {
+    Some(group) => group.langs
+    None => []
   }
-  []
 }
 
 ///|
@@ -37,11 +35,13 @@ fn related(lang : Lang) -> Array[Lang] {
 fn near_tie_prior(
   words : Map[String, Int32],
   ranked : Array[(Lang, Double)],
+  script~ : Script = Latin,
 ) -> Array[(Lang, Double)] {
   guard ranked.length() > 1 else { return ranked }
   let top = ranked[0]
-  let family = related(top.0)
-  if family.is_empty() || clues(words, top.0, Some(ranked[1].0)).evidence > 0 {
+  let family = related(top.0, script)
+  if family.is_empty() ||
+    clues(words, top.0, Some(ranked[1].0), script~).evidence > 0 {
     return ranked
   }
   let mut best = top.0

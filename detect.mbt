@@ -204,17 +204,18 @@ fn ranking(
         ranked,
         options.allow,
         options.deny,
+        script~,
       )
       if ranked[0].0 != before {
         record(
           RelatedLanguages(
             ranked[0].0,
-            group_clues(ranked[0].0, before, stats.words),
+            group_clues(ranked[0].0, before, stats.words, script),
           ),
         )
       }
       let before = ranked[0].0
-      let ranked = near_tie_prior(stats.words, ranked)
+      let ranked = near_tie_prior(stats.words, ranked, script~)
       if ranked[0].0 != before {
         record(NearTie(ranked[0].0, before))
       }
@@ -230,9 +231,10 @@ fn ranking(
 /// fixed language order. In `Franc` mode the ranking is franc's. In
 /// `Enhanced` mode, when the letters and common words of the text show
 /// that a closely related language is meant (Spanish or Portuguese;
-/// Russian, Ukrainian, Belarusian, Bulgarian, Serbian or Kazakh; Croatian,
-/// Serbian or Bosnian; Indonesian or Malay; Rundi or Kinyarwanda; Tagalog
-/// or Cebuano; or the languages written in Arabic script), that language
+/// Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Kazakh or Bosnian
+/// in Cyrillic script; Croatian, Serbian or Bosnian in Latin script;
+/// Indonesian or Malay; Rundi or Kinyarwanda; Tagalog or Cebuano; or the
+/// languages written in Arabic script), that language
 /// moves to the top and swaps scores with franc's choice. Returns an empty
 /// array when the text is shorter than `min_length` or contains no letters
 /// of a supported script.
